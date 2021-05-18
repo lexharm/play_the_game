@@ -20,7 +20,7 @@ public enum BotState {
     INSTRUCTION,
     INTRO,
     PLAY_SCENARIO,
-    BATTLE,
+    COMBAT,
     FINISH_GAME,
     FAIL_GAME,
     INVENTORY;

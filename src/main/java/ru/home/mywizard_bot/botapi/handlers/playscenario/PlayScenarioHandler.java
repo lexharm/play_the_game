@@ -25,13 +25,16 @@ public class PlayScenarioHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
     private MainMenuService mainMenuService;
+    private Story story;
 
     public PlayScenarioHandler(UserDataCache userDataCache,
                                ReplyMessagesService messagesService,
-                               MainMenuService mainMenuService) {
+                               MainMenuService mainMenuService,
+                               Story story) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
         this.mainMenuService = mainMenuService;
+        this.story = story;
     }
 
     @Override
@@ -51,6 +54,9 @@ public class PlayScenarioHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        if (profileData.getStrength() <= 0) {
+            profileData.setStrength(10);
+        }
         int currentParagraph = profileData.getCurrentParagraph();
         if (currentParagraph == 0)
             currentParagraph = 1;
@@ -59,13 +65,17 @@ public class PlayScenarioHandler implements InputMessageHandler {
 
         SendMessage replyToUser = null;
 
-        Paragraph newParagraph = Story.getInstance().getParagraph(currentParagraph);
+        Paragraph newParagraph = story.getParagraph(currentParagraph);
         if (usersAnswer != null) {
-            Paragraph paragraph = Story.getInstance().getParagraph(currentParagraph);
+            Paragraph paragraph = story.getParagraph(currentParagraph);
             List<Link> links = paragraph.getLinks();
             for (Link link : links) {
                 if (usersAnswer.equals(link.getText())){
-                    newParagraph = link.getParagraph();
+                    newParagraph = story.getParagraph(link);
+                    if (newParagraph.isCombat()) {
+                        userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
+                        profileData.setEnemy(newParagraph.getEnemy());
+                    }
                     profileData.setCurrentParagraph(newParagraph.getId());
                     userDataCache.saveUserProfileData(userId, profileData);
                     break;
@@ -118,5 +128,4 @@ public class PlayScenarioHandler implements InputMessageHandler {
 
         return inlineKeyboardMarkup;
     }
-
 }
