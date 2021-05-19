@@ -48,7 +48,7 @@ public class MainMenuHandler implements InputMessageHandler {
                 return mainMenuService.getMainMenuMessageForCombat(chatId, "", newParagraph, profileData.getEnemy(), profileData.getStrength());
             } else {
                 userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                return mainMenuService.getMainMenuMessage(message.getChatId(), newParagraph);
+                return mainMenuService.getMainMenuMessage(message.getChatId(), newParagraph, profileData);
             }
         }
         return mainMenuService.getMainMenuMessage(message.getChatId(), messagesService.getReplyText("reply.showMainMenu"));

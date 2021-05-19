@@ -2,8 +2,11 @@ package ru.home.mywizard_bot.scenario.loader;
 
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.scenario.Enemy;
+import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
+import ru.home.mywizard_bot.scenario.checks.Check;
+import ru.home.mywizard_bot.scenario.checks.EventCheck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ public class DummyLoader extends Loader {
         List<Link> links;
         int id;
         Enemy enemy;
+        Check check;
 
         id = -1;
         paragraph = new Paragraph(id, "Внезапно из-за спазма в горле вы давитесь собственной слюной и умираете " +
@@ -33,18 +37,23 @@ public class DummyLoader extends Loader {
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
         links = new ArrayList<>();
-        links.add(new Link("На северо-восток", 89));
+        links.add(new Link("На северо-восток", 89, new EventCheck("Mayline_dead")));
         links.add(new Link("На юго-восток", 230));
-        links.add(new Link("Вернуться и подраться с Майлином", 999));
+        Link link = new Link("Вернуться и подраться с Майлином", 999, new EventCheck("Mayline_dead", false));
+        link.addCheck(new EventCheck("Mayline_laugh", false));
+        links.add(link);
+        link = new Link("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", 999, new EventCheck("Mayline_laugh"));
+        link.addCheck(new EventCheck("Mayline_dead", false));
+        links.add(link);
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = 999;
         paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох. Не ждите пощады!");
         links = new ArrayList<>();
-        links.add(new Link("Трусливо сбежать", 1));
+        links.add(new Link("Трусливо сбежать", 1, new Item("Mayline_laugh", "Mayline_laugh", false)));
         paragraph.setLinks(links);
-        enemy = new Enemy("Майлин", "Mayline", 1000, 12, 25);
+        enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
         paragraph.setEnemy(enemy);
         paragraph.setCombat(true);
         allParagraphs.put(id, paragraph);
@@ -52,7 +61,7 @@ public class DummyLoader extends Loader {
         id = 1000;
         paragraph = new Paragraph(id, "Победа! Теперь можно никуда не ходить.");
         links = new ArrayList<>();
-        links.add(new Link("Начать заново", 1));
+        links.add(new Link("Начать заново", 1, new Item("Mayline_dead", "Mayline_dead", false)));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 

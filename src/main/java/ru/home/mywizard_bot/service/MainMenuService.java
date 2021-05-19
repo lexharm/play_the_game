@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
@@ -19,14 +20,19 @@ import java.util.List;
  */
 @Service
 public class MainMenuService {
+    //private UserProfileData profileData;
 
-    public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph) {
-        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph);
+    /*public MainMenuService(UserProfileData profileData) {
+        this.profileData = profileData;
+    }*/
+
+    public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData) {
+        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData);
         final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, paragraph.getText(), replyKeyboardMarkup);
         return mainMenuMessage;
     }
 
-    private ReplyKeyboardMarkup getMainMenuKeyboard(Paragraph paragraph) {
+    private ReplyKeyboardMarkup getMainMenuKeyboard(Paragraph paragraph, UserProfileData profileData) {
 
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -38,9 +44,11 @@ public class MainMenuService {
         List<Link> links = paragraph.getLinks();
 
         for (Link link : links) {
-            KeyboardRow row = new KeyboardRow();
-            row.add(new KeyboardButton(link.getText()));
-            keyboard.add(row);
+            if (link.test(profileData)) {
+                KeyboardRow row = new KeyboardRow();
+                row.add(new KeyboardButton(link.getText()));
+                keyboard.add(row);
+            }
         }
 
         KeyboardRow row1 = new KeyboardRow();

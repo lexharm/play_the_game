@@ -72,6 +72,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
             for (Link link : links) {
                 if (usersAnswer.equals(link.getText())){
                     newParagraph = story.getParagraph(link);
+                    link.reward(profileData);
                     if (newParagraph.isCombat()) {
                         userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
                         profileData.setEnemy(newParagraph.getEnemy());
@@ -88,8 +89,10 @@ public class PlayScenarioHandler implements InputMessageHandler {
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
         }*/
 
-        if (currentParagraph != newParagraph.getId() || currentParagraph == 1) {
-            replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph);
+        if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
+            replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, newParagraph.getText(), newParagraph, newParagraph.getEnemy(), profileData.getStrength());
+        } else {
+            replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData);
         }
         /*replyToUser = messagesService.getReplyMessage(chatId, newParagraph.getText());
         replyToUser.setReplyMarkup(getInlineMessageButtons(newParagraph));*/
