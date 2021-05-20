@@ -54,9 +54,6 @@ public class PlayScenarioHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
-        if (profileData.getStrength() <= 0) {
-            profileData.setStrength(10);
-        }
         int currentParagraph = profileData.getCurrentParagraph();
         if (currentParagraph == 0)
             currentParagraph = 1;
@@ -66,13 +63,14 @@ public class PlayScenarioHandler implements InputMessageHandler {
         SendMessage replyToUser = null;
 
         Paragraph newParagraph = story.getParagraph(currentParagraph);
+
         if (usersAnswer != null) {
             Paragraph paragraph = story.getParagraph(currentParagraph);
             List<Link> links = paragraph.getLinks();
             for (Link link : links) {
                 if (usersAnswer.equals(link.getText())){
                     newParagraph = story.getParagraph(link);
-                    link.reward(profileData);
+                    link.engageFeatures(profileData);
                     if (newParagraph.isCombat()) {
                         userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
                         profileData.setEnemy(newParagraph.getEnemy());
@@ -84,10 +82,8 @@ public class PlayScenarioHandler implements InputMessageHandler {
             }
         }
 
-        /*if (botState.equals(BotState.PLAY_SCENARIO)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askName");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
-        }*/
+        newParagraph.engageFeatures(profileData);
+        userDataCache.saveUserProfileData(userId, profileData);
 
         if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
             replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, newParagraph.getText(), newParagraph, newParagraph.getEnemy(), profileData.getStrength());

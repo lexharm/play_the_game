@@ -6,9 +6,7 @@ import lombok.experimental.FieldDefaults;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +26,7 @@ public class UserProfileData {
 
     int currentParagraph = 1;
     int enemyStrength;
-    int Strength = 10;
+    int strength = 999;
     int dexterity = 12;
     int damage = 100;
     Enemy enemy;
@@ -53,5 +51,14 @@ public class UserProfileData {
                 checks.put(item.getId(), 1);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "UserProfileData{" +
+                "strength=" + strength +
+                ", inventory=" + inventory +
+                ", checks=" + checks +
+                '}';
     }
 }

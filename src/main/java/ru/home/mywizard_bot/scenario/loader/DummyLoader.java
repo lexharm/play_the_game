@@ -7,6 +7,8 @@ import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.scenario.checks.EventCheck;
+import ru.home.mywizard_bot.scenario.features.GiveItem;
+import ru.home.mywizard_bot.scenario.features.SetPlayerStrength;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ public class DummyLoader extends Loader {
                 "деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
+        paragraph.addFeature(new SetPlayerStrength(10));
+        paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));
         links = new ArrayList<>();
         links.add(new Link("На северо-восток", 89, new EventCheck("Mayline_dead")));
         links.add(new Link("На юго-восток", 230));
@@ -51,7 +55,7 @@ public class DummyLoader extends Loader {
         id = 999;
         paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох. Не ждите пощады!");
         links = new ArrayList<>();
-        links.add(new Link("Трусливо сбежать", 1, new Item("Mayline_laugh", "Mayline_laugh", false)));
+        links.add(new Link("Трусливо сбежать", 1, new GiveItem(new Item("Mayline_laugh", "Mayline_laugh", false))));
         paragraph.setLinks(links);
         enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
         paragraph.setEnemy(enemy);
@@ -61,7 +65,7 @@ public class DummyLoader extends Loader {
         id = 1000;
         paragraph = new Paragraph(id, "Победа! Теперь можно никуда не ходить.");
         links = new ArrayList<>();
-        links.add(new Link("Начать заново", 1, new Item("Mayline_dead", "Mayline_dead", false)));
+        links.add(new Link("Начать заново", 1, new GiveItem(new Item("Mayline_dead", "Mayline_dead", false))));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
@@ -90,11 +94,13 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = 230;
-        paragraph = new Paragraph(id, "Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
+        paragraph = new Paragraph(id, "ВНЕЗАПНО вы находите монету с изображением профиля Императора! Это к удаче!" +
+                " Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
                 "показаться в королевском дворце в Элгариоле. С непривычки ноги вязнут в песке, пот заливает глаза, " +
                 "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
                 "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется. Через полчаса становится " +
                 "понятно, что это караван верблюдов, неспешно двигающийся с юга наперерез вам. Ваше действие?");
+        paragraph.addFeature(new GiveItem(new Item("Coin", "Монета с профилем Императора")));
         links = new ArrayList<>();
         links.add(new Link("Свернуть на север, чтобы избежать встречи с ним", 481));
         links.add(new Link("Идти дальше", 96));

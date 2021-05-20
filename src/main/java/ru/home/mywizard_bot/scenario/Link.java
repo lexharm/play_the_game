@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.scenario.checks.Check;
+import ru.home.mywizard_bot.scenario.features.Feature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class Link {
     String text;
     int id;
     List<Check> checks = new ArrayList<>();
+    List<Feature> features = new ArrayList<>();
     Item item;
 
     public Link(String text, int id) {
@@ -26,10 +28,10 @@ public class Link {
         checks.add(check);
     }
 
-    public Link(String text, int id, Item item) {
+    public Link(String text, int id, Feature feature) {
         this.text = text;
         this.id = id;
-        this.item = item;
+        features.add(feature);
     }
 
     public boolean test(UserProfileData profileData) {
@@ -45,9 +47,9 @@ public class Link {
         checks.add(check);
     }
 
-    public void reward(UserProfileData profileData) {
-        if (item != null) {
-            profileData.addItem(item);
+    public void engageFeatures(UserProfileData profileData) {
+        for (Feature feature : features) {
+            feature.engage(profileData);
         }
     }
 }

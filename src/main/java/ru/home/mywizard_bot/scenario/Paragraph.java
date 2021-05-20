@@ -3,7 +3,10 @@ package ru.home.mywizard_bot.scenario;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.scenario.features.Feature;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,6 +17,7 @@ public class Paragraph {
     private String imagePath;
     private boolean combat;
     private Enemy enemy;
+    private List<Feature> features = new ArrayList<>();
 
     public Paragraph(int id, String text) {
         this.id = id;
@@ -26,5 +30,15 @@ public class Paragraph {
         this.text = text;
         this.combat = isCombat;
         this.enemy = enemy;
+    }
+
+    public void engageFeatures(UserProfileData profileData) {
+        for (Feature feature : features) {
+            feature.engage(profileData);
+        }
+    }
+
+    public void addFeature(Feature feature) {
+        features.add(feature);
     }
 }

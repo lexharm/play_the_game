@@ -55,9 +55,9 @@ public class TelegramFacade {
             case "/start":
                 botState = BotState.PLAY_SCENARIO;
                 break;
-            /*case "Листок путешественника":
+            case "Листок путешественника":
                 botState = BotState.INVENTORY;
-                break;*/
+                break;
             case "Меню":
                 botState = BotState.SHOW_MAIN_MENU;
                 break;
