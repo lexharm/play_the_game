@@ -9,10 +9,14 @@ import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.InputMessageHandler;
 import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
+import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.scenario.NoLinkException;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.service.MainMenuService;
 import ru.home.mywizard_bot.service.ReplyMessagesService;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -38,20 +42,41 @@ public class MainMenuHandler implements InputMessageHandler {
         log.info("MainMenuHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
         String menuButton = message.getText();
-        if (menuButton.equals("Назад")) {
-            int userId = message.getFrom().getId();
-            long chatId = message.getChatId();
-            UserProfileData profileData = userDataCache.getUserProfileData(userId);
-            Paragraph newParagraph = story.getParagraph(profileData.getCurrentParagraph());
-            if (newParagraph.isCombat()) {
-                userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
-                return mainMenuService.getMainMenuMessageForCombat(chatId, "", newParagraph, profileData.getEnemy(), profileData.getStrength());
-            } else {
+        int userId = message.getFrom().getId();
+        long chatId = message.getChatId();
+        UserProfileData profileData = userDataCache.getUserProfileData(userId);
+
+        int currentMenu = profileData.getCurrentMenu();
+        int currentParagraph = profileData.getCurrentParagraph();
+
+        Paragraph newParagraph = story.getParagraph(currentMenu);
+
+        switch (menuButton)  {
+            case "Вернуться в игру":
+                newParagraph = story.getParagraph(currentParagraph);
                 userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                return mainMenuService.getMainMenuMessage(message.getChatId(), newParagraph, profileData);
-            }
+                break;
+            default:
+                Paragraph paragraph = story.getParagraph(currentMenu);
+                List<Link> links = paragraph.getLinks();
+                for (Link link : links) {
+                    if (menuButton.equals(link.getText())){
+                        try {
+                            newParagraph = story.getParagraph(link);
+                        } catch (NoLinkException e) {
+                            newParagraph = story.getParagraph(-10000);
+                        }
+                        if (newParagraph.getId() == 0 ) {
+                            userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
+                        }
+                        profileData.setCurrentMenu(newParagraph.getId());
+                        break;
+                    }
+                }
+                break;
         }
-        return mainMenuService.getMainMenuMessage(message.getChatId(), messagesService.getReplyText("reply.showMainMenu"));
+        userDataCache.saveUserProfileData(userId, profileData);
+        return mainMenuService.getMainMenuMessage(message.getChatId(), newParagraph, profileData);
     }
 
     @Override

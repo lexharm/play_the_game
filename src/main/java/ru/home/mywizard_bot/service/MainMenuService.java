@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Link;
@@ -20,11 +21,6 @@ import java.util.List;
  */
 @Service
 public class MainMenuService {
-    //private UserProfileData profileData;
-
-    /*public MainMenuService(UserProfileData profileData) {
-        this.profileData = profileData;
-    }*/
 
     public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData) {
         final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData);
@@ -52,14 +48,19 @@ public class MainMenuService {
         }
 
         KeyboardRow row1 = new KeyboardRow();
-//        KeyboardRow row2 = new KeyboardRow();
-//        KeyboardRow row3 = new KeyboardRow();
-        row1.add(new KeyboardButton("Листок путешественника"));
-        row1.add(new KeyboardButton("Меню"));
-//        row3.add(new KeyboardButton("Помощь"));
-        keyboard.add(row1);
-//        keyboard.add(row2);
-//        keyboard.add(row3);
+        switch (profileData.getBotState()) {
+            case PLAY_SCENARIO :
+                row1.add(new KeyboardButton("Листок путешественника"));
+                row1.add(new KeyboardButton("Меню"));
+                keyboard.add(row1);
+                break;
+            case COMBAT:
+                row1.add(new KeyboardButton("Меню"));
+                keyboard.add(row1);
+                break;
+            default:
+                break;
+        }
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }

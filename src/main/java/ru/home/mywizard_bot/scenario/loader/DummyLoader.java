@@ -23,11 +23,77 @@ public class DummyLoader extends Loader {
         Enemy enemy;
         Check check;
 
+        id = -10000;
+        paragraph = new Paragraph(id, "Раздел отсутствует :(");
+        links = new ArrayList<>();
+        links.add(new Link("Вернуться в главное меню", 10000));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = 10000;
+        paragraph = new Paragraph(id, "Главное меню");
+        links = new ArrayList<>();
+        links.add(new Link("Вернуться в игру", 10001));
+        links.add(new Link("Новая игра", 10002));
+        links.add(new Link("Руководство", 10003));
+        links.add(new Link("Статистика", 10004));
+        links.add(new Link("Подробнее о боте", 10005));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = 10002;
+        paragraph = new Paragraph(id, "Вы уверены?");
+        links = new ArrayList<>();
+        links.add(new Link("Да", 0));
+        links.add(new Link("Назад", 10000));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = 10003;
+        paragraph = new Paragraph(id, "Выберите интересующую тему");
+        links = new ArrayList<>();
+        links.add(new Link("Правила игры", 10008));
+        links.add(new Link("Ловкость и сила", 10009));
+        links.add(new Link("Удача", 10010));
+        links.add(new Link("Битвы", 10011));
+        links.add(new Link("Ранения", 10012));
+        links.add(new Link("Сила мысли", 10013));
+        links.add(new Link("Если вы проголодались", 10014));
+        links.add(new Link("Листок путешественника", 10015));
+        links.add(new Link("Назад", 10000));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = 10004;
+        paragraph = new Paragraph(id, "Выберите раздел");
+        links = new ArrayList<>();
+        links.add(new Link("Персональная статистика", 10016));
+        links.add(new Link("Глобальная статистика", 10017));
+        links.add(new Link("Назад", 10000));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = 10005;
+        paragraph = new Paragraph(id, "Выберите раздел");
+        links = new ArrayList<>();
+        links.add(new Link("О сценарии", 10018));
+        links.add(new Link("О разработчиках", 10019));
+        links.add(new Link("Назад", 10000));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
         id = -1;
         paragraph = new Paragraph(id, "Внезапно из-за спазма в горле вы давитесь собственной слюной и умираете " +
                 "так и не достигнув цели своего путешествия.");
         links = new ArrayList<>();
         links.add(new Link("Начать заново", 1));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = 0;
+        paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
+        links = new ArrayList<>();
+        links.add(new Link("EX ANIMO, FRATER!", 1));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 

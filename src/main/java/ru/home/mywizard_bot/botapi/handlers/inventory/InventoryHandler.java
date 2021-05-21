@@ -65,6 +65,8 @@ public class InventoryHandler implements InputMessageHandler {
         } else {
             newParagraph = new Paragraph(1000000, profileData.toString());
             List<Link> links = new ArrayList<>();
+            links.add(new Link("Восстановить здоровье едой", 1000000));
+            links.add(new Link("Телепатические способности", 1000000));
             links.add(new Link("Назад", currentParagraph));
             newParagraph.setLinks(links);
         }

@@ -11,6 +11,7 @@ import ru.home.mywizard_bot.botapi.InputMessageHandler;
 import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
 import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.scenario.NoLinkException;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.service.MainMenuService;
@@ -63,23 +64,40 @@ public class PlayScenarioHandler implements InputMessageHandler {
         SendMessage replyToUser = null;
 
         Paragraph newParagraph = story.getParagraph(currentParagraph);
+        List<Link> links = new ArrayList<>();
 
-        if (usersAnswer != null) {
-            Paragraph paragraph = story.getParagraph(currentParagraph);
-            List<Link> links = paragraph.getLinks();
-            for (Link link : links) {
-                if (usersAnswer.equals(link.getText())){
-                    newParagraph = story.getParagraph(link);
-                    link.engageFeatures(profileData);
-                    if (newParagraph.isCombat()) {
-                        userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
-                        profileData.setEnemy(newParagraph.getEnemy());
+        switch (usersAnswer) {
+            case "Меню":
+                newParagraph = story.getParagraph(10000);
+                userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+                break;
+            case "Листок путешественника":
+                newParagraph = new Paragraph(1000000, profileData.toString());
+                links.add(new Link("Восстановить здоровье едой", 1000000));
+                links.add(new Link("Телепатические способности", 1000000));
+                links.add(new Link("Назад", currentParagraph));
+                userDataCache.setUsersCurrentBotState(userId, BotState.INVENTORY);
+                break;
+            default:
+                Paragraph paragraph = story.getParagraph(currentParagraph);
+                for (Link link : links) {
+                    if (usersAnswer.equals(link.getText())) {
+                        try {
+                            newParagraph = story.getParagraph(link);
+                        } catch (NoLinkException e) {
+                            newParagraph = story.getParagraph(currentParagraph);
+                        }
+                        link.engageFeatures(profileData);
+                        if (newParagraph.isCombat()) {
+                            userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
+                            profileData.setEnemy(newParagraph.getEnemy());
+                        }
+                        profileData.setCurrentParagraph(newParagraph.getId());
+                        userDataCache.saveUserProfileData(userId, profileData);
+                        break;
                     }
-                    profileData.setCurrentParagraph(newParagraph.getId());
-                    userDataCache.saveUserProfileData(userId, profileData);
-                    break;
                 }
-            }
+                break;
         }
 
         newParagraph.engageFeatures(profileData);

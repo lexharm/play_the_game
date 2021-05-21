@@ -27,7 +27,7 @@ public class UserDataCache implements DataCache {
     public BotState getUsersCurrentBotState(int userId) {
         BotState botState = usersBotStates.get(userId);
         if (botState == null) {
-            botState = BotState.PLAY_SCENARIO;
+            botState = BotState.SHOW_MAIN_MENU;
         }
         return botState;
     }
@@ -43,6 +43,7 @@ public class UserDataCache implements DataCache {
 
     @Override
     public void saveUserProfileData(int userId, UserProfileData userProfileData) {
+        userProfileData.setBotState(getUsersCurrentBotState(userId));
         usersProfileData.put(userId, userProfileData);
     }
 }

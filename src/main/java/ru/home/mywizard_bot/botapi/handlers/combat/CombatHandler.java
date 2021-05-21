@@ -63,7 +63,11 @@ public class CombatHandler implements InputMessageHandler {
             List<Link> links = paragraph.getLinks();
             for (Link link : links) {
                 if (usersAnswer.equals(link.getText())){
-                    newParagraph = story.getParagraph(link);
+                    try {
+                        newParagraph = story.getParagraph(link);
+                    } catch (NoLinkException e) {
+                        newParagraph = story.getParagraph(-1);
+                    }
                     link.engageFeatures(profileData);
                     if (newParagraph.isCombat()) {
                         userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);

@@ -28,12 +28,12 @@ public class Story {
         return paragraph;
     }
 
-    public Paragraph getParagraph(Link link) {
+    public Paragraph getParagraph(Link link) throws NoLinkException {
         Paragraph paragraph;
         if (allParagraphs.containsKey(link.id)) {
             paragraph = allParagraphs.get(link.id);
         } else {
-            paragraph = allParagraphs.get(-1);
+            throw new NoLinkException();
         }
         return paragraph;
     }

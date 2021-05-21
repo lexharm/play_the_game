@@ -53,14 +53,14 @@ public class TelegramFacade {
 
         switch (inputMsg) {
             case "/start":
-                botState = BotState.PLAY_SCENARIO;
+                botState = BotState.SHOW_MAIN_MENU;
                 break;
-            case "Листок путешественника":
+            /*case "Листок путешественника":
                 botState = BotState.INVENTORY;
                 break;
             case "Меню":
                 botState = BotState.SHOW_MAIN_MENU;
-                break;
+                break;*/
             default:
                 botState = userDataCache.getUsersCurrentBotState(userId);
                 break;

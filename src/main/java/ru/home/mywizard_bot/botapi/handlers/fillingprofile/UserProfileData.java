@@ -3,6 +3,7 @@ package ru.home.mywizard_bot.botapi.handlers.fillingprofile;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 
@@ -24,6 +25,8 @@ public class UserProfileData {
     int age;
     int number;
 
+    BotState botState;
+    int currentMenu = 10000;
     int currentParagraph = 1;
     int enemyStrength;
     int strength = 999;
