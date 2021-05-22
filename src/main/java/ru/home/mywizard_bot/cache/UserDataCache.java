@@ -21,6 +21,9 @@ public class UserDataCache implements DataCache {
     @Override
     public void setUsersCurrentBotState(int userId, BotState botState) {
         usersBotStates.put(userId, botState);
+        UserProfileData profileData = getUserProfileData(userId);
+        profileData.setBotState(botState);
+        saveUserProfileData(userId, profileData);
     }
 
     @Override
@@ -43,7 +46,6 @@ public class UserDataCache implements DataCache {
 
     @Override
     public void saveUserProfileData(int userId, UserProfileData userProfileData) {
-        userProfileData.setBotState(getUsersCurrentBotState(userId));
         usersProfileData.put(userId, userProfileData);
     }
 }

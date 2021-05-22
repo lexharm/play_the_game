@@ -13,9 +13,9 @@ import java.util.List;
 public class Paragraph {
     int id;
     String text;
-    private List<Link> links;
+    private List<Link> links = new ArrayList<>();
     private String imagePath;
-    private boolean combat;
+    private boolean combat = false;
     private Enemy enemy;
     private List<Feature> features = new ArrayList<>();
 

@@ -7,6 +7,8 @@ import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.scenario.checks.EventCheck;
+import ru.home.mywizard_bot.scenario.checks.GameAlreadyExists;
+import ru.home.mywizard_bot.scenario.features.EndGame;
 import ru.home.mywizard_bot.scenario.features.GiveItem;
 import ru.home.mywizard_bot.scenario.features.SetPlayerStrength;
 
@@ -30,10 +32,21 @@ public class DummyLoader extends Loader {
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
+        id = 9999;
+        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n" +
+                "Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
+        links = new ArrayList<>();
+        links.add(new Link("Руководство", 10003));
+        links.add(new Link("Новая игра", 10002));
+        links.add(new Link("Статистика", 10004));
+        links.add(new Link("Подробнее о боте", 10005));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
         id = 10000;
         paragraph = new Paragraph(id, "Главное меню");
         links = new ArrayList<>();
-        links.add(new Link("Вернуться в игру", 10001));
+        links.add(new Link("Вернуться в игру", 10001, new GameAlreadyExists()));
         links.add(new Link("Новая игра", 10002));
         links.add(new Link("Руководство", 10003));
         links.add(new Link("Статистика", 10004));
@@ -85,8 +98,10 @@ public class DummyLoader extends Loader {
         id = -1;
         paragraph = new Paragraph(id, "Внезапно из-за спазма в горле вы давитесь собственной слюной и умираете " +
                 "так и не достигнув цели своего путешествия.");
+        paragraph.addFeature(new EndGame());
         links = new ArrayList<>();
         links.add(new Link("Начать заново", 1));
+        links.add(new Link("Выйти в главное меню", 10000));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 

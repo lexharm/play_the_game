@@ -47,13 +47,12 @@ public class MainMenuHandler implements InputMessageHandler {
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
         int currentMenu = profileData.getCurrentMenu();
-        int currentParagraph = profileData.getCurrentParagraph();
 
         Paragraph newParagraph = story.getParagraph(currentMenu);
 
         switch (menuButton)  {
             case "Вернуться в игру":
-                newParagraph = story.getParagraph(currentParagraph);
+                newParagraph = story.getParagraph(profileData.getCurrentParagraph());
                 userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
                 break;
             default:
@@ -66,10 +65,15 @@ public class MainMenuHandler implements InputMessageHandler {
                         } catch (NoLinkException e) {
                             newParagraph = story.getParagraph(-10000);
                         }
-                        if (newParagraph.getId() == 0 ) {
-                            userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
+                        switch (newParagraph.getId()) {
+                            case 1 :
+                                userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
+                                profileData.setCurrentParagraph(1);
+                                break;
+                            default:
+                                profileData.setCurrentMenu(newParagraph.getId());
+                                break;
                         }
-                        profileData.setCurrentMenu(newParagraph.getId());
                         break;
                     }
                 }

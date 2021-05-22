@@ -26,8 +26,8 @@ public class UserProfileData {
     int number;
 
     BotState botState;
-    int currentMenu = 10000;
-    int currentParagraph = 1;
+    int currentMenu = 9999;
+    Integer currentParagraph;
     int enemyStrength;
     int strength = 999;
     int dexterity = 12;

@@ -56,10 +56,6 @@ public class PlayScenarioHandler implements InputMessageHandler {
         long chatId = inputMsg.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
         int currentParagraph = profileData.getCurrentParagraph();
-        if (currentParagraph == 0)
-            currentParagraph = 1;
-
-        BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
         SendMessage replyToUser = null;
 
@@ -76,16 +72,18 @@ public class PlayScenarioHandler implements InputMessageHandler {
                 links.add(new Link("Восстановить здоровье едой", 1000000));
                 links.add(new Link("Телепатические способности", 1000000));
                 links.add(new Link("Назад", currentParagraph));
+                newParagraph.setLinks(links);
                 userDataCache.setUsersCurrentBotState(userId, BotState.INVENTORY);
                 break;
             default:
                 Paragraph paragraph = story.getParagraph(currentParagraph);
-                for (Link link : links) {
+                for (Link link : paragraph.getLinks()) {
                     if (usersAnswer.equals(link.getText())) {
                         try {
                             newParagraph = story.getParagraph(link);
                         } catch (NoLinkException e) {
-                            newParagraph = story.getParagraph(currentParagraph);
+                            newParagraph = story.getParagraph(-1);
+                            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
                         }
                         link.engageFeatures(profileData);
                         if (newParagraph.isCombat()) {
@@ -108,9 +106,6 @@ public class PlayScenarioHandler implements InputMessageHandler {
         } else {
             replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData);
         }
-        /*replyToUser = messagesService.getReplyMessage(chatId, newParagraph.getText());
-        replyToUser.setReplyMarkup(getInlineMessageButtons(newParagraph));*/
-
         return replyToUser;
     }
 

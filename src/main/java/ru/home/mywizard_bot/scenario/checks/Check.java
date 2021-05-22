@@ -6,6 +6,8 @@ public abstract class Check {
     String value;
     boolean presence;
 
+    public Check() {}
+
     public Check(String value) {
         this.value = value;
         presence = true;
