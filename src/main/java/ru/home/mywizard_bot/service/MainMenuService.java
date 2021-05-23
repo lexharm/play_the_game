@@ -10,6 +10,7 @@ import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
+import ru.home.mywizard_bot.scenario.Story;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +23,13 @@ import java.util.List;
 @Service
 public class MainMenuService {
 
-    public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData) {
-        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData);
+    public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story) {
+        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData, story);
         final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, paragraph.getText(), replyKeyboardMarkup);
         return mainMenuMessage;
     }
 
-    private ReplyKeyboardMarkup getMainMenuKeyboard(Paragraph paragraph, UserProfileData profileData) {
+    private ReplyKeyboardMarkup getMainMenuKeyboard(Paragraph paragraph, UserProfileData profileData, Story story) {
 
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -38,7 +39,6 @@ public class MainMenuService {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         List<Link> links = paragraph.getLinks();
-
         for (Link link : links) {
             if (link.test(profileData)) {
                 KeyboardRow row = new KeyboardRow();
@@ -48,19 +48,10 @@ public class MainMenuService {
         }
 
         KeyboardRow row1 = new KeyboardRow();
-        switch (profileData.getBotState()) {
-            case PLAY_SCENARIO :
-                row1.add(new KeyboardButton("Листок путешественника"));
-                row1.add(new KeyboardButton("Меню"));
-                keyboard.add(row1);
-                break;
-            case COMBAT:
-                row1.add(new KeyboardButton("Меню"));
-                keyboard.add(row1);
-                break;
-            default:
-                break;
+        for (Link link : story.getExtraLinks().get(profileData.getBotState())) {
+            row1.add(new KeyboardButton(link.getText()));
         }
+        keyboard.add(row1);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }

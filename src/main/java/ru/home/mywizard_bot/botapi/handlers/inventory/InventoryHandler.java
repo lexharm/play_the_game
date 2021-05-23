@@ -71,7 +71,7 @@ public class InventoryHandler implements InputMessageHandler {
             newParagraph.setLinks(links);
         }
 
-        replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData);
+        replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
 
         return replyToUser;
     }

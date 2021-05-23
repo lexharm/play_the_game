@@ -1,6 +1,7 @@
 package ru.home.mywizard_bot.scenario.loader;
 
 import org.springframework.stereotype.Component;
+import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Link;
@@ -11,6 +12,7 @@ import ru.home.mywizard_bot.scenario.checks.GameAlreadyExists;
 import ru.home.mywizard_bot.scenario.features.EndGame;
 import ru.home.mywizard_bot.scenario.features.GiveItem;
 import ru.home.mywizard_bot.scenario.features.SetPlayerStrength;
+import ru.home.mywizard_bot.scenario.features.SetStateMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,27 @@ import java.util.List;
 @Component
 public class DummyLoader extends Loader {
     @Override
-    public void load() {
+    public void loadExtraLinks() {
+        List<Link> links;
+
+        //Extra menu buttons for SHOW_MAIN_MENU
+        links = new ArrayList<>();
+        extraLinks.put(BotState.SHOW_MAIN_MENU, links);
+
+        //Extra menu buttons for PLAY_SCENARIO
+        links = new ArrayList<>();
+        links.add(new Link("Листок путешественника", 9000));
+        links.add(new Link("Меню", 10000, new SetStateMenu()));
+        extraLinks.put(BotState.PLAY_SCENARIO, links);
+
+        //Extra menu buttons for COMBAT
+        links = new ArrayList<>();
+        links.add(new Link("Меню", 10000, new SetStateMenu()));
+        extraLinks.put(BotState.COMBAT, links);
+    }
+
+    @Override
+    public void loadParagraphs() {
         Paragraph paragraph;
         List<Link> links;
         int id;
@@ -29,6 +51,16 @@ public class DummyLoader extends Loader {
         paragraph = new Paragraph(id, "Раздел отсутствует :(");
         links = new ArrayList<>();
         links.add(new Link("Вернуться в главное меню", 10000));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        // Inventory
+        id = 9000;
+        paragraph = new Paragraph(id, "");
+        links = new ArrayList<>();
+        links.add(new Link("Восстановить здоровье едой", 9000));
+        links.add(new Link("Описание телепатических способностей", 9000));
+        links.add(new Link("Вернуться к игре", 9000));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 

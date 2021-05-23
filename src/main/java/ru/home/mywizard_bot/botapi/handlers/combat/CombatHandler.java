@@ -126,7 +126,7 @@ public class CombatHandler implements InputMessageHandler {
             if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
                 replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, replyText, newParagraph, enemy, playerStrength);
             } else {
-                replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData);
+                replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
             }
         /*if (botState.equals(BotState.PLAY_SCENARIO)) {
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askName");

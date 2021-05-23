@@ -61,8 +61,30 @@ public class PlayScenarioHandler implements InputMessageHandler {
 
         Paragraph newParagraph = story.getParagraph(currentParagraph);
         List<Link> links = new ArrayList<>();
+        links.addAll(story.getExtraLinks().get(profileData.getBotState()));
+        Paragraph paragraph = story.getParagraph(currentParagraph);
+        links.addAll(paragraph.getLinks());
 
-        switch (usersAnswer) {
+        for (Link link : links) {
+            if (usersAnswer.equals(link.getText())) {
+                try {
+                    newParagraph = story.getParagraph(link);
+                } catch (NoLinkException e) {
+                    newParagraph = story.getParagraph(-1);
+                    userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+                }
+                link.engageFeatures(profileData);
+                if (newParagraph.isCombat()) {
+                    userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
+                    profileData.setEnemy(newParagraph.getEnemy());
+                }
+                profileData.setCurrentParagraph(newParagraph.getId());
+                userDataCache.saveUserProfileData(userId, profileData);
+                break;
+            }
+        }
+
+        /*switch (usersAnswer) {
             case "Меню":
                 newParagraph = story.getParagraph(10000);
                 userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
@@ -96,7 +118,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
                     }
                 }
                 break;
-        }
+        }*/
 
         newParagraph.engageFeatures(profileData);
         userDataCache.saveUserProfileData(userId, profileData);
@@ -104,7 +126,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
         if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
             replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, newParagraph.getText(), newParagraph, newParagraph.getEnemy(), profileData.getStrength());
         } else {
-            replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData);
+            replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
         }
         return replyToUser;
     }

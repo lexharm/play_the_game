@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Paragraph {
+public class Paragraph implements Cloneable {
     int id;
     String text;
     private List<Link> links = new ArrayList<>();
