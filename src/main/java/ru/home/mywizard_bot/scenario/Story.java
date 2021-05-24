@@ -3,6 +3,8 @@ package ru.home.mywizard_bot.scenario;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.loader.Loader;
@@ -18,7 +20,7 @@ public class Story {
     private final Map<Integer, Paragraph> allParagraphs;
     private final Map<BotState, List<Link>> extraLinks;
 
-    public Story(Loader loader) {
+    public Story(@Qualifier("WorkingLoader") Loader loader) {
         allParagraphs = loader.getAllParagraphs();
         extraLinks = loader.getExtraLinks();
     }
