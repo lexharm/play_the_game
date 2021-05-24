@@ -60,10 +60,11 @@ public class PlayScenarioHandler implements InputMessageHandler {
         SendMessage replyToUser = null;
 
         Paragraph newParagraph = story.getParagraph(currentParagraph);
-        List<Link> links = new ArrayList<>();
-        links.addAll(story.getExtraLinks().get(profileData.getBotState()));
+
         Paragraph paragraph = story.getParagraph(currentParagraph);
+        List<Link> links = new ArrayList<>();
         links.addAll(paragraph.getLinks());
+        links.addAll(story.getExtraLinks().get(profileData.getBotState()));
 
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())) {
@@ -78,47 +79,13 @@ public class PlayScenarioHandler implements InputMessageHandler {
                     userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
                     profileData.setEnemy(newParagraph.getEnemy());
                 }
-                profileData.setCurrentParagraph(newParagraph.getId());
+                if (profileData.getBotState() == BotState.PLAY_SCENARIO) {
+                    profileData.setCurrentParagraph(newParagraph.getId());
+                }
                 userDataCache.saveUserProfileData(userId, profileData);
                 break;
             }
         }
-
-        /*switch (usersAnswer) {
-            case "Меню":
-                newParagraph = story.getParagraph(10000);
-                userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
-                break;
-            case "Листок путешественника":
-                newParagraph = new Paragraph(1000000, profileData.toString());
-                links.add(new Link("Восстановить здоровье едой", 1000000));
-                links.add(new Link("Телепатические способности", 1000000));
-                links.add(new Link("Назад", currentParagraph));
-                newParagraph.setLinks(links);
-                userDataCache.setUsersCurrentBotState(userId, BotState.INVENTORY);
-                break;
-            default:
-                Paragraph paragraph = story.getParagraph(currentParagraph);
-                for (Link link : paragraph.getLinks()) {
-                    if (usersAnswer.equals(link.getText())) {
-                        try {
-                            newParagraph = story.getParagraph(link);
-                        } catch (NoLinkException e) {
-                            newParagraph = story.getParagraph(-1);
-                            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
-                        }
-                        link.engageFeatures(profileData);
-                        if (newParagraph.isCombat()) {
-                            userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
-                            profileData.setEnemy(newParagraph.getEnemy());
-                        }
-                        profileData.setCurrentParagraph(newParagraph.getId());
-                        userDataCache.saveUserProfileData(userId, profileData);
-                        break;
-                    }
-                }
-                break;
-        }*/
 
         newParagraph.engageFeatures(profileData);
         userDataCache.saveUserProfileData(userId, profileData);
