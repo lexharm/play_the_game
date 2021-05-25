@@ -19,7 +19,5 @@ public enum BotState {
 
     SHOW_MAIN_MENU,
     PLAY_SCENARIO,
-    COMBAT,
-    INVENTORY,
-    END_GAME;
+    COMBAT;
 }

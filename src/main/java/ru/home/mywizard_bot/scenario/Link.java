@@ -34,6 +34,11 @@ public class Link {
         features.add(feature);
     }
 
+    public Link(String text, int id, Check check, Feature feature) {
+        this(text, id, check);
+        addFeature(feature);
+    }
+
     public boolean test(UserProfileData profileData) {
         for (Check check : checks) {
             if (!check.test(profileData)) {
@@ -45,6 +50,10 @@ public class Link {
 
     public void addCheck(Check check) {
         checks.add(check);
+    }
+
+    public void addFeature(Feature feature) {
+        features.add(feature);
     }
 
     public void engageFeatures(UserProfileData profileData) {

@@ -59,7 +59,7 @@ public class FillingProfileHandler implements InputMessageHandler {
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
         }
 
-        if (botState.equals(BotState.ASK_AGE)) {
+        /*if (botState.equals(BotState.ASK_AGE)) {
             profileData.setName(usersAnswer);
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_GENDER);
@@ -99,7 +99,7 @@ public class FillingProfileHandler implements InputMessageHandler {
             profileData.setSong(usersAnswer);
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
             replyToUser = messagesService.getReplyMessage(chatId, "reply.profileFilled");
-        }
+        }*/
 
         userDataCache.saveUserProfileData(userId, profileData);
 

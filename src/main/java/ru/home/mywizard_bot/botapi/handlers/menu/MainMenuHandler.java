@@ -50,27 +50,26 @@ public class MainMenuHandler implements InputMessageHandler {
 
         Paragraph newParagraph = story.getParagraph(currentMenu);
 
-        if ("Вернуться в игру".equals(menuButton)) {
-            newParagraph = story.getParagraph(profileData.getCurrentParagraph());
-            userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-        } else {
-            Paragraph paragraph = story.getParagraph(currentMenu);
-            List<Link> links = paragraph.getLinks();
-            for (Link link : links) {
-                if (menuButton.equals(link.getText())) {
-                    try {
-                        newParagraph = story.getParagraph(link);
-                    } catch (NoLinkException e) {
-                        newParagraph = story.getParagraph(-10000);
-                    }
-                    if (newParagraph.getId() == 1) {
-                        userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                        profileData.setCurrentParagraph(1);
-                    } else {
-                        profileData.setCurrentMenu(newParagraph.getId());
-                    }
-                    break;
+        Paragraph paragraph = story.getParagraph(currentMenu);
+        List<Link> links = paragraph.getLinks();
+        for (Link link : links) {
+            if (menuButton.equals(link.getText())) {
+                try {
+                    newParagraph = story.getParagraph(link);
+                } catch (NoLinkException e) {
+                    newParagraph = story.getParagraph(-10000);
                 }
+                link.engageFeatures(profileData);
+                switch (profileData.getBotState()) {
+                    case PLAY_SCENARIO:
+                    case COMBAT:
+                        newParagraph = story.getParagraph(profileData.getCurrentParagraph());
+                        break;
+                    default:
+                        profileData.setCurrentMenu(newParagraph.getId());
+                        break;
+                }
+                break;
             }
         }
         userDataCache.saveUserProfileData(userId, profileData);

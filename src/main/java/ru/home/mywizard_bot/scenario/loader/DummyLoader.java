@@ -9,10 +9,7 @@ import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.scenario.checks.EventCheck;
 import ru.home.mywizard_bot.scenario.checks.GameAlreadyExists;
-import ru.home.mywizard_bot.scenario.features.EndGame;
-import ru.home.mywizard_bot.scenario.features.GiveItem;
-import ru.home.mywizard_bot.scenario.features.SetPlayerStrength;
-import ru.home.mywizard_bot.scenario.features.SetStateMenu;
+import ru.home.mywizard_bot.scenario.features.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +26,7 @@ public class DummyLoader extends Loader {
 
         //Extra menu buttons for PLAY_SCENARIO
         links = new ArrayList<>();
-        links.add(new Link("Листок путешественника", 9000));
+        links.add(new Link("Листок путешественника", 9000, new SetStateMenu()));
         links.add(new Link("Меню", 10000, new SetStateMenu()));
         extraLinks.put(BotState.PLAY_SCENARIO, links);
 
@@ -60,7 +57,7 @@ public class DummyLoader extends Loader {
         links = new ArrayList<>();
         links.add(new Link("Восстановить здоровье едой", 9000));
         links.add(new Link("Описание телепатических способностей", 9000));
-        links.add(new Link("Вернуться к игре", 9000));
+        links.add(new Link("Вернуться в игру", 9000, new ReturnToGame()));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
@@ -78,7 +75,7 @@ public class DummyLoader extends Loader {
         id = 10000;
         paragraph = new Paragraph(id, "Главное меню");
         links = new ArrayList<>();
-        links.add(new Link("Вернуться в игру", 10001, new GameAlreadyExists()));
+        links.add(new Link("Вернуться в игру", 10001, new GameAlreadyExists(), new ReturnToGame()));
         links.add(new Link("Новая игра", 10002));
         links.add(new Link("Руководство", 10003));
         links.add(new Link("Статистика", 10004));
@@ -140,7 +137,7 @@ public class DummyLoader extends Loader {
         id = 0;
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
         links = new ArrayList<>();
-        links.add(new Link("EX ANIMO, FRATER!", 1));
+        links.add(new Link("EX ANIMO, FRATER!", 1, new ReturnToGame()));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
@@ -151,6 +148,7 @@ public class DummyLoader extends Loader {
                 "деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
+        paragraph.addFeature(new ReturnToGame());
         paragraph.addFeature(new SetPlayerStrength(10));
         paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));
         links = new ArrayList<>();

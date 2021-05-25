@@ -47,5 +47,6 @@ public class UserDataCache implements DataCache {
     @Override
     public void saveUserProfileData(int userId, UserProfileData userProfileData) {
         usersProfileData.put(userId, userProfileData);
+        usersBotStates.put(userId, userProfileData.getBotState());
     }
 }
