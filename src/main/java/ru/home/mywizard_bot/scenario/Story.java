@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
+import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.scenario.loader.Loader;
 
 import java.util.ArrayList;
@@ -17,31 +18,65 @@ import java.util.Map;
 @Component
 @Getter
 public class Story {
-    private final Map<Integer, Paragraph> allParagraphs;
+    private final Map<String, Paragraph> allParagraphs;
     private final Map<BotState, List<Link>> extraLinks;
+    @Value("${story.noLinkParagraph}")
+    private String noLinkParagraph;
+    @Value("${story.noStoryParagraph}")
+    private String noStoryParagraph;
+    @Value("${story.noMenuParagraph}")
+    private String noMenuParagraph;
 
     public Story(@Qualifier("WorkingLoader") Loader loader) {
         allParagraphs = loader.getAllParagraphs();
         extraLinks = loader.getExtraLinks();
     }
 
-    public Paragraph getParagraph(int id) {
+    public Paragraph getParagraph(String id, BotState botState) {
         Paragraph paragraph;
         if (allParagraphs.containsKey(id)) {
             paragraph = allParagraphs.get(id);
         } else {
-            paragraph = allParagraphs.get(-1);
+            if (botState == BotState.SHOW_MAIN_MENU)
+                paragraph = allParagraphs.get(noMenuParagraph);
+            else if (botState == BotState.PLAY_SCENARIO)
+                paragraph = allParagraphs.get(noStoryParagraph);
+            else
+                paragraph = allParagraphs.get(noLinkParagraph);
         }
         return paragraph;
     }
 
-    public Paragraph getParagraph(Link link) throws NoLinkException {
-        Paragraph paragraph;
-        if (allParagraphs.containsKey(link.id)) {
-            paragraph = allParagraphs.get(link.id);
-        } else {
-            throw new NoLinkException();
+    public Paragraph getMenuParagraph(Link link) {
+        return getParagraph(link.id, BotState.SHOW_MAIN_MENU);
+    }
+
+    public Paragraph getStoryParagraph(Link link) {
+        return getParagraph(link.id, BotState.PLAY_SCENARIO);
+    }
+
+    public Paragraph getCombatParagraph(Link link, Paragraph currentParagraph) {
+        String id = link.id;
+        Paragraph paragraph = null;
+        for (Link extraLink : extraLinks.get(BotState.COMBAT)) {
+            if (id.equals(extraLink.id)) {
+                paragraph = allParagraphs.getOrDefault(id, currentParagraph);
+            }
         }
+        if (paragraph == null)
+            paragraph = getStoryParagraph(link);
         return paragraph;
+    }
+
+    /*public Paragraph getParagraph(Link link) {
+        return getParagraph(link);
+    }*/
+
+    public List<Link> getExtraLinks(BotState botState) {
+        return extraLinks.get(botState);
+    }
+
+    public Paragraph getNoLinkParagraph() {
+        return allParagraphs.get(noLinkParagraph);
     }
 }

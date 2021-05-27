@@ -7,6 +7,5 @@ public class SetStateMenu implements Feature {
     @Override
     public void engage(UserProfileData profileData) {
         profileData.setBotState(BotState.SHOW_MAIN_MENU);
-        profileData.setCurrentMenu(10000);
     }
 }

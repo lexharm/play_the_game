@@ -52,42 +52,37 @@ public class CombatHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
-        int currentParagraph = profileData.getCurrentParagraph();
-        if (currentParagraph == 0)
-            currentParagraph = 999;
 
-        Paragraph newParagraph = null;
+        Paragraph currentParagraph = profileData.getCurrentParagraph();
+        List<Link> links = new ArrayList<>();
+        links.addAll(currentParagraph.getLinks());
+        links.addAll(story.getExtraLinks(BotState.COMBAT));
 
-        if (usersAnswer != null) {
-            Paragraph paragraph = story.getParagraph(currentParagraph);
-            List<Link> links = paragraph.getLinks();
-            for (Link link : links) {
-                if (usersAnswer.equals(link.getText())){
-                    try {
-                        newParagraph = story.getParagraph(link);
-                    } catch (NoLinkException e) {
-                        newParagraph = story.getParagraph(-1);
-                    }
-                    link.engageFeatures(profileData);
-                    if (newParagraph.isCombat()) {
-                        userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
-                        profileData.setEnemy(newParagraph.getEnemy());
-                    } else {
-                        userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                    }
-                    profileData.setCurrentParagraph(newParagraph.getId());
-                    userDataCache.saveUserProfileData(userId, profileData);
-                    break;
+        Paragraph newParagraph = currentParagraph;
+
+        Paragraph paragraph = currentParagraph;
+        for (Link link : links) {
+            if (usersAnswer.equals(link.getText())){
+                newParagraph = story.getCombatParagraph(link, currentParagraph);
+                link.engageFeatures(profileData);
+                if (profileData.getEnemy() == null) {
+                    profileData.setBotState(BotState.PLAY_SCENARIO);
+                    profileData.setCurrentParagraph(newParagraph);
                 }
+                break;
             }
         }
+        if (newParagraph != currentParagraph) {
+            newParagraph.engageFeatures(profileData);
+        }
+        userDataCache.saveUserProfileData(userId, profileData);
 
         SendMessage replyToUser = null;
         String replyText = "";
         Enemy enemy = profileData.getEnemy();
         int playerStrength = profileData.getStrength();
 
-        if (newParagraph == null) {
+        /*if (newParagraph == null) {
 
             int playerDamage = profileData.getDamage();
             int playerDexterity = profileData.getDexterity();
@@ -122,7 +117,7 @@ public class CombatHandler implements InputMessageHandler {
                 profileData.setCurrentParagraph(newParagraph.getId());
                 userDataCache.saveUserProfileData(userId, profileData);
             }
-        }
+        }*/
             if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
                 replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, replyText, newParagraph, enemy, playerStrength);
             } else {

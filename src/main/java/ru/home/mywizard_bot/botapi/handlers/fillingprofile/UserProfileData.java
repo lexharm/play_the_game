@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
+import ru.home.mywizard_bot.scenario.Paragraph;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +27,8 @@ public class UserProfileData {
     int number;
 
     BotState botState;
-    int currentMenu = 9999;
-    Integer currentParagraph = 1;
+    Paragraph currentMenu;
+    Paragraph currentParagraph;
     int enemyStrength;
     int strength = 999;
     int dexterity = 12;

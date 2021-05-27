@@ -10,6 +10,6 @@ public class StartNewGame implements Feature {
     private Integer firstParagraph;
     @Override
     public void engage(UserProfileData profileData) {
-        profileData.setCurrentParagraph(firstParagraph);
+        //profileData.setCurrentParagraph(firstParagraph);
     }
 }

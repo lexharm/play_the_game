@@ -12,29 +12,29 @@ import java.util.List;
 @Data
 public class Link {
     String text;
-    int id;
+    String id;
     List<Check> checks = new ArrayList<>();
     List<Feature> features = new ArrayList<>();
     Item item;
 
-    public Link(String text, int id) {
+    public Link(String text, String id) {
         this.text = text;
         this.id = id;
     }
 
-    public Link(String text, int id, Check check) {
+    public Link(String text, String id, Check check) {
         this.text = text;
         this.id = id;
         checks.add(check);
     }
 
-    public Link(String text, int id, Feature feature) {
+    public Link(String text, String id, Feature feature) {
         this.text = text;
         this.id = id;
         features.add(feature);
     }
 
-    public Link(String text, int id, Check check, Feature feature) {
+    public Link(String text, String id, Check check, Feature feature) {
         this(text, id, check);
         addFeature(feature);
     }

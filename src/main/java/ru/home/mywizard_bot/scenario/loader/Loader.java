@@ -13,10 +13,10 @@ import java.util.Map;
 
 @Component
 public abstract class Loader {
-    Map<Integer, Paragraph> allParagraphs = new HashMap<>();
+    Map<String, Paragraph> allParagraphs = new HashMap<>();
     Map<BotState, List<Link>> extraLinks = new HashMap<>();
 
-    public Map<Integer, Paragraph> getAllParagraphs() {
+    public Map<String, Paragraph> getAllParagraphs() {
         loadParagraphs();
         return allParagraphs;
     }
