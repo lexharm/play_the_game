@@ -62,7 +62,7 @@ public class DummyLoader extends Loader {
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
-        id = "9999";
+        id = "initialMenu";
         paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n" +
                 "Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
         links = new ArrayList<>();
@@ -138,7 +138,7 @@ public class DummyLoader extends Loader {
         id = "0";
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
         links = new ArrayList<>();
-        links.add(new Link("EX ANIMO, FRATER!", "1", new ReturnToGame()));
+        links.add(new Link("EX ANIMO, FRATER!", "1", new StartNewGame()));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 

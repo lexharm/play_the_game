@@ -17,20 +17,22 @@ public class Link {
     List<Feature> features = new ArrayList<>();
     Item item;
 
-    public Link(String text, String id) {
-        this.text = text;
+    public Link(String id) {
         this.id = id;
     }
 
-    public Link(String text, String id, Check check) {
+    public Link(String text, String id) {
+        this(id);
         this.text = text;
-        this.id = id;
+    }
+
+    public Link(String text, String id, Check check) {
+        this(text, id);
         checks.add(check);
     }
 
     public Link(String text, String id, Feature feature) {
-        this.text = text;
-        this.id = id;
+        this(text, id);
         features.add(feature);
     }
 

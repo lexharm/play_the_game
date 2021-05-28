@@ -3,10 +3,13 @@ package ru.home.mywizard_bot.botapi.handlers.fillingprofile;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Paragraph;
+import ru.home.mywizard_bot.scenario.Story;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,15 +33,19 @@ public class UserProfileData {
     Paragraph currentMenu;
     Paragraph currentParagraph;
     int enemyStrength;
-    int strength = 999;
-    int dexterity = 12;
-    int damage = 100;
+    int strength;
+    int dexterity;
+    int damage;
     Enemy enemy;
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
 
     public void setEnemy(Enemy enemy) {
         this.enemy = new Enemy(enemy.getName(), enemy.getId(), enemy.getDexterity(), enemy.getStrength(), enemy.getIntelligence());
+    }
+
+    public void clearEnemy() {
+        this.enemy = null;
     }
 
     public void addItem(Item item) {
@@ -64,5 +71,11 @@ public class UserProfileData {
                 ", inventory=" + inventory +
                 ", checks=" + checks +
                 '}';
+    }
+
+    public Paragraph getCurrentMenu(Story story) {
+        if (currentMenu == null)
+            currentMenu = story.getInitialMenuParagraph();
+        return currentMenu;
     }
 }

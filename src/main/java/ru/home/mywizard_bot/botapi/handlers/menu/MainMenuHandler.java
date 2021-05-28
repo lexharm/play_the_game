@@ -47,7 +47,7 @@ public class MainMenuHandler implements InputMessageHandler {
         long chatId = message.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
-        Paragraph currentMenu = profileData.getCurrentMenu();
+        Paragraph currentMenu = profileData.getCurrentMenu(story);
         List<Link> links = new ArrayList<>();
         links.addAll(currentMenu.getLinks());
         links.addAll(story.getExtraLinks(BotState.SHOW_MAIN_MENU));

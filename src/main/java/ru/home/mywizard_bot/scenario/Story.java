@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 @Getter
+@Component
 public class Story {
     private final Map<String, Paragraph> allParagraphs;
     private final Map<BotState, List<Link>> extraLinks;
@@ -26,6 +26,10 @@ public class Story {
     private String noStoryParagraph;
     @Value("${story.noMenuParagraph}")
     private String noMenuParagraph;
+    @Value("${story.initialMenuParagraph}")
+    private String initialMenuParagraph;
+    @Value("${story.initialStoryParagraph}")
+    private String initialStoryParagraph;
 
     public Story(@Qualifier("WorkingLoader") Loader loader) {
         allParagraphs = loader.getAllParagraphs();
@@ -78,5 +82,13 @@ public class Story {
 
     public Paragraph getNoLinkParagraph() {
         return allParagraphs.get(noLinkParagraph);
+    }
+
+    public Paragraph getInitialMenuParagraph() {
+        return getMenuParagraph(new Link(initialMenuParagraph));
+    }
+
+    public Paragraph getInitialStoryParagraph() {
+        return getStoryParagraph(new Link(initialStoryParagraph));
     }
 }
