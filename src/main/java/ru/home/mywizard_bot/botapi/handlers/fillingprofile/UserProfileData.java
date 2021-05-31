@@ -68,6 +68,8 @@ public class UserProfileData {
     public String toString() {
         return "UserProfileData{" +
                 "strength=" + strength +
+                ", dexterity=" + dexterity +
+                ", damage=" + damage +
                 ", inventory=" + inventory +
                 ", checks=" + checks +
                 '}';

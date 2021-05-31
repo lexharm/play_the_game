@@ -54,12 +54,13 @@ public class DummyLoader extends Loader {
 
         // Inventory
         id = "9000";
-        paragraph = new Paragraph(id, "");
+        paragraph = new Paragraph(id, "Инвентарь");
         links = new ArrayList<>();
         links.add(new Link("Восстановить здоровье едой", "9000"));
         links.add(new Link("Описание телепатических способностей", "9000"));
         links.add(new Link("Вернуться в игру", "9000", new ReturnToGame()));
         paragraph.setLinks(links);
+        paragraph.addFeature(new ShowInventory());
         allParagraphs.put(id, paragraph);
 
         id = "initialMenu";

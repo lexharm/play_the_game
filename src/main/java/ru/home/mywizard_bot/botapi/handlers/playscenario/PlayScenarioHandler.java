@@ -73,6 +73,8 @@ public class PlayScenarioHandler implements InputMessageHandler {
                 }
                 if (profileData.getBotState() == BotState.PLAY_SCENARIO) {
                     profileData.setCurrentParagraph(newParagraph);
+                } else if (profileData.getBotState() == BotState.SHOW_MAIN_MENU) {
+                    profileData.setCurrentMenu(newParagraph);
                 }
                 break;
             }

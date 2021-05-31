@@ -31,6 +31,13 @@ public class Story {
     @Value("${story.initialStoryParagraph}")
     private String initialStoryParagraph;
 
+    @Value("${startNewGame.strength}")
+    private int strength;
+    @Value("${startNewGame.dexterity}")
+    private int dexterity;
+    @Value("${startNewGame.damage}")
+    private int damage;
+
     public Story(@Qualifier("WorkingLoader") Loader loader) {
         allParagraphs = loader.getAllParagraphs();
         extraLinks = loader.getExtraLinks();
