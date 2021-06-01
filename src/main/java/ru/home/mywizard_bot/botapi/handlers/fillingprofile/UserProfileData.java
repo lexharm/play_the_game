@@ -29,6 +29,7 @@ public class UserProfileData {
     int age;
     int number;
 
+    boolean activeGame;
     BotState botState;
     Paragraph currentMenu;
     Paragraph currentParagraph;

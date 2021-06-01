@@ -6,6 +6,7 @@ import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
+import ru.home.mywizard_bot.scenario.checks.ActiveGameCheck;
 import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.scenario.checks.EventCheck;
 import ru.home.mywizard_bot.scenario.checks.GameAlreadyExists;
@@ -77,7 +78,7 @@ public class DummyLoader extends Loader {
         id = "10000";
         paragraph = new Paragraph(id, "Главное меню");
         links = new ArrayList<>();
-        links.add(new Link("Вернуться в игру", "10001", new GameAlreadyExists(), new ReturnToGame()));
+        links.add(new Link("Вернуться в игру", "10001", new ActiveGameCheck(), new ReturnToGame()));
         links.add(new Link("Новая игра", "10002"));
         links.add(new Link("Руководство", "10003"));
         links.add(new Link("Статистика", "10004"));
@@ -131,7 +132,7 @@ public class DummyLoader extends Loader {
                 "так и не достигнув цели своего путешествия.");
         paragraph.addFeature(new EndGame());
         links = new ArrayList<>();
-        links.add(new Link("Начать заново", "1"));
+        links.add(new Link("Начать заново", "10002"));
         links.add(new Link("Выйти в главное меню", "10000"));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
@@ -139,8 +140,10 @@ public class DummyLoader extends Loader {
         id = "0";
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
         links = new ArrayList<>();
-        links.add(new Link("EX ANIMO, FRATER!", "1", new StartNewGame()));
+        links.add(new Link("EX ANIMO, FRATER!", "1", new SetStateScenario()));
         paragraph.setLinks(links);
+        paragraph.addFeature(new InitNewGame());
+        paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));
         allParagraphs.put(id, paragraph);
 
         id = "1";
@@ -150,9 +153,6 @@ public class DummyLoader extends Loader {
                 "деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
-        paragraph.addFeature(new ReturnToGame());
-        paragraph.addFeature(new SetPlayerStrength(10));
-        paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));
         links = new ArrayList<>();
         links.add(new Link("На северо-восток", "89", new EventCheck("Mayline_dead")));
         links.add(new Link("На юго-восток", "230"));

@@ -39,9 +39,7 @@ public class UserDataCache implements DataCache {
     public UserProfileData getUserProfileData(int userId) {
         UserProfileData userProfileData = usersProfileData.get(userId);
         if (userProfileData == null) {
-            System.out.println("before");
             userProfileData = new UserProfileData();
-            System.out.println("after " + userProfileData.toString());
         }
         return userProfileData;
     }

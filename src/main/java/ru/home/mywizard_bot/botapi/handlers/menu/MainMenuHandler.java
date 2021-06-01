@@ -69,7 +69,7 @@ public class MainMenuHandler implements InputMessageHandler {
                 break;
             }
         }
-        if (newParagraph != currentMenu) {
+        if ((newParagraph != currentMenu) && (newParagraph != profileData.getCurrentParagraph())) {
             newParagraph.engageFeatures(profileData);
         }
         userDataCache.saveUserProfileData(userId, profileData);

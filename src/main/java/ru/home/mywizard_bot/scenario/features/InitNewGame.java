@@ -15,7 +15,7 @@ import ru.home.mywizard_bot.service.ApplicationContextHolder;
 import java.util.HashMap;
 
 @Component
-public class StartNewGame implements Feature {
+public class InitNewGame implements Feature {
 
     @Override
     public void engage(UserProfileData profileData) {
@@ -27,6 +27,6 @@ public class StartNewGame implements Feature {
         profileData.setInventory(new HashMap<>());
         profileData.setChecks(new HashMap<>());
         profileData.clearEnemy();
-        profileData.setBotState(BotState.PLAY_SCENARIO);
+        profileData.setActiveGame(true);
     }
 }
