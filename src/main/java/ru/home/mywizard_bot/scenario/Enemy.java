@@ -30,4 +30,8 @@ public class Enemy {
                 ", damage=" + damage +
                 '}';
     }
+
+    public String getCombatInfo() {
+        return name + " сила=" + strength + ", ловкость=" + dexterity;
+    }
 }

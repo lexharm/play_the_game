@@ -30,6 +30,8 @@ public class Story {
     private String initialMenuParagraph;
     @Value("${story.initialStoryParagraph}")
     private String initialStoryParagraph;
+    @Value("${story.combatDefeatParagraph}")
+    private String combatDefeatParagraph;
 
     @Value("${startNewGame.strength}")
     private int strength;
@@ -55,7 +57,13 @@ public class Story {
             else
                 paragraph = allParagraphs.get(noLinkParagraph);
         }
-        return paragraph;
+        Paragraph res = null;
+        try {
+            res = (Paragraph) paragraph.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     public Paragraph getMenuParagraph(Link link) {
@@ -74,14 +82,18 @@ public class Story {
                 paragraph = allParagraphs.getOrDefault(id, currentParagraph);
             }
         }
-        if (paragraph == null)
-            paragraph = getStoryParagraph(link);
-        return paragraph;
+        Paragraph res = null;
+        if (paragraph == null) {
+            res = getStoryParagraph(link);
+        } else {
+            try {
+                res = (Paragraph) paragraph.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+        return res;
     }
-
-    /*public Paragraph getParagraph(Link link) {
-        return getParagraph(link);
-    }*/
 
     public List<Link> getExtraLinks(BotState botState) {
         return extraLinks.get(botState);
@@ -97,5 +109,9 @@ public class Story {
 
     public Paragraph getInitialStoryParagraph() {
         return getStoryParagraph(new Link(initialStoryParagraph));
+    }
+
+    public Paragraph getCombatDefeatParagraph() {
+        return getStoryParagraph(new Link(combatDefeatParagraph));
     }
 }

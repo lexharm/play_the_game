@@ -6,10 +6,7 @@ import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
-import ru.home.mywizard_bot.scenario.checks.ActiveGameCheck;
-import ru.home.mywizard_bot.scenario.checks.Check;
-import ru.home.mywizard_bot.scenario.checks.EventCheck;
-import ru.home.mywizard_bot.scenario.checks.GameAlreadyExists;
+import ru.home.mywizard_bot.scenario.checks.*;
 import ru.home.mywizard_bot.scenario.features.*;
 
 import java.util.ArrayList;
@@ -33,7 +30,9 @@ public class DummyLoader extends Loader {
 
         //Extra menu buttons for COMBAT
         links = new ArrayList<>();
-        links.add(new Link("Нанести удар!", "10000"));
+        //links.add(new Link("Нанести удар слева!", "CombatStep", new CombatStep()));
+        links.add(new Link("Нанести удар!", "CombatStep", new CombatStep()));
+        //links.add(new Link("Нанести удар справа!", "CombatStep", new CombatStep()));
         links.add(new Link("Меню", "10000", new SetStateMenu()));
         extraLinks.put(BotState.COMBAT, links);
     }
@@ -137,6 +136,15 @@ public class DummyLoader extends Loader {
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
+        id = "combatDefeat";
+        paragraph = new Paragraph(id, "Вам не хватило сил одержать победу в этой схватке. Вам конец.");
+        paragraph.addFeature(new EndGame());
+        links = new ArrayList<>();
+        links.add(new Link("Начать заново", "10002"));
+        links.add(new Link("Выйти в главное меню", "10000"));
+        paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
         id = "0";
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
         links = new ArrayList<>();
@@ -166,9 +174,15 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "999";
-        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох. Не ждите пощады!");
+        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох. Не ждите пощады!",
+                "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
+        paragraph.addFeature(new SetStateCombat());
+        paragraph.addFeature(new AddCombatCheck());
         links = new ArrayList<>();
-        links.add(new Link("Трусливо сбежать", "1", new GiveItem(new Item("Mayline_laugh", "Mayline_laugh", false))));
+        link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("Mayline_laugh", "Mayline_laugh", false)));
+        link.addFeature(new SetStateScenario());
+        links.add(link);
+        links.add(new Link("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("Mayline_dead", "Mayline_dead", false))));
         paragraph.setLinks(links);
         enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
         paragraph.setEnemy(enemy);

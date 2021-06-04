@@ -10,8 +10,11 @@ import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
+import ru.home.mywizard_bot.scenario.checks.Check;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +35,7 @@ public class UserProfileData {
     boolean activeGame;
     BotState botState;
     Paragraph currentMenu;
-    Paragraph currentParagraph;
+    Paragraph currentParagraph = new Paragraph("dummy", "dummy");
     int enemyStrength;
     int strength;
     int dexterity;
@@ -40,6 +43,8 @@ public class UserProfileData {
     Enemy enemy;
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
+    List<Check> combatChecks = new ArrayList<>();
+    String message = "";
 
     public void setEnemy(Enemy enemy) {
         this.enemy = new Enemy(enemy.getName(), enemy.getId(), enemy.getDexterity(), enemy.getStrength(), enemy.getIntelligence());
@@ -74,6 +79,11 @@ public class UserProfileData {
                 ", inventory=" + inventory +
                 ", checks=" + checks +
                 '}';
+    }
+
+    public String getCombatInfo() {
+        return "Ваша сила=" + strength +
+                ", ловкость=" + dexterity;
     }
 
     public Paragraph getCurrentMenu(Story story) {
