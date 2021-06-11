@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class CombatHandler implements InputMessageHandler {
     private final UserDataCache userDataCache;
-    private ReplyMessagesService messagesService;
+    private final ReplyMessagesService messagesService;
     private final MainMenuService mainMenuService;
     private final Story story;
 
@@ -66,24 +66,31 @@ public class CombatHandler implements InputMessageHandler {
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
                     newParagraph.engageFeatures(profileData);
                 }
-                if (profileData.getBotState() == BotState.PLAY_SCENARIO) {
-                    profileData.setCurrentParagraph(newParagraph);
-                    profileData.setEnemy(new Enemy("dummy", "dummy", 0, 0, 0));
-                    if (newParagraph.getPostText().length() > 0) {
-                        newParagraph.setText(newParagraph.getPostText());
-                    }
-                } else if (profileData.getBotState() == BotState.COMBAT) {
-                    newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
-                            + profileData.getEnemy().getCombatInfo());
+                switch (profileData.getBotState()) {
+                    case PLAY_SCENARIO:
+                        profileData.setCurrentParagraph(newParagraph);
+                        profileData.setEnemy(new Enemy("dummy", "dummy", 0, 0, 0));
+                        if (newParagraph.getPostText().length() > 0) {
+                            newParagraph.setText(newParagraph.getPostText());
+                        }
+                        break;
+                    case SHOW_MAIN_MENU:
+                        profileData.setCurrentMenu(newParagraph);
+                        break;
+                    default:
+                        //COMBAT
+                        newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
+                                + profileData.getEnemy().getCombatInfo());
+                        break;
                 }
                 break;
             }
         }
         userDataCache.saveUserProfileData(userId, profileData);
-        SendMessage replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
-        return replyToUser;
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
     }
 
+    //TODO: use it for advanced features
     private InlineKeyboardMarkup getInlineMessageButtons(Paragraph paragraph) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 

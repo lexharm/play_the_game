@@ -6,7 +6,6 @@ import ru.home.mywizard_bot.scenario.Paragraph;
 public class ShowInventory implements Feature {
     @Override
     public void engage(UserProfileData profileData) {
-        Paragraph paragraph = profileData.getCurrentMenu();
-        paragraph.setText(profileData.toString());
+        profileData.setMessage(profileData.toString());
     }
 }

@@ -54,7 +54,7 @@ public class DummyLoader extends Loader {
 
         // Inventory
         id = "9000";
-        paragraph = new Paragraph(id, "Инвентарь");
+        paragraph = new Paragraph(id, "");
         links = new ArrayList<>();
         links.add(new Link("Восстановить здоровье едой", "9000"));
         links.add(new Link("Описание телепатических способностей", "9000"));
@@ -162,27 +162,28 @@ public class DummyLoader extends Loader {
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
         links = new ArrayList<>();
-        links.add(new Link("На северо-восток", "89", new EventCheck("Mayline_dead")));
+        links.add(new Link("На северо-восток", "89", new EventCheck("MaylineIsDead")));
         links.add(new Link("На юго-восток", "230"));
-        Link link = new Link("Вернуться и подраться с Майлином", "999", new EventCheck("Mayline_dead", false));
-        link.addCheck(new EventCheck("Mayline_laugh", false));
+        Link link = new Link("Вернуться и подраться с Майлином", "999", new EventCheck("MaylineIsDead", false));
+        link.addCheck(new EventCheck("MaylineIsLaugh", false));
         links.add(link);
-        link = new Link("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("Mayline_laugh"));
-        link.addCheck(new EventCheck("Mayline_dead", false));
+        link = new Link("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("MaylineIsLaugh"));
+        link.addCheck(new EventCheck("MaylineIsDead", false));
         links.add(link);
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "999";
-        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох. Не ждите пощады!",
+        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох и вручает вам веревку. Не ждите пощады!",
                 "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
         paragraph.addFeature(new SetStateCombat());
         paragraph.addFeature(new AddCombatCheck());
+        paragraph.addFeature(new GiveItem(new Item("Rope", "Веревка")));
         links = new ArrayList<>();
-        link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("Mayline_laugh", "Mayline_laugh", false)));
+        link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
         link.addFeature(new SetStateScenario());
         links.add(link);
-        links.add(new Link("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("Mayline_dead", "Mayline_dead", false))));
+        links.add(new Link("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         paragraph.setLinks(links);
         enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
         paragraph.setEnemy(enemy);
@@ -192,7 +193,7 @@ public class DummyLoader extends Loader {
         id = "1000";
         paragraph = new Paragraph(id, "Победа! Теперь можно никуда не ходить.");
         links = new ArrayList<>();
-        links.add(new Link("Начать заново", "1", new GiveItem(new Item("Mayline_dead", "Mayline_dead", false))));
+        links.add(new Link("Начать заново", "1", new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 

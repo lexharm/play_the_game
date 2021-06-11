@@ -24,10 +24,10 @@ import java.util.List;
 @Slf4j
 @Component
 public class PlayScenarioHandler implements InputMessageHandler {
-    private UserDataCache userDataCache;
+    private final UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
-    private MainMenuService mainMenuService;
-    private Story story;
+    private final MainMenuService mainMenuService;
+    private final Story story;
 
     public PlayScenarioHandler(UserDataCache userDataCache,
                                ReplyMessagesService messagesService,
@@ -75,18 +75,18 @@ public class PlayScenarioHandler implements InputMessageHandler {
                         profileData.setCurrentParagraph(newParagraph);
                         profileData.setEnemy(newParagraph.getEnemy());
                         break;
-                    case PLAY_SCENARIO:
-                        profileData.setCurrentParagraph(newParagraph);
-                        break;
                     case SHOW_MAIN_MENU:
                         profileData.setCurrentMenu(newParagraph);
+                        break;
+                    default:
+                        //PLAY_SCENARIO
+                        profileData.setCurrentParagraph(newParagraph);
                         break;
                 }
                 break;
             }
         }
         userDataCache.saveUserProfileData(userId, profileData);
-
         if (profileData.getBotState() == BotState.COMBAT) {
             newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
                     + profileData.getCombatInfo());

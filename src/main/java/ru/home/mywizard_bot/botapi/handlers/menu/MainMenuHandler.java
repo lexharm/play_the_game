@@ -22,10 +22,10 @@ import java.util.List;
 @Slf4j
 @Component
 public class MainMenuHandler implements InputMessageHandler {
-    private UserDataCache userDataCache;
+    private final UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
-    private MainMenuService mainMenuService;
-    private Story story;
+    private final MainMenuService mainMenuService;
+    private final Story story;
 
     public MainMenuHandler(UserDataCache userDataCache, ReplyMessagesService messagesService, MainMenuService mainMenuService, Story story) {
         this.userDataCache = userDataCache;
@@ -63,6 +63,7 @@ public class MainMenuHandler implements InputMessageHandler {
                         newParagraph = profileData.getCurrentParagraph();
                         break;
                     default:
+                        //SHOW_MAIN_MENU
                         profileData.setCurrentMenu(newParagraph);
                         break;
                 }

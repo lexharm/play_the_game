@@ -51,7 +51,7 @@ public class UserProfileData {
     }
 
     public void clearEnemy() {
-        this.enemy = null;
+        this.enemy = new Enemy("dummy", "dummy", 0, 0, 0);
     }
 
     public void addItem(Item item) {
@@ -72,12 +72,12 @@ public class UserProfileData {
 
     @Override
     public String toString() {
-        return "UserProfileData{" +
-                "strength=" + strength +
-                ", dexterity=" + dexterity +
-                ", damage=" + damage +
-                ", inventory=" + inventory +
-                ", checks=" + checks +
+        return "UserProfileData{" + "\n" +
+                "Сила = " + strength + "\n" +
+                "Ловкость = " + dexterity + "\n" +
+                "Наносимый урон = " + damage + "\n" +
+                "Предметы=" + inventory + "\n" +
+                "Проверки=" + checks +
                 '}';
     }
 
