@@ -7,7 +7,7 @@ import ru.home.mywizard_bot.scenario.Paragraph;
 public class ReturnToGame implements Feature {
     @Override
     public void engage(UserProfileData profileData) {
-        if (profileData.getEnemy() != null) {
+        if (profileData.getEnemy().getStrength() > 0) {
             profileData.setBotState(BotState.COMBAT);
         } else {
             profileData.setBotState(BotState.PLAY_SCENARIO);

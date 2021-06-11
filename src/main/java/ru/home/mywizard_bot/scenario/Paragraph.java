@@ -11,21 +11,28 @@ import java.util.List;
 
 @Data
 public class Paragraph implements Cloneable {
-    int id;
+    String id;
     String text;
+    String postText;
     private List<Link> links = new ArrayList<>();
     private String imagePath;
     private boolean combat = false;
     private Enemy enemy;
     private List<Feature> features = new ArrayList<>();
 
-    public Paragraph(int id, String text) {
+    public Paragraph(String id, String text) {
         this.id = id;
         this.text = text;
         combat = false;
+        postText = "";
     }
 
-    public Paragraph(int id, String text, boolean isCombat, Enemy enemy) {
+    public Paragraph(String id, String text, String postText) {
+        this(id, text);
+        this.postText = postText;
+    }
+
+    public Paragraph(String id, String text, boolean isCombat, Enemy enemy) {
         this.id = id;
         this.text = text;
         this.combat = isCombat;
@@ -40,5 +47,10 @@ public class Paragraph implements Cloneable {
 
     public void addFeature(Feature feature) {
         features.add(feature);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

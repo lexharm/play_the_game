@@ -20,10 +20,10 @@ import java.util.List;
 @Slf4j
 @Component
 public class CombatHandler implements InputMessageHandler {
-    private UserDataCache userDataCache;
-    private ReplyMessagesService messagesService;
-    private MainMenuService mainMenuService;
-    private Story story;
+    private final UserDataCache userDataCache;
+    private final ReplyMessagesService messagesService;
+    private final MainMenuService mainMenuService;
+    private final Story story;
 
     public CombatHandler(UserDataCache userDataCache,
                                ReplyMessagesService messagesService,
@@ -52,96 +52,45 @@ public class CombatHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
-        int currentParagraph = profileData.getCurrentParagraph();
-        if (currentParagraph == 0)
-            currentParagraph = 999;
 
-        Paragraph newParagraph = null;
+        Paragraph currentParagraph = profileData.getCurrentParagraph();
+        List<Link> links = new ArrayList<>();
+        links.addAll(currentParagraph.getLinks());
+        links.addAll(story.getExtraLinks(BotState.COMBAT));
 
-        if (usersAnswer != null) {
-            Paragraph paragraph = story.getParagraph(currentParagraph);
-            List<Link> links = paragraph.getLinks();
-            for (Link link : links) {
-                if (usersAnswer.equals(link.getText())){
-                    try {
-                        newParagraph = story.getParagraph(link);
-                    } catch (NoLinkException e) {
-                        newParagraph = story.getParagraph(-1);
-                    }
-                    link.engageFeatures(profileData);
-                    if (newParagraph.isCombat()) {
-                        userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
-                        profileData.setEnemy(newParagraph.getEnemy());
-                    } else {
-                        userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                    }
-                    profileData.setCurrentParagraph(newParagraph.getId());
-                    userDataCache.saveUserProfileData(userId, profileData);
-                    break;
+        Paragraph newParagraph = currentParagraph;
+        for (Link link : links) {
+            if (usersAnswer.equals(link.getText())){
+                newParagraph = story.getCombatParagraph(link, currentParagraph);
+                link.engageFeatures(profileData);
+                if (!newParagraph.getId().equals(currentParagraph.getId())) {
+                    newParagraph.engageFeatures(profileData);
                 }
+                switch (profileData.getBotState()) {
+                    case PLAY_SCENARIO:
+                        profileData.setCurrentParagraph(newParagraph);
+                        profileData.setEnemy(new Enemy("dummy", "dummy", 0, 0, 0));
+                        if (newParagraph.getPostText().length() > 0) {
+                            newParagraph.setText(newParagraph.getPostText());
+                        }
+                        break;
+                    case SHOW_MAIN_MENU:
+                        profileData.setCurrentMenu(newParagraph);
+                        break;
+                    default:
+                        //COMBAT
+                        newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
+                                + profileData.getEnemy().getCombatInfo());
+                        break;
+                }
+                break;
             }
         }
-
-        SendMessage replyToUser = null;
-        String replyText = "";
-        Enemy enemy = profileData.getEnemy();
-        int playerStrength = profileData.getStrength();
-
-        if (newParagraph == null) {
-
-            int playerDamage = profileData.getDamage();
-            int playerDexterity = profileData.getDexterity();
-
-            //BotState botState = userDataCache.getUsersCurrentBotState(userId);
-
-
-            newParagraph = story.getParagraph(currentParagraph);
-
-            if (enemy.getStrength() > 0 && playerStrength > 0) {
-                int enemyPower = Dice.roll() * 2 + enemy.getDexterity();
-                int playerPower = Dice.roll() * 2 + playerDexterity;
-                if (enemyPower > playerPower) {
-                    playerStrength -= enemy.getDamage();
-                    profileData.setStrength(playerStrength);
-                    replyText = enemy.getName() + " наносит удар. Урон " + enemy.getDamage() + " ед.";
-                } else if (enemyPower < playerPower) {
-                    enemy.setStrength(enemy.getStrength() - playerDamage);
-                    replyText = "Вы наносите удар " + playerDamage + " ед.";
-                } else {
-                    replyText = "Вы парируете удар";
-                }
-
-                if (playerStrength <= 0) {
-                    newParagraph = story.getParagraph(-2);
-                    userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                } else if (enemy.getStrength() <= 0) {
-                    newParagraph = story.getParagraph(1000);
-                    userDataCache.setUsersCurrentBotState(userId, BotState.PLAY_SCENARIO);
-                }
-
-                profileData.setCurrentParagraph(newParagraph.getId());
-                userDataCache.saveUserProfileData(userId, profileData);
-            }
-        }
-            if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
-                replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, replyText, newParagraph, enemy, playerStrength);
-            } else {
-                replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
-            }
-        /*if (botState.equals(BotState.PLAY_SCENARIO)) {
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askName");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
-        }*/
-
-        //if (currentParagraph != newParagraph.getId() || currentParagraph == 1) {
-
-        //}
-        /*replyToUser = messagesService.getReplyMessage(chatId, newParagraph.getText());
-        replyToUser.setReplyMarkup(getInlineMessageButtons(newParagraph));*/
-
-        return replyToUser;
+        userDataCache.saveUserProfileData(userId, profileData);
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
     }
 
+    //TODO: use it for advanced features
     private InlineKeyboardMarkup getInlineMessageButtons(Paragraph paragraph) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 

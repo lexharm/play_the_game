@@ -34,13 +34,13 @@ public class SpecificLoader extends Loader {
 
         //Extra menu buttons for PLAY_SCENARIO
         links = new ArrayList<>();
-        links.add(new Link("Листок путешественника", 9000));
-        links.add(new Link("Меню", 10000, new SetStateMenu()));
+        links.add(new Link("Листок путешественника", "9000"));
+        links.add(new Link("Меню", "10000", new SetStateMenu()));
         extraLinks.put(BotState.PLAY_SCENARIO, links);
 
         //Extra menu buttons for COMBAT
         links = new ArrayList<>();
-        links.add(new Link("Меню", 10000, new SetStateMenu()));
+        links.add(new Link("Меню", "10000", new SetStateMenu()));
         extraLinks.put(BotState.COMBAT, links);
     }
 }

@@ -1,6 +1,7 @@
 package ru.home.mywizard_bot.botapi.handlers.playscenario;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -23,10 +24,10 @@ import java.util.List;
 @Slf4j
 @Component
 public class PlayScenarioHandler implements InputMessageHandler {
-    private UserDataCache userDataCache;
+    private final UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
-    private MainMenuService mainMenuService;
-    private Story story;
+    private final MainMenuService mainMenuService;
+    private final Story story;
 
     public PlayScenarioHandler(UserDataCache userDataCache,
                                ReplyMessagesService messagesService,
@@ -55,49 +56,45 @@ public class PlayScenarioHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
-        int currentParagraph = profileData.getCurrentParagraph();
 
-        SendMessage replyToUser = null;
-
-        Paragraph newParagraph = story.getParagraph(currentParagraph);
-
-        Paragraph paragraph = story.getParagraph(currentParagraph);
+        Paragraph currentParagraph = profileData.getCurrentParagraph();
         List<Link> links = new ArrayList<>();
-        links.addAll(paragraph.getLinks());
-        links.addAll(story.getExtraLinks().get(profileData.getBotState()));
+        links.addAll(currentParagraph.getLinks());
+        links.addAll(story.getExtraLinks(BotState.PLAY_SCENARIO));
 
+        Paragraph newParagraph = currentParagraph;
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())) {
-                try {
-                    newParagraph = story.getParagraph(link);
-                } catch (NoLinkException e) {
-                    newParagraph = story.getParagraph(-1);
-                    userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
-                }
+                newParagraph = story.getStoryParagraph(link);
                 link.engageFeatures(profileData);
-                if (newParagraph.isCombat()) {
-                    userDataCache.setUsersCurrentBotState(userId, BotState.COMBAT);
-                    profileData.setEnemy(newParagraph.getEnemy());
+                if (!newParagraph.getId().equals(currentParagraph.getId())) {
+                    newParagraph.engageFeatures(profileData);
                 }
-                if (profileData.getBotState() == BotState.PLAY_SCENARIO) {
-                    profileData.setCurrentParagraph(newParagraph.getId());
+                switch (profileData.getBotState()) {
+                    case COMBAT:
+                        profileData.setCurrentParagraph(newParagraph);
+                        profileData.setEnemy(newParagraph.getEnemy());
+                        break;
+                    case SHOW_MAIN_MENU:
+                        profileData.setCurrentMenu(newParagraph);
+                        break;
+                    default:
+                        //PLAY_SCENARIO
+                        profileData.setCurrentParagraph(newParagraph);
+                        break;
                 }
-                userDataCache.saveUserProfileData(userId, profileData);
                 break;
             }
         }
-
-        newParagraph.engageFeatures(profileData);
         userDataCache.saveUserProfileData(userId, profileData);
-
-        if (userDataCache.getUsersCurrentBotState(userId) == BotState.COMBAT) {
-            replyToUser = mainMenuService.getMainMenuMessageForCombat(chatId, newParagraph.getText(), newParagraph, newParagraph.getEnemy(), profileData.getStrength());
-        } else {
-            replyToUser = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+        if (profileData.getBotState() == BotState.COMBAT) {
+            newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
+                    + profileData.getCombatInfo());
         }
-        return replyToUser;
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
     }
 
+    //TODO: use it for advanced features
     private InlineKeyboardMarkup getInlineMessageButtons(Paragraph paragraph) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -119,7 +116,6 @@ public class PlayScenarioHandler implements InputMessageHandler {
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(buttonIwillThink);
         keyboardButtonsRow2.add(buttonIdontKnow);
-
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);

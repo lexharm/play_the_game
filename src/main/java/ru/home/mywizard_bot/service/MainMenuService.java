@@ -25,7 +25,13 @@ public class MainMenuService {
 
     public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story) {
         final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData, story);
-        final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, paragraph.getText(), replyKeyboardMarkup);
+        String messageText = "";
+        if (profileData.getMessage().length() > 0) {
+            messageText = profileData.getMessage() + "\n";
+        }
+        messageText += paragraph.getText();
+        final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, messageText, replyKeyboardMarkup);
+        profileData.setMessage("");
         return mainMenuMessage;
     }
 
