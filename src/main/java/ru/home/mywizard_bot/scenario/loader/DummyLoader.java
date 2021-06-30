@@ -90,7 +90,7 @@ public class DummyLoader extends Loader {
         links = new ArrayList<>();
         links.add(new Link("Да", "0"));
         links.add(new Link("Назад", "10000"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "10003";

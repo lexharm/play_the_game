@@ -14,9 +14,20 @@ import java.util.Map;
 @Component
 public class BotStateContext {
     private Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
+    private Map<BotState, CallbackHandler> callbackHandlers = new HashMap<>();
 
-    public BotStateContext(List<InputMessageHandler> messageHandlers) {
+    public BotStateContext(List<InputMessageHandler> messageHandlers, List<CallbackHandler> callbackHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandlerName(), handler));
+        callbackHandlers.forEach(handler -> this.callbackHandlers.put(handler.getHandlerName(), handler));
+    }
+
+    public SendMessage processCallbackQuery(BotState currentState, Message message) {
+        CallbackHandler currentMessageHandler = findCallbackHandler(currentState);
+        return currentMessageHandler.handle(message);
+    }
+
+    private CallbackHandler findCallbackHandler(BotState currentState) {
+        return callbackHandlers.get(currentState);
     }
 
     public SendMessage processInputMessage(BotState currentState, Message message) {

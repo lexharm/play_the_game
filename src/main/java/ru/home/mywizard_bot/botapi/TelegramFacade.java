@@ -50,7 +50,6 @@ public class TelegramFacade {
         int userId = message.getFrom().getId();
         BotState botState;
         SendMessage replyMessage;
-
         switch (inputMsg) {
             case "/start":
                 botState = BotState.SHOW_MAIN_MENU;
@@ -59,21 +58,28 @@ public class TelegramFacade {
                 botState = userDataCache.getUsersCurrentBotState(userId);
                 break;
         }
-
         userDataCache.setUsersCurrentBotState(userId, botState);
-
         replyMessage = botStateContext.processInputMessage(botState, message);
-
         return replyMessage;
     }
 
     private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
         final long chatId = buttonQuery.getMessage().getChatId();
-        final int userId = buttonQuery.getFrom().getId();
-        BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
+        final int userId = buttonQuery.getMessage().getFrom().getId();
+        BotState botState;
+        switch (buttonQuery.getData()) {
+            case "/start":
+                botState = BotState.SHOW_MAIN_MENU;
+                break;
+            default:
+                botState = userDataCache.getUsersCurrentBotState(userId);
+                break;
+        }
+        userDataCache.setUsersCurrentBotState(userId, botState);
+        //BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
+        BotApiMethod<?> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery.getMessage());
 
-
-        //From Destiny choose buttons
+        /*//From Destiny choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
             callBackAnswer = new SendMessage(chatId, "Как тебя зовут ?");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
@@ -98,10 +104,9 @@ public class TelegramFacade {
             callBackAnswer = new SendMessage(chatId, "Твоя любимая цифра");
         } else {
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
-        }
+        }*/
         return callBackAnswer;
     }
-
 
     private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert, CallbackQuery callbackquery) {
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();

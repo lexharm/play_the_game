@@ -14,6 +14,7 @@ public class Paragraph implements Cloneable {
     String id;
     String text;
     String postText;
+    private List<Link> inlineLinks = new ArrayList<>();
     private List<Link> links = new ArrayList<>();
     private String imagePath;
     private boolean combat = false;
