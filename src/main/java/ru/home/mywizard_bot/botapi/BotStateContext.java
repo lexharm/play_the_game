@@ -2,6 +2,7 @@ package ru.home.mywizard_bot.botapi;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.HashMap;
@@ -21,9 +22,9 @@ public class BotStateContext {
         callbackHandlers.forEach(handler -> this.callbackHandlers.put(handler.getHandlerName(), handler));
     }
 
-    public SendMessage processCallbackQuery(BotState currentState, Message message) {
+    public SendMessage processCallbackQuery(BotState currentState, CallbackQuery callbackQuery) {
         CallbackHandler currentMessageHandler = findCallbackHandler(currentState);
-        return currentMessageHandler.handle(message);
+        return currentMessageHandler.handle(callbackQuery);
     }
 
     private CallbackHandler findCallbackHandler(BotState currentState) {

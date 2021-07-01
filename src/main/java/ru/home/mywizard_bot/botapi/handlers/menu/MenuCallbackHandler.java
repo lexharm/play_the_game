@@ -32,26 +32,27 @@ public class MenuCallbackHandler implements CallbackHandler {
     }
 
     @Override
-    public SendMessage handle(Message message) {
-        return processUsersInput(message);
+    public SendMessage handle(CallbackQuery callbackQuery) {
+        return processUsersInput(callbackQuery);
     }
 
-    private SendMessage processUsersInput(Message message) {
+    private SendMessage processUsersInput(CallbackQuery callbackQuery) {
+        Message message = callbackQuery.getMessage();
         log.info("MenuCallbackHandler User:{}, userId: {}, chatId: {}, with text: {}",
-                message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
-        String usersAnswer = message.getText();
-        int userId = message.getFrom().getId();
+                message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), callbackQuery.getData());
+        String usersAnswer = callbackQuery.getData();
+        int userId = callbackQuery.getFrom().getId();
         long chatId = message.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
         Paragraph currentMenu = profileData.getCurrentMenu(story);
         List<Link> links = new ArrayList<>();
-        links.addAll(currentMenu.getLinks());
-        links.addAll(story.getExtraLinks(BotState.SHOW_MAIN_MENU));
+        links.addAll(currentMenu.getInlineLinks());
+        //links.addAll(story.getExtraLinks(BotState.SHOW_MAIN_MENU));
 
         Paragraph newParagraph = currentMenu;
         for (Link link : links) {
-            if (usersAnswer.equals(link.getText())) {
+            if (usersAnswer.equals(link.getId())) {
                 newParagraph = story.getMenuParagraph(link);
                 link.engageFeatures(profileData);
                 switch (profileData.getBotState()) {

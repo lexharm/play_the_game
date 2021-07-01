@@ -5,12 +5,21 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
+import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.service.MainMenuService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Alex Tonkikh
@@ -47,6 +56,7 @@ public class TelegramFacade {
 
     private SendMessage handleInputMessage(Message message) {
         String inputMsg = message.getText();
+        long chatId = message.getChatId();
         int userId = message.getFrom().getId();
         BotState botState;
         SendMessage replyMessage;
@@ -65,7 +75,7 @@ public class TelegramFacade {
 
     private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
         final long chatId = buttonQuery.getMessage().getChatId();
-        final int userId = buttonQuery.getMessage().getFrom().getId();
+        final int userId = buttonQuery.getFrom().getId();
         BotState botState;
         switch (buttonQuery.getData()) {
             case "/start":
@@ -77,7 +87,24 @@ public class TelegramFacade {
         }
         userDataCache.setUsersCurrentBotState(userId, botState);
         //BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
-        BotApiMethod<?> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery.getMessage());
+        //BotApiMethod<?> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
+        List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
+        InlineKeyboardButton button = new InlineKeyboardButton().setText("Ok!");
+        button.setCallbackData("123");
+        List<InlineKeyboardButton> buttonList = new ArrayList<>();
+        buttonList.add(button);
+        inlineKeyboard.add(buttonList);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(inlineKeyboard);
+        BotApiMethod<?> callBackAnswer = new EditMessageText()
+                .setChatId(chatId)
+                .setMessageId(buttonQuery.getMessage().getMessageId())
+                .setText("Hello there, general Kenobi!")
+                .setReplyMarkup(inlineKeyboardMarkup);
+        /*BotApiMethod<?> callBackAnswer = new EditMessageReplyMarkup()
+                .setReplyMarkup(inlineKeyboardMarkup)
+                .setMessageId(buttonQuery.getMessage().getMessageId())
+                .setChatId(chatId);*/
 
         /*//From Destiny choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
