@@ -64,8 +64,8 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "initialMenu";
-        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n" +
-                "Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
+        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n");
+        paragraph.addText("Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
         links = new ArrayList<>();
         links.add(new Link("Руководство", "10003"));
         links.add(new Link("Новая игра", "10002"));

@@ -37,7 +37,7 @@ public class TelegramFacade {
         this.mainMenuService = mainMenuService;
     }
 
-    public BotApiMethod<?> handleUpdate(Update update) {
+    /*public BotApiMethod<?> handleUpdate(Update update) {
         SendMessage replyMessage = null;
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -52,9 +52,32 @@ public class TelegramFacade {
             replyMessage = handleInputMessage(message);
         }
         return replyMessage;
+    }*/
+    public List<BotApiMethod<?>> handleUpdate(Update update) {
+        List<BotApiMethod<?>> replyMessagesList = null;
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
+                    callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
+            replyMessagesList = processCallbackQuery(callbackQuery);
+        }
+        Message message = update.getMessage();
+        if (message != null && message.hasText()) {
+            log.info("New message from User:{}, userId: {}, chatId: {}, with text: {}",
+                    message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
+            replyMessagesList = handleInputMessage(message);
+        }
+        log.info("replyMessagesList has size: {}", replyMessagesList != null ? replyMessagesList.size() : "null");
+        //TODO: It's needed to do smthng with unknown updates. Where is it from?
+        if (replyMessagesList == null) {
+            replyMessagesList = new ArrayList<>();
+            replyMessagesList.add(new SendMessage().setText("Catched unknown update").setChatId(new Long(149037203)));
+        }
+        return replyMessagesList;
     }
 
-    private SendMessage handleInputMessage(Message message) {
+    /*@Deprecated
+    private SendMessage handleInputMessage_old(Message message) {
         String inputMsg = message.getText();
         long chatId = message.getChatId();
         int userId = message.getFrom().getId();
@@ -71,9 +94,27 @@ public class TelegramFacade {
         userDataCache.setUsersCurrentBotState(userId, botState);
         replyMessage = botStateContext.processInputMessage(botState, message);
         return replyMessage;
+    }*/
+
+    private List<BotApiMethod<?>> handleInputMessage(Message message) {
+        String inputMsg = message.getText();
+        long chatId = message.getChatId();
+        int userId = message.getFrom().getId();
+        BotState botState;
+        SendMessage replyMessage;
+        switch (inputMsg) {
+            case "/start":
+                botState = BotState.SHOW_MAIN_MENU;
+                break;
+            default:
+                botState = userDataCache.getUsersCurrentBotState(userId);
+                break;
+        }
+        userDataCache.setUsersCurrentBotState(userId, botState);
+        return botStateContext.processInputMessage(botState, message);
     }
 
-    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
+    private List<BotApiMethod<?>> processCallbackQuery(CallbackQuery buttonQuery) {
         final long chatId = buttonQuery.getMessage().getChatId();
         final int userId = buttonQuery.getFrom().getId();
         BotState botState;
@@ -87,8 +128,8 @@ public class TelegramFacade {
         }
         userDataCache.setUsersCurrentBotState(userId, botState);
         //BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
-        //BotApiMethod<?> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
-        List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
+        List<BotApiMethod<?>> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
+        /*List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
         InlineKeyboardButton button = new InlineKeyboardButton().setText("Ok!");
         button.setCallbackData("123");
         List<InlineKeyboardButton> buttonList = new ArrayList<>();
@@ -100,7 +141,7 @@ public class TelegramFacade {
                 .setChatId(chatId)
                 .setMessageId(buttonQuery.getMessage().getMessageId())
                 .setText("Hello there, general Kenobi!")
-                .setReplyMarkup(inlineKeyboardMarkup);
+                .setReplyMarkup(inlineKeyboardMarkup);*/
         /*BotApiMethod<?> callBackAnswer = new EditMessageReplyMarkup()
                 .setReplyMarkup(inlineKeyboardMarkup)
                 .setMessageId(buttonQuery.getMessage().getMessageId())

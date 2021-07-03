@@ -1,6 +1,7 @@
 package ru.home.mywizard_bot.service;
 
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -27,17 +28,24 @@ import java.util.List;
 @Service
 public class MainMenuService {
 
-    public SendMessage getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story) {
+    public List<BotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story) {
         //final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData, story);
+        List<BotApiMethod<?>> replyMessagesList = new ArrayList<>();
         final ReplyKeyboard replyKeyboard = getKeyboard(paragraph, profileData, story);
-        String messageText = "";
+        /*String messageText = "";
         if (profileData.getMessage().length() > 0) {
             messageText = profileData.getMessage() + "\n";
         }
-        messageText += paragraph.getText();
-        final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, messageText, replyKeyboard);
-        profileData.setMessage("");
-        return mainMenuMessage;
+        messageText += paragraph.getText();*/
+        for (String text : paragraph.getTextsList()) {
+            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(text));
+        }
+        //final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, messageText, replyKeyboard);
+        //profileData.setMessage("");
+        SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
+        lastMessage.enableMarkdown(true);
+        lastMessage.setReplyMarkup(replyKeyboard);
+        return replyMessagesList;
     }
 
     /*private ReplyKeyboardMarkup getMainMenuKeyboard(Paragraph paragraph, UserProfileData profileData, Story story) {

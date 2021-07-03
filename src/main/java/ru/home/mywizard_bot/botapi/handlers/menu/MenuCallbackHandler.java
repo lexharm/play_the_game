@@ -32,11 +32,11 @@ public class MenuCallbackHandler implements CallbackHandler {
     }
 
     @Override
-    public SendMessage handle(CallbackQuery callbackQuery) {
+    public List<BotApiMethod<?>> handle(CallbackQuery callbackQuery) {
         return processUsersInput(callbackQuery);
     }
 
-    private SendMessage processUsersInput(CallbackQuery callbackQuery) {
+    private List<BotApiMethod<?>> processUsersInput(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
         log.info("MenuCallbackHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), callbackQuery.getData());
@@ -73,11 +73,9 @@ public class MenuCallbackHandler implements CallbackHandler {
         }
         userDataCache.saveUserProfileData(userId, profileData);
 
-        SendMessage replyMessage = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
-
         //replyMessage.setReplyMarkup(getInlineMessageButtons());
 
-        return replyMessage;
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
     }
 
     @Override
