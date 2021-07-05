@@ -1,5 +1,6 @@
 package ru.home.mywizard_bot.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -46,47 +47,44 @@ public class MainMenuService {
 
         if (replyKeyboard != null && inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
-                SendMessage message = (SendMessage) replyMessagesList.get(0);
-                message.setReplyMarkup(inlineKeyboard);
-                //SendMessage dummyMessage = new SendMessage().setChatId(chatId).setReplyMarkup(replyKeyboard).enableMarkdown(true).setText("Both");
-                SendMessage dummyMessage = new SendMessage().setChatId(chatId).setReplyMarkup(new ReplyKeyboardRemove()).enableMarkdown(true).setText("Both");
-                replyMessagesList.add(0, dummyMessage);
-                DeleteMessage deleteMessage = new DeleteMessage(chatId, 0);
-                replyMessagesList.add(1, deleteMessage);
+                replyMessagesList.add(0, new SendMessage()
+                        .setChatId(chatId)
+                        .setReplyMarkup(replyKeyboard)
+                        .enableMarkdown(true)
+                        .setText("If you see this, then something went wrong. Report us ASAP."));
+                replyMessagesList.add(1, new DeleteMessage(chatId, 0));
+                ((SendMessage) replyMessagesList.get(2)).setReplyMarkup(inlineKeyboard);
             } else if (replyMessagesList.size() == 2) {
-                SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                firstMessage.setReplyMarkup(replyKeyboard).enableMarkdown(true);
-                SendMessage lastMessage = (SendMessage) replyMessagesList.get(1);
-                lastMessage.setReplyMarkup(inlineKeyboard);
+                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                ((SendMessage) replyMessagesList.get(1)).setReplyMarkup(inlineKeyboard);
             } else {
-                SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
-                SendMessage penultMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-2);
-                penultMessage.setReplyMarkup(replyKeyboard).enableMarkdown(true);
-                SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
-                lastMessage.setReplyMarkup(inlineKeyboard);
+                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(new ReplyKeyboardRemove());
+                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-2))
+                        .setReplyMarkup(replyKeyboard)
+                        .enableMarkdown(true);
+                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-1)).setReplyMarkup(inlineKeyboard);
             }
         } else if (replyKeyboard != null) {
             if (replyMessagesList.size() == 1) {
-                SendMessage message = (SendMessage) replyMessagesList.get(0);
-                message.setReplyMarkup(replyKeyboard);
+                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(replyKeyboard).enableMarkdown(true);
             } else if (replyMessagesList.size() == 2) {
-                SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
-                SendMessage lastMessage = (SendMessage) replyMessagesList.get(1);
-                lastMessage.setReplyMarkup(replyKeyboard);
+                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(new ReplyKeyboardRemove());
+                ((SendMessage) replyMessagesList.get(1)).setReplyMarkup(replyKeyboard).enableMarkdown(true);;
             } else {
-                SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
-                SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
-                lastMessage.setReplyMarkup(replyKeyboard);
+                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(new ReplyKeyboardRemove());
+                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-1))
+                        .setReplyMarkup(replyKeyboard)
+                        .enableMarkdown(true);
             }
         } else if (inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
-                SendMessage message = (SendMessage) replyMessagesList.get(0);
-                message.setReplyMarkup(inlineKeyboard);
-                SendMessage dummyMessage = new SendMessage().setChatId(chatId).setReplyMarkup(new ReplyKeyboardRemove()).setText("Inline");
-                replyMessagesList.add(0, dummyMessage);
+                replyMessagesList.add(0, new SendMessage()
+                        .setChatId(chatId)
+                        .setReplyMarkup(new ReplyKeyboardRemove())
+                        .enableMarkdown(true)
+                        .setText("If you see this message, then something went wrong. Report us ASAP."));
+                replyMessagesList.add(1, new DeleteMessage(chatId, 0));
+                ((SendMessage) replyMessagesList.get(2)).setReplyMarkup(inlineKeyboard);
             } else if (replyMessagesList.size() == 2) {
                 SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
                 firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
