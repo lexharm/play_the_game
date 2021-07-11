@@ -13,7 +13,9 @@ import java.util.List;
 public class Paragraph implements Cloneable {
     String id;
     String text;
+    List<String> textsList = new ArrayList<>();
     String postText;
+    private List<Link> inlineLinks = new ArrayList<>();
     private List<Link> links = new ArrayList<>();
     private String imagePath;
     private boolean combat = false;
@@ -22,7 +24,8 @@ public class Paragraph implements Cloneable {
 
     public Paragraph(String id, String text) {
         this.id = id;
-        this.text = text;
+        //this.text = text;
+        textsList.add(text);
         combat = false;
         postText = "";
     }
@@ -52,5 +55,9 @@ public class Paragraph implements Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public void addText(String text) {
+        textsList.add(text);
     }
 }

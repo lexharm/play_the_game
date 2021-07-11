@@ -3,6 +3,7 @@ package ru.home.mywizard_bot.botapi.handlers.playscenario;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -40,7 +41,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
     }
 
     @Override
-    public SendMessage handle(Message message) {
+    public List<BotApiMethod<?>> handle(Message message) {
         return processUsersInput(message);
     }
 
@@ -49,7 +50,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
         return BotState.PLAY_SCENARIO;
     }
 
-    private SendMessage processUsersInput(Message inputMsg) {
+    private List<BotApiMethod<?>> processUsersInput(Message inputMsg) {
         log.info("PlayScenarioHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 inputMsg.getFrom().getUserName(), inputMsg.getFrom().getId(), inputMsg.getChatId(), inputMsg.getText());
         String usersAnswer = inputMsg.getText();

@@ -4,15 +4,12 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.home.mywizard_bot.botapi.BotState;
 
 import java.util.List;
 
-/**
- * Обработчик сообщений
- */
-public interface InputMessageHandler {
-    //SendMessage handle(Message message);
-    List<BotApiMethod<?>> handle(Message message);
+public interface CallbackHandler {
+    List<BotApiMethod<?>> handle(CallbackQuery callbackQuery);
 
     BotState getHandlerName();
 }

@@ -24,14 +24,6 @@ import java.util.Map;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileData {
-    String name;
-    String gender;
-    String color;
-    String movie;
-    String song;
-    int age;
-    int number;
-
     boolean activeGame;
     BotState botState;
     Paragraph currentMenu;

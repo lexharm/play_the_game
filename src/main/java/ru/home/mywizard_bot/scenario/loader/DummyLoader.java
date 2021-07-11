@@ -64,8 +64,8 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "initialMenu";
-        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n" +
-                "Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
+        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n");
+        paragraph.addText("Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
         links = new ArrayList<>();
         links.add(new Link("Руководство", "10003"));
         links.add(new Link("Новая игра", "10002"));
@@ -90,7 +90,7 @@ public class DummyLoader extends Loader {
         links = new ArrayList<>();
         links.add(new Link("Да", "0"));
         links.add(new Link("Назад", "10000"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "10003";
@@ -157,8 +157,8 @@ public class DummyLoader extends Loader {
         id = "1";
         paragraph = new Paragraph(id, "Плодородные земли Элгариола позади. Перед вами пустыня. Вряд ли удастся " +
                 "обнаружить здесь тропинку, а тем более какую-нибудь дорогу, так что придется ориентироваться  только " +
-                "по солнцу. Одинокая гора должна быть где-то на востоке, но стоит ли отправляться туда сразу?  В " +
-                "деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
+                "по солнцу. Одинокая гора должна быть где-то на востоке, но стоит ли отправляться туда сразу?");
+        paragraph.addText("В деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
         links = new ArrayList<>();
@@ -222,12 +222,13 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "230";
-        paragraph = new Paragraph(id, "ВНЕЗАПНО вы находите монету с изображением профиля Императора! Это к удаче!" +
-                " Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
-                "показаться в королевском дворце в Элгариоле. С непривычки ноги вязнут в песке, пот заливает глаза, " +
-                "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
-                "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется. Через полчаса становится " +
-                "понятно, что это караван верблюдов, неспешно двигающийся с юга наперерез вам. Ваше действие?");
+        paragraph = new Paragraph(id, "ВНЕЗАПНО вы находите монету с изображением профиля Императора! Это к удаче!");
+        paragraph.addText("Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
+                        "показаться в королевском дворце в Элгариоле. С непривычки ноги вязнут в песке, пот заливает глаза, " +
+                        "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
+                        "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется.");
+        paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга наперерез вам. Ваше действие?");
+
         paragraph.addFeature(new GiveItem(new Item("Coin", "Монета с профилем Императора")));
         links = new ArrayList<>();
         links.add(new Link("Свернуть на север, чтобы избежать встречи с ним", "481"));
@@ -246,6 +247,30 @@ public class DummyLoader extends Loader {
         links.add(new Link("Поговорить с погонщиком", "345"));
         links.add(new Link("Продолжить путь", "245"));
         paragraph.setLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = "345";
+        paragraph = new Paragraph(id, "- Ты чьих будешь, - спрашивает погонщик.");
+        links = new ArrayList<>();
+        links.add(new Link("Эм... ммм... Хоббитс, эээ?", "346"));
+        links.add(new Link("Я - головка от буя!", "347"));
+        paragraph.setInlineLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = "346";
+        paragraph = new Paragraph(id, "Ненавижу хоббитов! - кричит погонщик и хватается за саблю. Битва неизбежна.",
+                "С трудом, но вы одолеваете пустынного жителя. Но что вы будете делать с остальными кочевниками?");
+        paragraph.addFeature(new SetStateCombat());
+        paragraph.addFeature(new AddCombatCheck());
+        links = new ArrayList<>();
+        /*link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
+        link.addFeature(new SetStateScenario());
+        links.add(link);*/
+        links.add(new Link("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        paragraph.setLinks(links);
+        enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
+        paragraph.setEnemy(enemy);
+        paragraph.setCombat(true);
         allParagraphs.put(id, paragraph);
 
         id = "245";
