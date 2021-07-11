@@ -7,7 +7,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.List;
 
-/** Обработчик сообщений
+/**
+ * Обработчик сообщений
  */
 public interface InputMessageHandler {
     //SendMessage handle(Message message);

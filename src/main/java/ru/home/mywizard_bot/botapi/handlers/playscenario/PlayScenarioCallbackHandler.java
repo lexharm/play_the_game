@@ -1,9 +1,8 @@
-package ru.home.mywizard_bot.botapi.handlers.menu;
+package ru.home.mywizard_bot.botapi.handlers.playscenario;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.mywizard_bot.botapi.BotState;
@@ -20,12 +19,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class MenuCallbackHandler implements CallbackHandler {
+public class PlayScenarioCallbackHandler implements CallbackHandler {
     private final UserDataCache userDataCache;
     private final MainMenuService mainMenuService;
     private final Story story;
 
-    public MenuCallbackHandler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
+    public PlayScenarioCallbackHandler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
         this.story = story;
@@ -38,44 +37,49 @@ public class MenuCallbackHandler implements CallbackHandler {
 
     private List<BotApiMethod<?>> processUsersInput(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
-        log.info("MenuCallbackHandler User:{}, userId: {}, chatId: {}, with text: {}",
+        log.info("PlayScenarioCallbackHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), callbackQuery.getData());
         String usersAnswer = callbackQuery.getData();
         int userId = callbackQuery.getFrom().getId();
         long chatId = message.getChatId();
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
-        Paragraph currentMenu = profileData.getCurrentMenu(story);
+        Paragraph currentParagraph = profileData.getCurrentParagraph();
         List<Link> links = new ArrayList<>();
-        links.addAll(currentMenu.getInlineLinks());
+        links.addAll(currentParagraph.getInlineLinks());
         //links.addAll(story.getExtraLinks(BotState.SHOW_MAIN_MENU));
 
-        Paragraph newParagraph = currentMenu;
+        Paragraph newParagraph = currentParagraph;
         boolean isParagraphChanged = false;
         for (Link link : links) {
             if (usersAnswer.equals(link.getId())) {
                 newParagraph = story.getMenuParagraph(link);
                 link.engageFeatures(profileData);
+                if (!newParagraph.getId().equals(currentParagraph.getId())) {
+                    newParagraph.engageFeatures(profileData);
+                }
                 switch (profileData.getBotState()) {
-                    case PLAY_SCENARIO:
                     case COMBAT:
-                        newParagraph = profileData.getCurrentParagraph();
+                        profileData.setCurrentParagraph(newParagraph);
+                        profileData.setEnemy(newParagraph.getEnemy());
+                        break;
+                    case SHOW_MAIN_MENU:
+                        profileData.setCurrentMenu(newParagraph);
                         break;
                     default:
-                        //SHOW_MAIN_MENU
-                        profileData.setCurrentMenu(newParagraph);
+                        //PLAY_SCENARIO
+                        profileData.setCurrentParagraph(newParagraph);
                         break;
                 }
                 isParagraphChanged = true;
                 break;
             }
         }
-        if (isParagraphChanged && (!newParagraph.getId().equals(currentMenu.getId())) && (!newParagraph.getId().equals(profileData.getCurrentParagraph().getId()))) {
-            newParagraph.engageFeatures(profileData);
-        }
         userDataCache.saveUserProfileData(userId, profileData);
-
-        //replyMessage.setReplyMarkup(getInlineMessageButtons());
+        if (profileData.getBotState() == BotState.COMBAT) {
+            newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
+                    + profileData.getCombatInfo());
+        }
         if (isParagraphChanged)
             return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
         else
@@ -84,6 +88,6 @@ public class MenuCallbackHandler implements CallbackHandler {
 
     @Override
     public BotState getHandlerName() {
-        return BotState.SHOW_MAIN_MENU;
+        return BotState.PLAY_SCENARIO;
     }
 }

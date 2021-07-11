@@ -1,10 +1,11 @@
 package ru.home.mywizard_bot.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -12,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Link;
@@ -29,6 +29,11 @@ import java.util.List;
  */
 @Service
 public class MainMenuService {
+    private final ReplyMessagesService messagesService;
+
+    public MainMenuService(ReplyMessagesService messagesService) {
+        this.messagesService = messagesService;
+    }
 
     public List<BotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story) {
         //final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData, story);
@@ -51,7 +56,7 @@ public class MainMenuService {
                         .setChatId(chatId)
                         .setReplyMarkup(replyKeyboard)
                         .enableMarkdown(true)
-                        .setText("If you see this, then something went wrong. Report us ASAP."));
+                        .setText(messagesService.getText("bot.reportUs")));
                 replyMessagesList.add(1, new DeleteMessage(chatId, 0));
                 ((SendMessage) replyMessagesList.get(2)).setReplyMarkup(inlineKeyboard);
             } else if (replyMessagesList.size() == 2) {
@@ -82,7 +87,7 @@ public class MainMenuService {
                         .setChatId(chatId)
                         .setReplyMarkup(new ReplyKeyboardRemove())
                         .enableMarkdown(true)
-                        .setText("If you see this message, then something went wrong. Report us ASAP."));
+                        .setText(messagesService.getText("bot.reportUs")));
                 replyMessagesList.add(1, new DeleteMessage(chatId, 0));
                 ((SendMessage) replyMessagesList.get(2)).setReplyMarkup(inlineKeyboard);
             } else if (replyMessagesList.size() == 2) {
@@ -103,6 +108,16 @@ public class MainMenuService {
         /*SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
         lastMessage.enableMarkdown(true);
         lastMessage.setReplyMarkup(replyKeyboard);*/
+        return replyMessagesList;
+    }
+
+    public List<BotApiMethod<?>> getIllegalActionMessage(CallbackQuery callbackquery) {
+        List<BotApiMethod<?>> replyMessagesList = new ArrayList<>();
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setCallbackQueryId(callbackquery.getId());
+        answerCallbackQuery.setShowAlert(true);
+        answerCallbackQuery.setText(messagesService.getText("bot.illegalAction"));
+        replyMessagesList.add(answerCallbackQuery);
         return replyMessagesList;
     }
 

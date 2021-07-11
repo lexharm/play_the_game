@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
-/**Работает с файлом шаблоном "ответных сообщений" messages.properties
- *
- * @author Alex Tonkikh
+/**
+ * Работает с файлом шаблоном "ответных сообщений" messages.properties
  */
 @Service
 public class LocaleMessageService {
@@ -20,7 +19,6 @@ public class LocaleMessageService {
         this.locale = Locale.forLanguageTag(localeTag);
     }
 
-
     public String getMessage(String message) {
         return messageSource.getMessage(message, null, locale);
     }
@@ -28,5 +26,4 @@ public class LocaleMessageService {
     public String getMessage(String message, Object... args) {
         return messageSource.getMessage(message, args, locale);
     }
-
 }
