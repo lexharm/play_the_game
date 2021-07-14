@@ -1,10 +1,13 @@
 package ru.home.mywizard_bot.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -28,6 +31,7 @@ import java.util.List;
  * @author Alex Tonkikh
  */
 @Service
+@Slf4j
 public class MainMenuService {
     private final ReplyMessagesService messagesService;
 
@@ -35,7 +39,7 @@ public class MainMenuService {
         this.messagesService = messagesService;
     }
 
-    public List<BotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story) {
+    public List<BotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story, boolean newMessage) {
         //final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData, story);
         List<BotApiMethod<?>> replyMessagesList = new ArrayList<>();
         //final ReplyKeyboard replyKeyboard = getKeyboard(paragraph, profileData, story);
@@ -47,60 +51,146 @@ public class MainMenuService {
         }
         messageText += paragraph.getText();*/
         for (String text : paragraph.getTextsList()) {
-            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(text));
+            if (newMessage) {
+                replyMessagesList.add(new SendMessage().setChatId(chatId).setText(text));
+            } else {
+                replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(text));
+            }
+        }
+
+        if (newMessage && profileData.isHasInlineKeyboard()) {
+            replyMessagesList.add(0, new EditMessageReplyMarkup()
+                    .setChatId(chatId)
+                    .setMessageId(profileData.getLastMessageId())
+                    .setReplyMarkup(new InlineKeyboardMarkup()));
         }
 
         if (replyKeyboard != null && inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
+                log.info("replyKeyboard != null && inlineKeyboard != null && size = 1");
                 replyMessagesList.add(0, new SendMessage()
                         .setChatId(chatId)
                         .setReplyMarkup(replyKeyboard)
                         .enableMarkdown(true)
                         .setText(messagesService.getText("bot.reportUs")));
                 replyMessagesList.add(1, new DeleteMessage(chatId, 0));
-                ((SendMessage) replyMessagesList.get(2)).setReplyMarkup(inlineKeyboard);
+                BotApiMethod botApiMethod = replyMessagesList.get(2);
+                if (botApiMethod instanceof SendMessage) {
+                    ((SendMessage) botApiMethod).setReplyMarkup(new InlineKeyboardMarkup());
+                }
+                replyMessagesList.add(new EditMessageReplyMarkup()
+                        .setChatId(chatId)
+                        .setReplyMarkup(inlineKeyboard));
             } else if (replyMessagesList.size() == 2) {
-                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(replyKeyboard).enableMarkdown(true);
-                ((SendMessage) replyMessagesList.get(1)).setReplyMarkup(inlineKeyboard);
+                log.info("replyKeyboard != null && inlineKeyboard != null && size = 2");
+                BotApiMethod botApiMethod = replyMessagesList.get(0);
+                if (botApiMethod instanceof SendMessage) {
+                    ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                }
+                BotApiMethod botApiMethod2 = replyMessagesList.get(1);
+                if (botApiMethod2 instanceof SendMessage) {
+                    ((SendMessage) botApiMethod2).setReplyMarkup(new InlineKeyboardMarkup());
+                }
+                replyMessagesList.add(new EditMessageReplyMarkup()
+                        .setChatId(chatId)
+                        .setReplyMarkup(inlineKeyboard));
             } else {
-                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(new ReplyKeyboardRemove());
-                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-2))
+                log.info("replyKeyboard != null && inlineKeyboard != null && size > 2");
+                BotApiMethod botApiMethod = replyMessagesList.get(0);
+                if (botApiMethod instanceof SendMessage) {
+                    ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                }
+                /*((SendMessage) replyMessagesList.get(replyMessagesList.size()-2))
                         .setReplyMarkup(replyKeyboard)
                         .enableMarkdown(true);
-                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-1)).setReplyMarkup(inlineKeyboard);
+                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-1)).setReplyMarkup(inlineKeyboard);*/
+                BotApiMethod botApiMethod2 = replyMessagesList.get(replyMessagesList.size()-1);
+                if (botApiMethod2 instanceof SendMessage) {
+                    ((SendMessage) botApiMethod2)
+                            .setReplyMarkup(replyKeyboard)
+                            .enableMarkdown(true);
+                }
+                replyMessagesList.add(new EditMessageReplyMarkup()
+                        .setChatId(chatId)
+                        .setReplyMarkup(inlineKeyboard));
             }
+            profileData.setHasReplyKeyboard(true);
+            profileData.setHasInlineKeyboard(true);
         } else if (replyKeyboard != null) {
             if (replyMessagesList.size() == 1) {
-                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                log.info("replyKeyboard != null && size = 1");
+                BotApiMethod botApiMethod = replyMessagesList.get(0);
+                if (botApiMethod instanceof SendMessage) {
+                    ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                }
             } else if (replyMessagesList.size() == 2) {
-                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(new ReplyKeyboardRemove());
-                ((SendMessage) replyMessagesList.get(1)).setReplyMarkup(replyKeyboard).enableMarkdown(true);;
+                log.info("replyKeyboard != null && size = 2");
+                BotApiMethod botApiMethod = replyMessagesList.get(0);
+                if (botApiMethod instanceof SendMessage) {
+                    ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                }
+                BotApiMethod botApiMethod2 = replyMessagesList.get(1);
+                if (botApiMethod2 instanceof SendMessage) {
+                    ((SendMessage) botApiMethod2).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                }
             } else {
-                ((SendMessage) replyMessagesList.get(0)).setReplyMarkup(new ReplyKeyboardRemove());
-                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-1))
-                        .setReplyMarkup(replyKeyboard)
-                        .enableMarkdown(true);
+                log.info("replyKeyboard != null && size > 2");
+                BotApiMethod botApiMethod = replyMessagesList.get(0);
+                if (botApiMethod instanceof SendMessage) {
+                    ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                }
+                BotApiMethod botApiMethod2 = replyMessagesList.get(replyMessagesList.size()-1);
+                if (botApiMethod2 instanceof SendMessage) {
+                    ((SendMessage) botApiMethod2)
+                            .setReplyMarkup(replyKeyboard)
+                            .enableMarkdown(true);
+                }
             }
+            profileData.setHasReplyKeyboard(true);
+            profileData.setHasInlineKeyboard(false);
         } else if (inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
-                replyMessagesList.add(0, new SendMessage()
+                log.info("inlineKeyboard != null && size = 1");
+                int i = 0;
+                if (profileData.isHasReplyKeyboard()) {
+                    replyMessagesList.add(i++, new SendMessage()
+                            .setChatId(chatId)
+                            .setReplyMarkup(new ReplyKeyboardRemove())
+                            .enableMarkdown(true)
+                            .setText(messagesService.getText("bot.reportUs")));
+                    replyMessagesList.add(i++, new DeleteMessage(chatId, 0));
+                }
+                //((SendMessage) replyMessagesList.get(2)).setReplyMarkup(new InlineKeyboardMarkup());
+                if (replyMessagesList.get(i) instanceof SendMessage) {
+                    ((SendMessage) replyMessagesList.get(i)).setReplyMarkup(new InlineKeyboardMarkup());
+                } else if (replyMessagesList.get(i) instanceof EditMessageReplyMarkup) {
+                    ((EditMessageText) replyMessagesList.get(i)).setReplyMarkup(new InlineKeyboardMarkup());
+                }
+                replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
-                        .setReplyMarkup(new ReplyKeyboardRemove())
-                        .enableMarkdown(true)
-                        .setText(messagesService.getText("bot.reportUs")));
-                replyMessagesList.add(1, new DeleteMessage(chatId, 0));
-                ((SendMessage) replyMessagesList.get(2)).setReplyMarkup(inlineKeyboard);
+                        .setReplyMarkup(inlineKeyboard));
             } else if (replyMessagesList.size() == 2) {
-                SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
+                log.info("inlineKeyboard != null && size = 2");
+                if (profileData.isHasReplyKeyboard()) {
+                    SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
+                    firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
+                }
                 SendMessage lastMessage = (SendMessage) replyMessagesList.get(1);
-                lastMessage.setReplyMarkup(inlineKeyboard);
+                lastMessage.setReplyMarkup(new InlineKeyboardMarkup());
+                replyMessagesList.add(new EditMessageReplyMarkup()
+                        .setChatId(chatId)
+                        .setReplyMarkup(inlineKeyboard));
             } else {
-                SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
+                log.info("inlineKeyboard != null && size > 2");
+                if (profileData.isHasReplyKeyboard()) {
+                    SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
+                    firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
+                }
                 SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
                 lastMessage.setReplyMarkup(inlineKeyboard);
             }
+            profileData.setHasReplyKeyboard(false);
+            profileData.setHasInlineKeyboard(true);
         }
 
         //final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, messageText, replyKeyboard);
@@ -214,7 +304,9 @@ public class MainMenuService {
         for (Link link : story.getExtraLinks().get(profileData.getBotState())) {
             extraRow.add(new KeyboardButton(link.getText()));
         }
-        keyboard.add(extraRow);
+        if (extraRow.size() > 0) {
+            keyboard.add(extraRow);
+        }
         if (keyboard.size() > 0) {
             replyKeyboardMarkup = new ReplyKeyboardMarkup();
             replyKeyboardMarkup.setSelective(true);

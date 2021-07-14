@@ -60,8 +60,10 @@ public class CombatHandler implements InputMessageHandler {
         links.addAll(story.getExtraLinks(BotState.COMBAT));
 
         Paragraph newParagraph = currentParagraph;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())){
+                matchedLink = link;
                 newParagraph = story.getCombatParagraph(link, currentParagraph);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
@@ -87,8 +89,9 @@ public class CombatHandler implements InputMessageHandler {
                 break;
             }
         }
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         userDataCache.saveUserProfileData(userId, profileData);
-        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
     }
 
     //TODO: use it for advanced features

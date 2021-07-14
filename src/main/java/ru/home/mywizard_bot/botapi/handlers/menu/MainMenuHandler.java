@@ -56,8 +56,10 @@ public class MainMenuHandler implements InputMessageHandler {
         links.addAll(story.getExtraLinks(BotState.SHOW_MAIN_MENU));
 
         Paragraph newParagraph = currentMenu;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())) {
+                matchedLink = link;
                 newParagraph = story.getMenuParagraph(link);
                 link.engageFeatures(profileData);
                 switch (profileData.getBotState()) {
@@ -77,8 +79,8 @@ public class MainMenuHandler implements InputMessageHandler {
             newParagraph.engageFeatures(profileData);
         }
         userDataCache.saveUserProfileData(userId, profileData);
-
-        List<BotApiMethod<?>> replyMessagesList = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
+        List<BotApiMethod<?>> replyMessagesList = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
 
         //replyMessage.setReplyMarkup(getInlineMessageButtons());
 

@@ -37,6 +37,10 @@ public class TelegramFacade {
         this.mainMenuService = mainMenuService;
     }
 
+    public UserDataCache getUserDataCache() {
+        return userDataCache;
+    }
+
     /*public BotApiMethod<?> handleUpdate(Update update) {
         SendMessage replyMessage = null;
         if (update.hasCallbackQuery()) {
@@ -104,6 +108,7 @@ public class TelegramFacade {
         SendMessage replyMessage;
         switch (inputMsg) {
             case "/start":
+                userDataCache.clearCache();
                 botState = BotState.SHOW_MAIN_MENU;
                 break;
             default:

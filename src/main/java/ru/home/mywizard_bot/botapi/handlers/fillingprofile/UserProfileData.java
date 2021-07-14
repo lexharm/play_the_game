@@ -37,6 +37,9 @@ public class UserProfileData {
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();
     String message = "";
+    Integer lastMessageId;
+    boolean hasReplyKeyboard = false;
+    boolean hasInlineKeyboard = false;
 
     public void setEnemy(Enemy enemy) {
         this.enemy = new Enemy(enemy.getName(), enemy.getId(), enemy.getDexterity(), enemy.getStrength(), enemy.getIntelligence());

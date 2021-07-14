@@ -52,8 +52,10 @@ public class MenuCallbackHandler implements CallbackHandler {
 
         Paragraph newParagraph = currentMenu;
         boolean isParagraphChanged = false;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getId())) {
+                matchedLink = link;
                 newParagraph = story.getMenuParagraph(link);
                 link.engageFeatures(profileData);
                 switch (profileData.getBotState()) {
@@ -76,8 +78,9 @@ public class MenuCallbackHandler implements CallbackHandler {
         userDataCache.saveUserProfileData(userId, profileData);
 
         //replyMessage.setReplyMarkup(getInlineMessageButtons());
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (isParagraphChanged)
-            return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+            return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
         else
             return mainMenuService.getIllegalActionMessage(callbackQuery);
     }

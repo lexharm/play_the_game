@@ -16,6 +16,7 @@ public class Link {
     List<Check> checks = new ArrayList<>();
     List<Feature> features = new ArrayList<>();
     Item item;
+    boolean newMessage = true;
 
     public Link(String id) {
         this.id = id;
@@ -26,9 +27,19 @@ public class Link {
         this.text = text;
     }
 
+    public Link(String text, String id, boolean newMessage) {
+        this(text, id);
+        this.newMessage = newMessage;
+    }
+
     public Link(String text, String id, Check check) {
         this(text, id);
         checks.add(check);
+    }
+
+    public Link(String text, String id, Check check, boolean newMessage) {
+        this(text, id, check);
+        this.newMessage = newMessage;
     }
 
     public Link(String text, String id, Feature feature) {
@@ -36,9 +47,19 @@ public class Link {
         features.add(feature);
     }
 
+    public Link(String text, String id, Feature feature, boolean newMessage) {
+        this(text, id, feature);
+        this.newMessage = newMessage;
+    }
+
     public Link(String text, String id, Check check, Feature feature) {
         this(text, id, check);
         addFeature(feature);
+    }
+
+    public Link(String text, String id, Check check, Feature feature, boolean newMessage) {
+        this(text, id, check, feature);
+        this.newMessage = newMessage;
     }
 
     public boolean test(UserProfileData profileData) {

@@ -64,8 +64,10 @@ public class PlayScenarioHandler implements InputMessageHandler {
         links.addAll(story.getExtraLinks(BotState.PLAY_SCENARIO));
 
         Paragraph newParagraph = currentParagraph;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())) {
+                matchedLink = link;
                 newParagraph = story.getStoryParagraph(link);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
@@ -92,7 +94,8 @@ public class PlayScenarioHandler implements InputMessageHandler {
             newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
                     + profileData.getCombatInfo());
         }
-        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
     }
 
     //TODO: use it for advanced features
