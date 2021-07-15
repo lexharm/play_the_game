@@ -3,6 +3,7 @@ package ru.home.mywizard_bot.botapi.handlers.menu;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -32,11 +33,11 @@ public class MenuCallbackHandler implements CallbackHandler {
     }
 
     @Override
-    public List<BotApiMethod<?>> handle(CallbackQuery callbackQuery) {
+    public List<PartialBotApiMethod<?>> handle(CallbackQuery callbackQuery) {
         return processUsersInput(callbackQuery);
     }
 
-    private List<BotApiMethod<?>> processUsersInput(CallbackQuery callbackQuery) {
+    private List<PartialBotApiMethod<?>> processUsersInput(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
         log.info("MenuCallbackHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), callbackQuery.getData());

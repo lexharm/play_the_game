@@ -4,6 +4,7 @@ package ru.home.mywizard_bot.botapi.handlers.menu;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -38,11 +39,11 @@ public class MainMenuHandler implements InputMessageHandler {
     }
 
     @Override
-    public List<BotApiMethod<?>> handle(Message message) {
+    public List<PartialBotApiMethod<?>> handle(Message message) {
         return processUsersInput(message);
     }
 
-    private List<BotApiMethod<?>> processUsersInput(Message message) {
+    private List<PartialBotApiMethod<?>> processUsersInput(Message message) {
         log.info("MainMenuHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
         String usersAnswer = message.getText();
@@ -80,7 +81,7 @@ public class MainMenuHandler implements InputMessageHandler {
         }
         userDataCache.saveUserProfileData(userId, profileData);
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
-        List<BotApiMethod<?>> replyMessagesList = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+        List<PartialBotApiMethod<?>> replyMessagesList = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
 
         //replyMessage.setReplyMarkup(getInlineMessageButtons());
 

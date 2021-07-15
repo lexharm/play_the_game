@@ -2,10 +2,7 @@ package ru.home.mywizard_bot.scenario.loader;
 
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.scenario.Enemy;
-import ru.home.mywizard_bot.scenario.Item;
-import ru.home.mywizard_bot.scenario.Link;
-import ru.home.mywizard_bot.scenario.Paragraph;
+import ru.home.mywizard_bot.scenario.*;
 import ru.home.mywizard_bot.scenario.checks.*;
 import ru.home.mywizard_bot.scenario.features.*;
 
@@ -66,6 +63,7 @@ public class InlinePrototype extends Loader {
         id = "initialMenu";
         paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!");
         paragraph.addText("Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
+        paragraph.setIllustration(new Illustration("", "static/images/art_1.jpg"));
         //paragraph.setSubstitute(true);
         links = new ArrayList<>();
         links.add(new Link("Руководство", "10003", false));
@@ -88,6 +86,7 @@ public class InlinePrototype extends Loader {
 
         id = "10002";
         paragraph = new Paragraph(id, "Вы уверены?");
+        paragraph.setIllustration(new Illustration("", "static/images/barbarian_1.jpg"));
         links = new ArrayList<>();
         links.add(new Link("Да", "0"));
         links.add(new Link("Назад", "10000", false));
@@ -121,7 +120,7 @@ public class InlinePrototype extends Loader {
         id = "10005";
         paragraph = new Paragraph(id, "Выберите раздел");
         links = new ArrayList<>();
-        links.add(new Link("О сценарии", "10018"));
+        links.add(new Link("О сценарии", "10018", false));
         links.add(new Link("О разработчиках", "10019"));
         links.add(new Link("Назад", "10000", false));
         paragraph.setInlineLinks(links);
@@ -131,6 +130,13 @@ public class InlinePrototype extends Loader {
         paragraph = new Paragraph(id, "Имена этих людей слишком хорошо известны, чтобы их называть!");
         links = new ArrayList<>();
         links.add(new Link("Понятно, очень приятно", "10005"));
+        paragraph.setInlineLinks(links);
+        allParagraphs.put(id, paragraph);
+
+        id = "10018";
+        paragraph = new Paragraph(id, "Хороший сценарий?");
+        links = new ArrayList<>();
+        links.add(new Link("Да!", "10005"));
         paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
@@ -178,12 +184,13 @@ public class InlinePrototype extends Loader {
         link = new Link("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("MaylineIsLaugh"));
         link.addCheck(new EventCheck("MaylineIsDead", false));
         links.add(link);
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "999";
         paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох и вручает вам веревку. Не ждите пощады!",
                 "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
+        paragraph.setIllustration(new Illustration("", "static/images/monster_2.jpg"));
         paragraph.addFeature(new SetStateCombat());
         paragraph.addFeature(new AddCombatCheck());
         paragraph.addFeature(new GiveItem(new Item("Rope", "Веревка")));
@@ -202,7 +209,7 @@ public class InlinePrototype extends Loader {
         paragraph = new Paragraph(id, "Победа! Теперь можно никуда не ходить.");
         links = new ArrayList<>();
         links.add(new Link("Начать заново", "1", new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "-2";
@@ -210,7 +217,7 @@ public class InlinePrototype extends Loader {
                 "кондорам. Однако во всём есть свои плюсы - теперь вам не нужно идти через пустыню :)");
         links = new ArrayList<>();
         links.add(new Link("Начать заново", "1"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "89";
@@ -226,7 +233,7 @@ public class InlinePrototype extends Loader {
         links.add(new Link("Свернуть в сторону", "514"));
         links.add(new Link("Продолжать путь", "479"));
         links.add(new Link("Остановиться и обножить меч", "344"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "230";
@@ -241,7 +248,7 @@ public class InlinePrototype extends Loader {
         links = new ArrayList<>();
         links.add(new Link("Свернуть на север, чтобы избежать встречи с ним", "481"));
         links.add(new Link("Идти дальше", "96"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "96";
@@ -254,11 +261,12 @@ public class InlinePrototype extends Loader {
         links = new ArrayList<>();
         links.add(new Link("Поговорить с погонщиком", "345"));
         links.add(new Link("Продолжить путь", "245"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "345";
         paragraph = new Paragraph(id, "- Ты чьих будешь, - спрашивает погонщик.");
+        paragraph.setIllustration(new Illustration("", "static/images/dwarf.jpg"));
         links = new ArrayList<>();
         links.add(new Link("Эм... ммм... Хоббитс, эээ?", "346"));
         links.add(new Link("Я - головка от буя!", "347"));
@@ -275,7 +283,7 @@ public class InlinePrototype extends Loader {
         link.addFeature(new SetStateScenario());
         links.add(link);*/
         links.add(new Link("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
         paragraph.setEnemy(enemy);
         paragraph.setCombat(true);
@@ -287,7 +295,7 @@ public class InlinePrototype extends Loader {
                 "предстоит нелегкий путь");
         links = new ArrayList<>();
         links.add(new Link("Отдыхать", "20"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "20";
@@ -296,7 +304,7 @@ public class InlinePrototype extends Loader {
         links = new ArrayList<>();
         links.add(new Link("На северо-восток", "116"));
         links.add(new Link("На юго-восток", "93"));
-        paragraph.setLinks(links);
+        paragraph.setInlineLinks(links);
         allParagraphs.put(id, paragraph);
     }
 }
