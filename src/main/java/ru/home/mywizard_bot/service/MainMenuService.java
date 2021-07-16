@@ -214,10 +214,20 @@ public class MainMenuService {
         return replyMessagesList;
     }
 
-    public List<PartialBotApiMethod<?>> getIllegalActionMessage(CallbackQuery callbackquery) {
+    public List<PartialBotApiMethod<?>> getIllegalActionMessage(CallbackQuery callbackQuery) {
         List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
-        answerCallbackQuery.setCallbackQueryId(callbackquery.getId());
+        answerCallbackQuery.setCallbackQueryId(callbackQuery.getId());
+        answerCallbackQuery.setShowAlert(true);
+        answerCallbackQuery.setText(messagesService.getText("bot.illegalAction"));
+        replyMessagesList.add(answerCallbackQuery);
+        return replyMessagesList;
+    }
+
+    public List<PartialBotApiMethod<?>> getIllegalActionMessage(String callbackQueryId) {
+        List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setCallbackQueryId(callbackQueryId);
         answerCallbackQuery.setShowAlert(true);
         answerCallbackQuery.setText(messagesService.getText("bot.illegalAction"));
         replyMessagesList.add(answerCallbackQuery);
