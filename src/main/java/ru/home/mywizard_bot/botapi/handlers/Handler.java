@@ -23,7 +23,7 @@ import java.util.List;
 public abstract class Handler {
     private final UserDataCache userDataCache;
     private final MainMenuService mainMenuService;
-    private final Story story;
+    protected final Story story;
 
     protected Handler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
         this.userDataCache = userDataCache;
@@ -49,42 +49,52 @@ public abstract class Handler {
         }
         long chatId = message.getChatId();
 
-        log.info("{} User:{}, userId: {}, chatId: {}, with text: {}",
-                this.getClass().getSimpleName(), message.getFrom().getUserName(), userId, chatId, receivedText);
+        log.info("{} {} User:{}, userId: {}, chatId: {}, with text: {}",
+                this.getClass().getSimpleName(), (callbackQueryId != null) ? "with callback" : "",
+                message.getFrom().getUserName(), userId, chatId, receivedText);
 
         UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
-        Paragraph currentParagraph = profileData.getCurrentParagraph();
+        Paragraph currentParagraph = getCurrentParagraph(profileData);
         List<Link> links = new ArrayList<>();
         links.addAll(currentParagraph.getLinks());
         links.addAll(story.getExtraLinks(getHandlerName()));
 
         Paragraph newParagraph = currentParagraph;
-        boolean isParagraphChanged = false;
+        boolean paragraphChanged = false;
         Link matchedLink = null;
         for (Link link : links) {
             if ((botApiObject instanceof CallbackQuery && receivedText.equals(link.getId()))
                     || (botApiObject instanceof Message && receivedText.equals(link.getText()))) {
                 matchedLink = link;
-                newParagraph = story.getCombatParagraph(link, currentParagraph);
+                newParagraph = getNewParagraph(link, currentParagraph);
                 link.engageFeatures(profileData);
-                if (!newParagraph.getId().equals(currentParagraph.getId())) {
-                    newParagraph.engageFeatures(profileData);
-                }
+                engageParagraphFeaturesHook_1(newParagraph, currentParagraph, profileData);
                 processStates(profileData.getBotState(), profileData, newParagraph);
-                isParagraphChanged = true;
+                paragraphChanged = true;
                 break;
             }
         }
-        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
+        engageParagraphFeaturesHook_2(newParagraph, currentParagraph, profileData, paragraphChanged);
         userDataCache.saveUserProfileData(userId, profileData);
-        if (!isParagraphChanged && callbackQueryId != null)
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
+        if (callbackQueryId != null && !paragraphChanged)
             return mainMenuService.getIllegalActionMessage(callbackQueryId);
         else
             return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
     }
 
-    public abstract void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph);
+    protected Paragraph getCurrentParagraph( UserProfileData profileData) {
+        return profileData.getCurrentParagraph();
+    };
+
+    protected abstract Paragraph getNewParagraph(Link link, Paragraph currentParagraph);
+
+    protected abstract void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData);
+
+    protected abstract void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged);
+
+    protected abstract void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph);
 
     public abstract BotState getHandlerName();
 }

@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.home.mywizard_bot.botapi.handlers.Handler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,10 @@ import java.util.Map;
  */
 @Component
 public class BotStateContext {
-    private Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
+    private Map<BotState, Handler> messageHandlers = new HashMap<>();
     private Map<BotState, CallbackHandler> callbackHandlers = new HashMap<>();
 
-    public BotStateContext(List<InputMessageHandler> messageHandlers, List<CallbackHandler> callbackHandlers) {
+    public BotStateContext(List<Handler> messageHandlers, List<CallbackHandler> callbackHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandlerName(), handler));
         callbackHandlers.forEach(handler -> this.callbackHandlers.put(handler.getHandlerName(), handler));
     }
@@ -40,11 +41,11 @@ public class BotStateContext {
     }*/
 
     public List<PartialBotApiMethod<?>> processInputMessage(BotState currentState, Message message) {
-        InputMessageHandler currentMessageHandler = findMessageHandler(currentState);
+        Handler currentMessageHandler = findMessageHandler(currentState);
         return currentMessageHandler.handle(message);
     }
 
-    private InputMessageHandler findMessageHandler(BotState currentState) {
+    private Handler findMessageHandler(BotState currentState) {
         return messageHandlers.get(currentState);
     }
 }
