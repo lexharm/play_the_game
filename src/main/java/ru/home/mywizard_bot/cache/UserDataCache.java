@@ -18,6 +18,10 @@ public class UserDataCache implements DataCache {
     private Map<Integer, BotState> usersBotStates = new HashMap<>();
     private Map<Integer, UserProfileData> usersProfileData = new HashMap<>();
 
+    public void clearCache() {
+        usersBotStates.clear();
+        usersProfileData.clear();
+    }
     @Override
     public void setUsersCurrentBotState(int userId, BotState botState) {
         usersBotStates.put(userId, botState);
@@ -48,5 +52,9 @@ public class UserDataCache implements DataCache {
     public void saveUserProfileData(int userId, UserProfileData userProfileData) {
         usersProfileData.put(userId, userProfileData);
         usersBotStates.put(userId, userProfileData.getBotState());
+    }
+
+    public void setLastMessageId(long userId, Integer lastMessageId) {
+        getUserProfileData((int) userId).setLastMessageId(lastMessageId);
     }
 }

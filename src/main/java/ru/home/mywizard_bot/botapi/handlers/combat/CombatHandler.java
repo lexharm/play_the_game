@@ -3,6 +3,7 @@ package ru.home.mywizard_bot.botapi.handlers.combat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -37,7 +38,7 @@ public class CombatHandler implements InputMessageHandler {
     }
 
     @Override
-    public List<BotApiMethod<?>> handle(Message message) {
+    public List<PartialBotApiMethod<?>> handle(Message message) {
         return processUsersInput(message);
     }
 
@@ -46,7 +47,7 @@ public class CombatHandler implements InputMessageHandler {
         return BotState.COMBAT;
     }
 
-    private List<BotApiMethod<?>> processUsersInput(Message inputMsg) {
+    private List<PartialBotApiMethod<?>> processUsersInput(Message inputMsg) {
         log.info("CombatHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 inputMsg.getFrom().getUserName(), inputMsg.getFrom().getId(), inputMsg.getChatId(), inputMsg.getText());
         String usersAnswer = inputMsg.getText();
@@ -60,8 +61,10 @@ public class CombatHandler implements InputMessageHandler {
         links.addAll(story.getExtraLinks(BotState.COMBAT));
 
         Paragraph newParagraph = currentParagraph;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())){
+                matchedLink = link;
                 newParagraph = story.getCombatParagraph(link, currentParagraph);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
@@ -87,8 +90,9 @@ public class CombatHandler implements InputMessageHandler {
                 break;
             }
         }
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         userDataCache.saveUserProfileData(userId, profileData);
-        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
     }
 
     //TODO: use it for advanced features

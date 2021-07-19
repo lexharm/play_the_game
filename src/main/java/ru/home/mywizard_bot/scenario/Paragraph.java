@@ -21,6 +21,7 @@ public class Paragraph implements Cloneable {
     private boolean combat = false;
     private Enemy enemy;
     private List<Feature> features = new ArrayList<>();
+    private Illustration illustration;
 
     public Paragraph(String id, String text) {
         this.id = id;

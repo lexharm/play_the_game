@@ -1,9 +1,11 @@
 package ru.home.mywizard_bot.botapi;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -30,11 +32,22 @@ public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
     private MainMenuService mainMenuService;
+    @Value("${telegrambot.sleep}")
+    private int sleepTime;
+
+    public int getSleepTime() {
+        return sleepTime;
+    }
+
 
     public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
+    }
+
+    public UserDataCache getUserDataCache() {
+        return userDataCache;
     }
 
     /*public BotApiMethod<?> handleUpdate(Update update) {
@@ -53,8 +66,8 @@ public class TelegramFacade {
         }
         return replyMessage;
     }*/
-    public List<BotApiMethod<?>> handleUpdate(Update update) {
-        List<BotApiMethod<?>> replyMessagesList = null;
+    public List<PartialBotApiMethod<?>> handleUpdate(Update update) {
+        List<PartialBotApiMethod<?>> replyMessagesList = null;
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
@@ -96,7 +109,7 @@ public class TelegramFacade {
         return replyMessage;
     }*/
 
-    private List<BotApiMethod<?>> handleInputMessage(Message message) {
+    private List<PartialBotApiMethod<?>> handleInputMessage(Message message) {
         String inputMsg = message.getText();
         long chatId = message.getChatId();
         int userId = message.getFrom().getId();
@@ -104,6 +117,7 @@ public class TelegramFacade {
         SendMessage replyMessage;
         switch (inputMsg) {
             case "/start":
+                userDataCache.clearCache();
                 botState = BotState.SHOW_MAIN_MENU;
                 break;
             default:
@@ -114,7 +128,7 @@ public class TelegramFacade {
         return botStateContext.processInputMessage(botState, message);
     }
 
-    private List<BotApiMethod<?>> processCallbackQuery(CallbackQuery buttonQuery) {
+    private List<PartialBotApiMethod<?>> processCallbackQuery(CallbackQuery buttonQuery) {
         final long chatId = buttonQuery.getMessage().getChatId();
         final int userId = buttonQuery.getFrom().getId();
         BotState botState;
@@ -128,7 +142,7 @@ public class TelegramFacade {
         }
         userDataCache.setUsersCurrentBotState(userId, botState);
         //BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
-        List<BotApiMethod<?>> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
+        List<PartialBotApiMethod<?>> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
         /*List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
         InlineKeyboardButton button = new InlineKeyboardButton().setText("Ok!");
         button.setCallbackData("123");

@@ -3,6 +3,7 @@ package ru.home.mywizard_bot.botapi.handlers.combat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.mywizard_bot.botapi.BotState;
@@ -32,11 +33,11 @@ public class CombatCallbackHandler implements CallbackHandler {
     }
 
     @Override
-    public List<BotApiMethod<?>> handle(CallbackQuery callbackQuery) {
+    public List<PartialBotApiMethod<?>> handle(CallbackQuery callbackQuery) {
         return processUsersInput(callbackQuery);
     }
 
-    private List<BotApiMethod<?>> processUsersInput(CallbackQuery callbackQuery) {
+    private List<PartialBotApiMethod<?>> processUsersInput(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
         log.info("CombatCallbackHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), callbackQuery.getData());
@@ -52,8 +53,10 @@ public class CombatCallbackHandler implements CallbackHandler {
 
         Paragraph newParagraph = currentParagraph;
         boolean isParagraphChanged = false;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getId())) {
+                matchedLink = link;
                 newParagraph = story.getCombatParagraph(link, currentParagraph);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
@@ -81,8 +84,9 @@ public class CombatCallbackHandler implements CallbackHandler {
             }
         }
         userDataCache.saveUserProfileData(userId, profileData);
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (isParagraphChanged)
-            return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+            return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
         else
             return mainMenuService.getIllegalActionMessage(callbackQuery);
     }

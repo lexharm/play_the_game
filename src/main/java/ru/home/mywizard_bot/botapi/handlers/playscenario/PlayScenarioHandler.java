@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -41,7 +42,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
     }
 
     @Override
-    public List<BotApiMethod<?>> handle(Message message) {
+    public List<PartialBotApiMethod<?>> handle(Message message) {
         return processUsersInput(message);
     }
 
@@ -50,7 +51,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
         return BotState.PLAY_SCENARIO;
     }
 
-    private List<BotApiMethod<?>> processUsersInput(Message inputMsg) {
+    private List<PartialBotApiMethod<?>> processUsersInput(Message inputMsg) {
         log.info("PlayScenarioHandler User:{}, userId: {}, chatId: {}, with text: {}",
                 inputMsg.getFrom().getUserName(), inputMsg.getFrom().getId(), inputMsg.getChatId(), inputMsg.getText());
         String usersAnswer = inputMsg.getText();
@@ -64,8 +65,10 @@ public class PlayScenarioHandler implements InputMessageHandler {
         links.addAll(story.getExtraLinks(BotState.PLAY_SCENARIO));
 
         Paragraph newParagraph = currentParagraph;
+        Link matchedLink = null;
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())) {
+                matchedLink = link;
                 newParagraph = story.getStoryParagraph(link);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
@@ -92,7 +95,8 @@ public class PlayScenarioHandler implements InputMessageHandler {
             newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
                     + profileData.getCombatInfo());
         }
-        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story);
+        boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
+        return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
     }
 
     //TODO: use it for advanced features
