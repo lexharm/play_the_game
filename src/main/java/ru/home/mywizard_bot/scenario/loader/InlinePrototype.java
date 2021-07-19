@@ -86,7 +86,6 @@ public class InlinePrototype extends Loader {
 
         id = "10002";
         paragraph = new Paragraph(id, "Вы уверены?");
-        paragraph.setIllustration(new Illustration("", "static/images/barbarian_1.jpg"));
         links = new ArrayList<>();
         links.add(new Link("Да", "0"));
         links.add(new Link("Назад", "10000", false));
@@ -161,6 +160,7 @@ public class InlinePrototype extends Loader {
 
         id = "0";
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
+        paragraph.setIllustration(new Illustration("", "static/images/barbarian_1.jpg"));
         links = new ArrayList<>();
         links.add(new Link("EX ANIMO, FRATER!", "1", new SetStateScenario()));
         paragraph.setLinks(links);
@@ -184,7 +184,7 @@ public class InlinePrototype extends Loader {
         link = new Link("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("MaylineIsLaugh"));
         link.addCheck(new EventCheck("MaylineIsDead", false));
         links.add(link);
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "999";
@@ -233,7 +233,7 @@ public class InlinePrototype extends Loader {
         links.add(new Link("Свернуть в сторону", "514"));
         links.add(new Link("Продолжать путь", "479"));
         links.add(new Link("Остановиться и обножить меч", "344"));
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "230";
@@ -248,7 +248,7 @@ public class InlinePrototype extends Loader {
         links = new ArrayList<>();
         links.add(new Link("Свернуть на север, чтобы избежать встречи с ним", "481"));
         links.add(new Link("Идти дальше", "96"));
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "96";
@@ -258,15 +258,15 @@ public class InlinePrototype extends Loader {
                 "шатры. На вас никто не обращает внимания. Смеркается, и в самом деле пора подумать о ночлеге. " +
                 "Хотите подойти поговорить с одним из погонщиков или продолжите свой путь, решив, что ночь безопасней " +
                 "провести в одиночку, чем с незнакомыми людьми?");
+        paragraph.setIllustration(new Illustration("Гном-погонщик пристально смотрит на вас.", "static/images/dwarf.jpg"));
         links = new ArrayList<>();
         links.add(new Link("Поговорить с погонщиком", "345"));
         links.add(new Link("Продолжить путь", "245"));
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "345";
         paragraph = new Paragraph(id, "- Ты чьих будешь, - спрашивает погонщик.");
-        paragraph.setIllustration(new Illustration("", "static/images/dwarf.jpg"));
         links = new ArrayList<>();
         links.add(new Link("Эм... ммм... Хоббитс, эээ?", "346"));
         links.add(new Link("Я - головка от буя!", "347"));
@@ -283,7 +283,7 @@ public class InlinePrototype extends Loader {
         link.addFeature(new SetStateScenario());
         links.add(link);*/
         links.add(new Link("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
         paragraph.setEnemy(enemy);
         paragraph.setCombat(true);
@@ -295,7 +295,7 @@ public class InlinePrototype extends Loader {
                 "предстоит нелегкий путь");
         links = new ArrayList<>();
         links.add(new Link("Отдыхать", "20"));
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
 
         id = "20";
@@ -304,7 +304,7 @@ public class InlinePrototype extends Loader {
         links = new ArrayList<>();
         links.add(new Link("На северо-восток", "116"));
         links.add(new Link("На юго-восток", "93"));
-        paragraph.setInlineLinks(links);
+        paragraph.setLinks(links);
         allParagraphs.put(id, paragraph);
     }
 }
