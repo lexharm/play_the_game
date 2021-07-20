@@ -1,10 +1,10 @@
-package ru.home.mywizard_bot.botapi.handlers.fillingprofile;
+package ru.home.mywizard_bot.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Item;
@@ -22,8 +22,11 @@ import java.util.Map;
  */
 
 @Data
+@Document(collection = "userProfileData")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileData {
+    @Id
+    String id;
     boolean activeGame;
     BotState botState;
     Paragraph currentMenu;

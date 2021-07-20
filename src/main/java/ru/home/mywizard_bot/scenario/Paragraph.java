@@ -1,9 +1,7 @@
 package ru.home.mywizard_bot.scenario;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.features.Feature;
 
 import java.util.ArrayList;

@@ -2,15 +2,13 @@ package ru.home.mywizard_bot.botapi.handlers.combat;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.InputMessageHandler;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
 import ru.home.mywizard_bot.scenario.*;
 import ru.home.mywizard_bot.service.MainMenuService;

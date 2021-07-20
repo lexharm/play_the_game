@@ -1,7 +1,7 @@
 package ru.home.mywizard_bot.scenario.features;
 
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Dice;
 import ru.home.mywizard_bot.scenario.Enemy;
 import ru.home.mywizard_bot.scenario.Story;
@@ -9,7 +9,6 @@ import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.service.ApplicationContextHolder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CombatStep implements Feature {
     @Override

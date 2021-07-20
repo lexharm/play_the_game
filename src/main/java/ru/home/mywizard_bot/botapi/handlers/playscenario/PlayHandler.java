@@ -3,7 +3,7 @@ package ru.home.mywizard_bot.botapi.handlers.playscenario;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.Handler;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
 import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
