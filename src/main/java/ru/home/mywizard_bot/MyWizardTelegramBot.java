@@ -6,7 +6,6 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -15,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.home.mywizard_bot.botapi.TelegramFacade;
 import ru.home.mywizard_bot.cache.UserDataCache;
+import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 import java.util.List;
 
@@ -25,11 +25,13 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
     private String botToken;
     private TelegramFacade telegramFacade;
     private UserDataCache userDataCache;
+    private UsersProfileDataService profileDataService;
 
     public MyWizardTelegramBot(DefaultBotOptions botOptions, TelegramFacade telegramFacade) {
         super(botOptions);
         this.telegramFacade = telegramFacade;
         this.userDataCache = telegramFacade.getUserDataCache();
+        this.profileDataService = telegramFacade.getProfileDataService();
     }
 
     @Override
@@ -82,7 +84,8 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
                         log.info("Execute success");
                     }
                     if (message != null) {
-                        userDataCache.setLastMessageId(message.getChatId(), message.getMessageId());
+                        //userDataCache.setLastMessageId(message.getChatId(), message.getMessageId());
+                        profileDataService.setLastMessageId(message.getChatId(), message.getMessageId());
                     }
                     try {
                         Thread.sleep(telegramFacade.getSleepTime());

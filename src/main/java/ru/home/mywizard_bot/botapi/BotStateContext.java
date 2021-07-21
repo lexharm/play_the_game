@@ -1,11 +1,8 @@
 package ru.home.mywizard_bot.botapi;
 
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.mywizard_bot.botapi.handlers.Handler;
 
 import java.util.HashMap;
@@ -25,10 +22,10 @@ public class BotStateContext {
         callbackHandlers.forEach(handler -> this.callbackHandlers.put(handler.getHandlerName(), handler));
     }
 
-    public List<PartialBotApiMethod<?>> processCallbackQuery(BotState currentState, CallbackQuery callbackQuery) {
+    /*public List<PartialBotApiMethod<?>> processCallbackQuery(BotState currentState, CallbackQuery callbackQuery) {
         CallbackHandler currentMessageHandler = findCallbackHandler(currentState);
         return currentMessageHandler.handle(callbackQuery);
-    }
+    }*/
 
     private CallbackHandler findCallbackHandler(BotState currentState) {
         return callbackHandlers.get(currentState);
@@ -40,7 +37,12 @@ public class BotStateContext {
         return currentMessageHandler.handle(message);
     }*/
 
-    public List<PartialBotApiMethod<?>> processInputMessage(BotState currentState, Message message) {
+    /*public List<PartialBotApiMethod<?>> processInputMessage(BotState currentState, Message message) {
+        Handler currentMessageHandler = findMessageHandler(currentState);
+        return currentMessageHandler.handle(message);
+    }*/
+
+    public List<PartialBotApiMethod<?>> processInputMessage(BotState currentState, BotApiObject message) {
         Handler currentMessageHandler = findMessageHandler(currentState);
         return currentMessageHandler.handle(message);
     }

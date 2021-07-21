@@ -12,6 +12,7 @@ import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.checks.Check;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,10 @@ import java.util.Map;
 @Data
 @Document(collection = "userProfileData")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserProfileData {
+public class UserProfileData implements Serializable {
     @Id
     String id;
+    long chatId;
     boolean activeGame;
     BotState botState;
     Paragraph currentMenu;

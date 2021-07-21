@@ -2,8 +2,10 @@ package ru.home.mywizard_bot.scenario;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Enemy {
+public class Enemy implements Serializable {
     private String name;
     private String id;
     private int dexterity;

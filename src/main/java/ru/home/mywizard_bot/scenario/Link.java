@@ -17,6 +17,8 @@ public class Link {
     Item item;
     boolean newMessage = true;
 
+    public Link() {}
+
     public Link(String id) {
         this.id = id;
     }

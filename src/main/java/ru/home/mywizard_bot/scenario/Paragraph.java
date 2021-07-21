@@ -4,11 +4,12 @@ import lombok.Data;
 import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.features.Feature;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Paragraph implements Cloneable {
+public class Paragraph implements Cloneable, Serializable {
     String id;
     String text;
     List<String> textsList = new ArrayList<>();
@@ -20,6 +21,8 @@ public class Paragraph implements Cloneable {
     private Enemy enemy;
     private List<Feature> features = new ArrayList<>();
     private Illustration illustration;
+
+    public Paragraph() {}
 
     public Paragraph(String id, String text) {
         this.id = id;

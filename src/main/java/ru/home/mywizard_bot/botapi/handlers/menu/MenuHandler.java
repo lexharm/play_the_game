@@ -9,11 +9,12 @@ import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 @Component
 public class MenuHandler extends Handler {
-    protected MenuHandler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
-        super(userDataCache, mainMenuService, story);
+    protected MenuHandler(UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService, Story story) {
+        super(userDataCache, profileDataService, mainMenuService, story);
     }
 
     @Override

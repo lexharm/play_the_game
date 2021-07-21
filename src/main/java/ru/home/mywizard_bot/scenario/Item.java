@@ -9,6 +9,8 @@ public class Item {
     private boolean visible;
     private int size;
 
+    public Item() {}
+
     // Default constructor
     public Item(String id, String name) {
         this.id = id;

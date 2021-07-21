@@ -13,6 +13,7 @@ import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,13 @@ import java.util.List;
 @Slf4j
 public abstract class Handler {
     private final UserDataCache userDataCache;
+    private final UsersProfileDataService profileDataService;
     private final MainMenuService mainMenuService;
     protected final Story story;
 
-    protected Handler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
+    protected Handler(UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService, Story story) {
         this.userDataCache = userDataCache;
+        this.profileDataService = profileDataService;
         this.mainMenuService = mainMenuService;
         this.story = story;
     }
@@ -52,11 +55,13 @@ public abstract class Handler {
                 this.getClass().getSimpleName(), (callbackQueryId != null) ? "with callback" : "",
                 message.getFrom().getUserName(), userId, chatId, receivedText);
 
-        UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        //UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        UserProfileData profileData = profileDataService.getUserProfileData(chatId);
 
         Paragraph currentParagraph = getCurrentParagraph(profileData);
         List<Link> links = new ArrayList<>();
         links.addAll(currentParagraph.getLinks());
+        links.addAll(currentParagraph.getInlineLinks());
         links.addAll(story.getExtraLinks(getHandlerName()));
 
         Paragraph newParagraph = currentParagraph;
@@ -75,7 +80,8 @@ public abstract class Handler {
             }
         }
         engageParagraphFeaturesHook_2(newParagraph, currentParagraph, profileData, paragraphChanged);
-        userDataCache.saveUserProfileData(userId, profileData);
+        //userDataCache.saveUserProfileData(userId, profileData);
+        profileDataService.saveUserProfileData(profileData);
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (callbackQueryId != null && !paragraphChanged)
             return mainMenuService.getIllegalActionMessage(callbackQueryId);

@@ -10,7 +10,9 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.mywizard_bot.cache.UserDataCache;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
 public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
+    private UsersProfileDataService profileDataService;
     private MainMenuService mainMenuService;
     @Value("${telegrambot.sleep}")
     private int sleepTime;
@@ -32,32 +35,37 @@ public class TelegramFacade {
     }
 
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
+        this.profileDataService = profileDataService;
     }
 
     public UserDataCache getUserDataCache() {
         return userDataCache;
     }
 
+    public UsersProfileDataService getProfileDataService() {
+        return profileDataService;
+    }
+
     /*public BotApiMethod<?> handleUpdate(Update update) {
-        SendMessage replyMessage = null;
-        if (update.hasCallbackQuery()) {
-            CallbackQuery callbackQuery = update.getCallbackQuery();
-            log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
-                    callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
-            return processCallbackQuery(callbackQuery);
-        }
-        Message message = update.getMessage();
-        if (message != null && message.hasText()) {
-            log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
-                    message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
-            replyMessage = handleInputMessage(message);
-        }
-        return replyMessage;
-    }*/
+            SendMessage replyMessage = null;
+            if (update.hasCallbackQuery()) {
+                CallbackQuery callbackQuery = update.getCallbackQuery();
+                log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
+                        callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
+                return processCallbackQuery(callbackQuery);
+            }
+            Message message = update.getMessage();
+            if (message != null && message.hasText()) {
+                log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
+                        message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
+                replyMessage = handleInputMessage(message);
+            }
+            return replyMessage;
+        }*/
     public List<PartialBotApiMethod<?>> handleUpdate(Update update) {
         List<PartialBotApiMethod<?>> replyMessagesList = null;
         if (update.hasCallbackQuery()) {
@@ -109,14 +117,20 @@ public class TelegramFacade {
         SendMessage replyMessage;
         switch (inputMsg) {
             case "/start":
-                userDataCache.clearCache();
+                //userDataCache.clearCache();
+                profileDataService.deleteByChatId(chatId);
+                UserProfileData profileData = new UserProfileData();
+                profileData.setChatId(chatId);
+                profileData.setBotState(BotState.SHOW_MAIN_MENU);
+                profileDataService.saveUserProfileData(profileData);
                 botState = BotState.SHOW_MAIN_MENU;
                 break;
             default:
-                botState = userDataCache.getUsersCurrentBotState(userId);
+                //botState = userDataCache.getUsersCurrentBotState(userId);
+                botState = profileDataService.getUserBotState(userId);
                 break;
         }
-        userDataCache.setUsersCurrentBotState(userId, botState);
+        //userDataCache.setUsersCurrentBotState(userId, botState);
         return botStateContext.processInputMessage(botState, message);
     }
 
@@ -126,15 +140,22 @@ public class TelegramFacade {
         BotState botState;
         switch (buttonQuery.getData()) {
             case "/start":
+                profileDataService.deleteByChatId(chatId);
+                UserProfileData profileData = new UserProfileData();
+                profileData.setChatId(chatId);
+                profileData.setBotState(BotState.SHOW_MAIN_MENU);
+                profileDataService.saveUserProfileData(profileData);
                 botState = BotState.SHOW_MAIN_MENU;
                 break;
             default:
-                botState = userDataCache.getUsersCurrentBotState(userId);
+                //botState = userDataCache.getUsersCurrentBotState(userId);
+                botState = profileDataService.getUserBotState(chatId);
                 break;
         }
-        userDataCache.setUsersCurrentBotState(userId, botState);
+        //userDataCache.setUsersCurrentBotState(userId, botState);
         //BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
-        List<PartialBotApiMethod<?>> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
+        //List<PartialBotApiMethod<?>> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
+        List<PartialBotApiMethod<?>> callBackAnswer = botStateContext.processInputMessage(botState, buttonQuery);
         /*List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
         InlineKeyboardButton button = new InlineKeyboardButton().setText("Ok!");
         button.setCallbackData("123");
