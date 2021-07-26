@@ -25,7 +25,7 @@ public class PlayHandler extends Handler {
     @Override
     protected void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData) {
         if (!newParagraph.getId().equals(currentParagraph.getId())) {
-            newParagraph.engageFeatures(profileData);
+            newParagraph.applyActions(profileData);
         }
     }
 

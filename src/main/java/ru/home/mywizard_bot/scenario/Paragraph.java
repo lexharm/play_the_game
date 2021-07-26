@@ -3,6 +3,7 @@ package ru.home.mywizard_bot.scenario;
 import lombok.Data;
 import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.Event;
 import ru.home.mywizard_bot.scenario.actions.InlineLink;
 import ru.home.mywizard_bot.scenario.actions.MovementLink;
 import ru.home.mywizard_bot.scenario.features.Feature;
@@ -53,6 +54,12 @@ public class Paragraph implements Cloneable, Serializable {
         for (Feature feature : features) {
             feature.engage(profileData);
         }
+    }
+
+    public void applyActions(UserProfileData profileData) {
+        actions.stream().filter(Event.class::isInstance)
+                .filter(x -> x.test(profileData))
+                .forEach(x -> x.applyEffects(profileData));
     }
 
     public void addFeature(Feature feature) {

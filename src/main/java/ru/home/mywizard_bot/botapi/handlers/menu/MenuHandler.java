@@ -35,7 +35,8 @@ public class MenuHandler extends Handler {
     @Override
     protected void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
         if ((!newParagraph.getId().equals(currentParagraph.getId())) && (!newParagraph.getId().equals(profileData.getCurrentParagraph().getId()))) {
-            newParagraph.engageFeatures(profileData);
+            //newParagraph.engageFeatures(profileData);
+            newParagraph.applyActions(profileData);
         }
     }
 

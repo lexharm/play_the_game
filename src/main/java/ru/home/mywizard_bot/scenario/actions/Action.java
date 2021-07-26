@@ -66,6 +66,6 @@ public class Action {
     }
 
     public boolean test(UserProfileData profileData) {
-        return conditions.stream().allMatch(x -> x.test(profileData));
+        return conditions.isEmpty() || conditions.stream().allMatch(x -> x.test(profileData));
     }
 }

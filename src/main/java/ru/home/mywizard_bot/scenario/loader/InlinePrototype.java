@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.*;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.Event;
 import ru.home.mywizard_bot.scenario.actions.InlineLink;
 import ru.home.mywizard_bot.scenario.actions.MovementLink;
 import ru.home.mywizard_bot.scenario.checks.*;
@@ -146,8 +147,8 @@ public class InlinePrototype extends Loader {
         id = "-1";
         paragraph = new Paragraph(id, "Внезапно из-за спазма в горле вы давитесь собственной слюной и умираете " +
                 "так и не достигнув цели своего путешествия.");
-        paragraph.addFeature(new EndGame());
         actions = new ArrayList<>();
+        actions.add(new Event(new EndGame()));
         actions.add(new MovementLink("Начать заново", "10002"));
         actions.add(new MovementLink("Выйти в главное меню", "10000"));
         paragraph.setActions(actions);
@@ -169,8 +170,8 @@ public class InlinePrototype extends Loader {
         actions.add(new MovementLink("EX ANIMO, FRATER!", "1", new SetStateScenario()));
         /*paragraph.addFeature(new InitNewGame());
         paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));*/
-        actions.add(new Action(new InitNewGame()));
-        actions.add(new Action(new GiveItem(new Item("Sword", "Меч-хладинец"))));
+        actions.add(new Event(new InitNewGame()));
+        actions.add(new Event(new GiveItem(new Item("Sword", "Меч-хладинец"))));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -253,7 +254,6 @@ public class InlinePrototype extends Loader {
                         "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
                         "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется.");
         paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга наперерез вам. Ваше действие?");
-
         paragraph.addFeature(new GiveItem(new Item("Coin", "Монета с профилем Императора")));
         actions = new ArrayList<>();
         actions.add(new MovementLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
@@ -278,8 +278,8 @@ public class InlinePrototype extends Loader {
         id = "345";
         paragraph = new Paragraph(id, "- Ты чьих будешь, - спрашивает погонщик.");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Эм... ммм... Хоббитс, эээ?", "346"));
-        actions.add(new InlineLink("Я - головка от буя!", "347"));
+        actions.add(new InlineLink("Эм... ммм... Хоббитс, эээ?", "346", true));
+        actions.add(new InlineLink("Я - головка от буя!", "347", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -289,13 +289,7 @@ public class InlinePrototype extends Loader {
         paragraph.addFeature(new SetStateCombat());
         paragraph.addFeature(new AddCombatCheck());
         actions = new ArrayList<>();
-        /*link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
-        link.addFeature(new SetStateScenario());
-        actions.add(link);*/
         actions.add(new MovementLink("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        /*enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
-        paragraph.setEnemy(enemy);
-        paragraph.setCombat(true);*/
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Погонщик", "Drover", 10, 12, 25));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);

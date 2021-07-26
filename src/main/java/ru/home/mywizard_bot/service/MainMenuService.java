@@ -135,8 +135,10 @@ public class MainMenuService {
                 log.info("replyKeyboard != null && size = 1");
                 PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
                 if (botApiMethod instanceof SendMessage) {
+                    System.out.println("U R HERE!");
                     ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
                 }
+                System.out.println("U R OVER THERE!");
             } else if (replyMessagesList.size() == 2) {
                 log.info("replyKeyboard != null && size = 2");
                 PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
