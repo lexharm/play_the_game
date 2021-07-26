@@ -21,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.*;
+import ru.home.mywizard_bot.scenario.actions.Action;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -297,9 +298,9 @@ public class MainMenuService {
     private InlineKeyboardMarkup getInlineKeyboard(Paragraph paragraph, UserProfileData profileData, Story story) {
         InlineKeyboardMarkup inlineKeyboardMarkup = null;
         List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
-        for (Link link : paragraph.getInlineLinks()) {
+        for (Action link : paragraph.getInlineLinks1()) {
             if (link.test(profileData)) {
-                InlineKeyboardButton button = new InlineKeyboardButton().setText(link.getText());
+                InlineKeyboardButton button = new InlineKeyboardButton().setText(link.getCaption());
                 button.setCallbackData(link.getId());
                 List<InlineKeyboardButton> buttonList = new ArrayList<>();
                 buttonList.add(button);
@@ -316,10 +317,10 @@ public class MainMenuService {
     private ReplyKeyboardMarkup getReplyKeyboard(Paragraph paragraph, UserProfileData profileData, Story story) {
         ReplyKeyboardMarkup replyKeyboardMarkup = null;
         List<KeyboardRow> keyboard = new ArrayList<>();
-        for (Link link : paragraph.getLinks()) {
+        for (Action link : paragraph.getMovementLinks()) {
             if (link.test(profileData)) {
                 KeyboardRow row = new KeyboardRow();
-                row.add(new KeyboardButton(link.getText()));
+                row.add(new KeyboardButton(link.getCaption()));
                 keyboard.add(row);
             }
         }

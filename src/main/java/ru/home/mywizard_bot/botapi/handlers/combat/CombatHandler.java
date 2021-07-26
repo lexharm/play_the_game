@@ -63,7 +63,7 @@ public class CombatHandler implements InputMessageHandler {
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())){
                 matchedLink = link;
-                newParagraph = story.getCombatParagraph(link, currentParagraph);
+                newParagraph = null; //story.getCombatParagraph(link, currentParagraph);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
                     newParagraph.engageFeatures(profileData);

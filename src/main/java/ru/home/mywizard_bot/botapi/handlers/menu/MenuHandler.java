@@ -3,11 +3,11 @@ package ru.home.mywizard_bot.botapi.handlers.menu;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.Handler;
-import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
-import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
+import ru.home.mywizard_bot.scenario.actions.Action;
 import ru.home.mywizard_bot.service.MainMenuService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
 
@@ -23,7 +23,7 @@ public class MenuHandler extends Handler {
     }
 
     @Override
-    protected Paragraph getNewParagraph(Link link, Paragraph currentParagraph) {
+    protected Paragraph getNewParagraph(Action link, Paragraph currentParagraph) {
         return story.getMenuParagraph(link);
     }
 

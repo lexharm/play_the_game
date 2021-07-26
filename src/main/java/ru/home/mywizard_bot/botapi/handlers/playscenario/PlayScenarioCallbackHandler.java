@@ -55,7 +55,7 @@ public class PlayScenarioCallbackHandler implements CallbackHandler {
         for (Link link : links) {
             if (usersAnswer.equals(link.getId())) {
                 matchedLink = link;
-                newParagraph = story.getMenuParagraph(link);
+                newParagraph = null;//story.getMenuParagraph(link);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
                     newParagraph.engageFeatures(profileData);

@@ -55,7 +55,7 @@ public class MenuCallbackHandler implements CallbackHandler {
         for (Link link : links) {
             if (usersAnswer.equals(link.getId())) {
                 matchedLink = link;
-                newParagraph = story.getMenuParagraph(link);
+                newParagraph = null;//story.getMenuParagraph(link);
                 link.engageFeatures(profileData);
                 switch (profileData.getBotState()) {
                     case PLAY_SCENARIO:

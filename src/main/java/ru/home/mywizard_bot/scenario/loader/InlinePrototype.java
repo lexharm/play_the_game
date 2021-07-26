@@ -3,6 +3,9 @@ package ru.home.mywizard_bot.scenario.loader;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.*;
+import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.InlineLink;
+import ru.home.mywizard_bot.scenario.actions.MovementLink;
 import ru.home.mywizard_bot.scenario.checks.*;
 import ru.home.mywizard_bot.scenario.features.*;
 
@@ -38,6 +41,8 @@ public class InlinePrototype extends Loader {
     @Override
     public void loadParagraphs() {
         Paragraph paragraph;
+        List<Action> actions;
+
         List<Link> links;
         String id;
         Enemy enemy;
@@ -45,18 +50,18 @@ public class InlinePrototype extends Loader {
 
         id = "noMenuParagraph";
         paragraph = new Paragraph(id, "Раздел отсутствует :(");
-        links = new ArrayList<>();
-        links.add(new Link("Вернуться в главное меню", "10000"));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Вернуться в главное меню", "10000"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "inventory";
         paragraph = new Paragraph(id, "");
-        links = new ArrayList<>();
-        links.add(new Link("Восстановить здоровье едой", "inventory"));
-        links.add(new Link("Описание телепатических способностей", "inventory"));
-        links.add(new Link("Вернуться в игру", "inventory", new ReturnToGame()));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Восстановить здоровье едой", "inventory"));
+        actions.add(new InlineLink("Описание телепатических способностей", "inventory"));
+        actions.add(new InlineLink("Вернуться в игру", "inventory", new ReturnToGame()));
+        paragraph.setActions(actions);
         paragraph.addFeature(new ShowInventory());
         allParagraphs.put(id, paragraph);
 
@@ -64,108 +69,109 @@ public class InlinePrototype extends Loader {
         paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!");
         paragraph.addText("Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
         paragraph.setIllustration(new Illustration("", "static/images/art_1.jpg"));
-        //paragraph.setSubstitute(true);
-        links = new ArrayList<>();
-        links.add(new Link("Руководство", "10003", false));
-        links.add(new Link("Новая игра", "10002", false));
-        links.add(new Link("Статистика", "10004", false));
-        links.add(new Link("Подробнее о боте", "10005", false));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Руководство", "10003", false));
+        actions.add(new InlineLink("Новая игра", "10002", false));
+        actions.add(new InlineLink("Статистика", "10004", false));
+        actions.add(new InlineLink("Подробнее о боте", "10005", false));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10000";
         paragraph = new Paragraph(id, "Главное меню");
-        links = new ArrayList<>();
-        links.add(new Link("Вернуться в игру", "10001", new ActiveGameCheck(), new ReturnToGame()));
-        links.add(new Link("Новая игра", "10002", false));
-        links.add(new Link("Руководство", "10003", false));
-        links.add(new Link("Статистика", "10004", false));
-        links.add(new Link("Подробнее о боте", "10005", false));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Вернуться в игру", "10001", new ActiveGameCheck(), new ReturnToGame()));
+        actions.add(new InlineLink("Новая игра", "10002", false));
+        actions.add(new InlineLink("Руководство", "10003", false));
+        actions.add(new InlineLink("Статистика", "10004", false));
+        actions.add(new InlineLink("Подробнее о боте", "10005", false));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10002";
         paragraph = new Paragraph(id, "Вы уверены?");
-        links = new ArrayList<>();
-        links.add(new Link("Да", "0"));
-        links.add(new Link("Назад", "10000", false));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Да", "0", true));
+        actions.add(new InlineLink("Назад", "10000", false));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10003";
         paragraph = new Paragraph(id, "Выберите интересующую тему");
-        links = new ArrayList<>();
-        links.add(new Link("Правила игры", "10008"));
-        links.add(new Link("Ловкость и сила", "10009"));
-        links.add(new Link("Удача", "10010"));
-        links.add(new Link("Битвы", "10011"));
-        links.add(new Link("Ранения", "10012"));
-        links.add(new Link("Сила мысли", "10013"));
-        links.add(new Link("Если вы проголодались", "10014"));
-        links.add(new Link("Листок путешественника", "10015"));
-        links.add(new Link("Назад", "10000", false));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Правила игры", "10008"));
+        actions.add(new InlineLink("Ловкость и сила", "10009"));
+        actions.add(new InlineLink("Удача", "10010"));
+        actions.add(new InlineLink("Битвы", "10011"));
+        actions.add(new InlineLink("Ранения", "10012"));
+        actions.add(new InlineLink("Сила мысли", "10013"));
+        actions.add(new InlineLink("Если вы проголодались", "10014"));
+        actions.add(new InlineLink("Листок путешественника", "10015"));
+        actions.add(new InlineLink("Назад", "10000", false));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10004";
         paragraph = new Paragraph(id, "Выберите раздел");
-        links = new ArrayList<>();
-        links.add(new Link("Персональная статистика", "10016"));
-        links.add(new Link("Глобальная статистика", "10017"));
-        links.add(new Link("Назад", "10000", false));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Персональная статистика", "10016"));
+        actions.add(new InlineLink("Глобальная статистика", "10017"));
+        actions.add(new InlineLink("Назад", "10000", false));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10005";
         paragraph = new Paragraph(id, "Выберите раздел");
-        links = new ArrayList<>();
-        links.add(new Link("О сценарии", "10018", false));
-        links.add(new Link("О разработчиках", "10019"));
-        links.add(new Link("Назад", "10000", false));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("О сценарии", "10018", false));
+        actions.add(new InlineLink("О разработчиках", "10019"));
+        actions.add(new InlineLink("Назад", "10000", false));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10019";
         paragraph = new Paragraph(id, "Имена этих людей слишком хорошо известны, чтобы их называть!");
-        links = new ArrayList<>();
-        links.add(new Link("Понятно, очень приятно", "10005"));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Понятно, очень приятно", "10005"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "10018";
         paragraph = new Paragraph(id, "Хороший сценарий?");
-        links = new ArrayList<>();
-        links.add(new Link("Да!", "10005"));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Да!", "10005"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "-1";
         paragraph = new Paragraph(id, "Внезапно из-за спазма в горле вы давитесь собственной слюной и умираете " +
                 "так и не достигнув цели своего путешествия.");
         paragraph.addFeature(new EndGame());
-        links = new ArrayList<>();
-        links.add(new Link("Начать заново", "10002"));
-        links.add(new Link("Выйти в главное меню", "10000"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Начать заново", "10002"));
+        actions.add(new MovementLink("Выйти в главное меню", "10000"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "combatDefeat";
         paragraph = new Paragraph(id, "Вам не хватило сил одержать победу в этой схватке. Вам конец.");
         paragraph.addFeature(new EndGame());
-        links = new ArrayList<>();
-        links.add(new Link("Начать заново", "10002"));
-        links.add(new Link("Выйти в главное меню", "10000"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Начать заново", "10002"));
+        actions.add(new MovementLink("Выйти в главное меню", "10000"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "0";
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
         paragraph.setIllustration(new Illustration("", "static/images/barbarian_1.jpg"));
-        links = new ArrayList<>();
-        links.add(new Link("EX ANIMO, FRATER!", "1", new SetStateScenario()));
-        paragraph.setLinks(links);
-        paragraph.addFeature(new InitNewGame());
-        paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("EX ANIMO, FRATER!", "1", new SetStateScenario()));
+        /*paragraph.addFeature(new InitNewGame());
+        paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));*/
+        actions.add(new Action(new InitNewGame()));
+        actions.add(new Action(new GiveItem(new Item("Sword", "Меч-хладинец"))));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "1";
@@ -175,49 +181,53 @@ public class InlinePrototype extends Loader {
         paragraph.addText("В деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
-        links = new ArrayList<>();
-        links.add(new Link("На северо-восток", "89", new EventCheck("MaylineIsDead")));
-        links.add(new Link("На юго-восток", "230"));
-        Link link = new Link("Вернуться и подраться с Майлином", "999", new EventCheck("MaylineIsDead", false));
-        link.addCheck(new EventCheck("MaylineIsLaugh", false));
-        links.add(link);
-        link = new Link("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("MaylineIsLaugh"));
-        link.addCheck(new EventCheck("MaylineIsDead", false));
-        links.add(link);
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("На северо-восток", "89", new EventCheck("MaylineIsDead")));
+        actions.add(new MovementLink("На юго-восток", "230"));
+
+        MovementLink link = new MovementLink("Вернуться и подраться с Майлином", "999", new EventCheck("MaylineIsDead", false));
+        link.addCondition(new EventCheck("MaylineIsLaugh", false));
+        actions.add(link);
+
+        link = new MovementLink("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("MaylineIsLaugh"));
+        link.addCondition(new EventCheck("MaylineIsDead", false));
+        actions.add(link);
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "999";
         paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох и вручает вам веревку. Не ждите пощады!",
                 "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
         paragraph.setIllustration(new Illustration("", "static/images/monster_2.jpg"));
+        actions = new ArrayList<>();
+
         paragraph.addFeature(new SetStateCombat());
         paragraph.addFeature(new AddCombatCheck());
         paragraph.addFeature(new GiveItem(new Item("Rope", "Веревка")));
-        links = new ArrayList<>();
-        link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
-        link.addFeature(new SetStateScenario());
-        links.add(link);
-        links.add(new Link("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        paragraph.setLinks(links);
-        enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
+        link = new MovementLink("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
+        link.addEffect(new SetStateScenario());
+        actions.add(link);
+        actions.add(new MovementLink("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        /*enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
         paragraph.setEnemy(enemy);
-        paragraph.setCombat(true);
+        paragraph.setCombat(true);*/
+        actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Майлин", "Mayline", 10, 12, 25));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "1000";
         paragraph = new Paragraph(id, "Победа! Теперь можно никуда не ходить.");
-        links = new ArrayList<>();
-        links.add(new Link("Начать заново", "1", new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Начать заново", "1", new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "-2";
         paragraph = new Paragraph(id, "Слабак! Тряпка! Дешёвка! Ты мёртв! - говорит Майлин скармливая ваш труп " +
                 "кондорам. Однако во всём есть свои плюсы - теперь вам не нужно идти через пустыню :)");
-        links = new ArrayList<>();
-        links.add(new Link("Начать заново", "1"));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Начать заново", "1"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "89";
@@ -229,11 +239,11 @@ public class InlinePrototype extends Loader {
                 "под полуденным солнцем вряд ли имеет смысл. Поднимается ветер (хорошо бы еще не было песчаной бури). " +
                 "Но вместе с ветром появляется и первая растительность — несколько шаров перекати-поле, быстро " +
                 "катящихся навстречу. Что вы предпримите?");
-        links = new ArrayList<>();
-        links.add(new Link("Свернуть в сторону", "514"));
-        links.add(new Link("Продолжать путь", "479"));
-        links.add(new Link("Остановиться и обножить меч", "344"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Свернуть в сторону", "514"));
+        actions.add(new MovementLink("Продолжать путь", "479"));
+        actions.add(new MovementLink("Остановиться и обножить меч", "344"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "230";
@@ -245,10 +255,10 @@ public class InlinePrototype extends Loader {
         paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга наперерез вам. Ваше действие?");
 
         paragraph.addFeature(new GiveItem(new Item("Coin", "Монета с профилем Императора")));
-        links = new ArrayList<>();
-        links.add(new Link("Свернуть на север, чтобы избежать встречи с ним", "481"));
-        links.add(new Link("Идти дальше", "96"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
+        actions.add(new MovementLink("Идти дальше", "96"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "96";
@@ -259,18 +269,18 @@ public class InlinePrototype extends Loader {
                 "Хотите подойти поговорить с одним из погонщиков или продолжите свой путь, решив, что ночь безопасней " +
                 "провести в одиночку, чем с незнакомыми людьми?");
         paragraph.setIllustration(new Illustration("Гном-погонщик пристально смотрит на вас.", "static/images/dwarf.jpg"));
-        links = new ArrayList<>();
-        links.add(new Link("Поговорить с погонщиком", "345"));
-        links.add(new Link("Продолжить путь", "245"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Поговорить с погонщиком", "345"));
+        actions.add(new MovementLink("Продолжить путь", "245"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "345";
         paragraph = new Paragraph(id, "- Ты чьих будешь, - спрашивает погонщик.");
-        links = new ArrayList<>();
-        links.add(new Link("Эм... ммм... Хоббитс, эээ?", "346"));
-        links.add(new Link("Я - головка от буя!", "347"));
-        paragraph.setInlineLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Эм... ммм... Хоббитс, эээ?", "346"));
+        actions.add(new InlineLink("Я - головка от буя!", "347"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "346";
@@ -278,33 +288,34 @@ public class InlinePrototype extends Loader {
                 "С трудом, но вы одолеваете пустынного жителя. Но что вы будете делать с остальными кочевниками?");
         paragraph.addFeature(new SetStateCombat());
         paragraph.addFeature(new AddCombatCheck());
-        links = new ArrayList<>();
+        actions = new ArrayList<>();
         /*link = new Link("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
         link.addFeature(new SetStateScenario());
-        links.add(link);*/
-        links.add(new Link("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        paragraph.setLinks(links);
-        enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
+        actions.add(link);*/
+        actions.add(new MovementLink("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        /*enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
         paragraph.setEnemy(enemy);
-        paragraph.setCombat(true);
+        paragraph.setCombat(true);*/
+        actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Погонщик", "Drover", 10, 12, 25));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "245";
         paragraph = new Paragraph(id, "Пройдя мимо каравана, вы уходите в ночь, а усталые люди и верблюды вскоре " +
                 "скрываются из виду. Пора и вам отдохнуть. Расположившись на ночлег, быстро засыпаете, ведь завтра " +
                 "предстоит нелегкий путь");
-        links = new ArrayList<>();
-        links.add(new Link("Отдыхать", "20"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Отдыхать", "20"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "20";
         paragraph = new Paragraph(id, "Ночь приносит желанный отдых (можете восстановить 2 СИЛЫ), а утром решайте, " +
                 "куда идти дальше.");
-        links = new ArrayList<>();
-        links.add(new Link("На северо-восток", "116"));
-        links.add(new Link("На юго-восток", "93"));
-        paragraph.setLinks(links);
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("На северо-восток", "116"));
+        actions.add(new MovementLink("На юго-восток", "93"));
+        paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
     }
 }

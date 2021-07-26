@@ -65,7 +65,7 @@ public class PlayScenarioHandler implements InputMessageHandler {
         for (Link link : links) {
             if (usersAnswer.equals(link.getText())) {
                 matchedLink = link;
-                newParagraph = story.getStoryParagraph(link);
+                newParagraph = null;//story.getStoryParagraph(link);
                 link.engageFeatures(profileData);
                 if (!newParagraph.getId().equals(currentParagraph.getId())) {
                     newParagraph.engageFeatures(profileData);

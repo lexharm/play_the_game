@@ -2,11 +2,15 @@ package ru.home.mywizard_bot.scenario;
 
 import lombok.Data;
 import ru.home.mywizard_bot.model.UserProfileData;
+import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.InlineLink;
+import ru.home.mywizard_bot.scenario.actions.MovementLink;
 import ru.home.mywizard_bot.scenario.features.Feature;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class Paragraph implements Cloneable, Serializable {
@@ -20,6 +24,7 @@ public class Paragraph implements Cloneable, Serializable {
     private boolean combat = false;
     private Enemy enemy;
     private List<Feature> features = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
     private Illustration illustration;
 
     public Paragraph() {}
@@ -61,5 +66,13 @@ public class Paragraph implements Cloneable, Serializable {
 
     public void addText(String text) {
         textsList.add(text);
+    }
+
+    public List<Action> getMovementLinks() {
+        return actions.stream().filter(MovementLink.class::isInstance).collect(Collectors.toList());
+    }
+
+    public List<Action> getInlineLinks1() {
+        return actions.stream().filter(InlineLink.class::isInstance).collect(Collectors.toList());
     }
 }

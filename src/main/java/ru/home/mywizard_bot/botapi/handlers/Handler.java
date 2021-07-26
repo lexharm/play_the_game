@@ -7,11 +7,11 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
-import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
+import ru.home.mywizard_bot.scenario.actions.Action;
 import ru.home.mywizard_bot.service.MainMenuService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
 
@@ -59,20 +59,24 @@ public abstract class Handler {
         UserProfileData profileData = profileDataService.getUserProfileData(chatId);
 
         Paragraph currentParagraph = getCurrentParagraph(profileData);
-        List<Link> links = new ArrayList<>();
+        /*List<Link> links = new ArrayList<>();
         links.addAll(currentParagraph.getLinks());
         links.addAll(currentParagraph.getInlineLinks());
-        links.addAll(story.getExtraLinks(getHandlerName()));
+        links.addAll(story.getExtraLinks(getHandlerName()));*/
+        List<Action> links = new ArrayList<>();
+        links.addAll(currentParagraph.getMovementLinks());
+        links.addAll(currentParagraph.getInlineLinks1());
+        links.addAll(currentParagraph.getMovementLinks());
 
         Paragraph newParagraph = currentParagraph;
         boolean paragraphChanged = false;
-        Link matchedLink = null;
-        for (Link link : links) {
+        Action matchedLink = null;
+        for (Action link : links) {
             if ((botApiObject instanceof CallbackQuery && receivedText.equals(link.getId()))
-                    || (botApiObject instanceof Message && receivedText.equals(link.getText()))) {
+                    || (botApiObject instanceof Message && receivedText.equals(link.getCaption()))) {
                 matchedLink = link;
                 newParagraph = getNewParagraph(link, currentParagraph);
-                link.engageFeatures(profileData);
+                link.applyEffects(profileData);
                 engageParagraphFeaturesHook_1(newParagraph, currentParagraph, profileData);
                 processStates(profileData.getBotState(), profileData, newParagraph);
                 paragraphChanged = true;
@@ -93,7 +97,7 @@ public abstract class Handler {
         return profileData.getCurrentParagraph();
     };
 
-    protected abstract Paragraph getNewParagraph(Link link, Paragraph currentParagraph);
+    protected abstract Paragraph getNewParagraph(Action link, Paragraph currentParagraph);
 
     protected abstract void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData);
 
