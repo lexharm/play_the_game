@@ -6,10 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.scenario.Enemy;
-import ru.home.mywizard_bot.scenario.Item;
-import ru.home.mywizard_bot.scenario.Paragraph;
-import ru.home.mywizard_bot.scenario.Story;
+import ru.home.mywizard_bot.scenario.*;
 import ru.home.mywizard_bot.scenario.checks.Check;
 
 import java.io.Serializable;
@@ -35,9 +32,16 @@ public class UserProfileData implements Serializable {
     Paragraph currentParagraph = new Paragraph("dummy", "dummy");
     int enemyStrength;
     int strength;
+    int initStrength;
     int dexterity;
+    int initDexterity;
+    int thoughtPower;
+    int initThoughtPower;
+    int attackPower;
     int damage;
     Enemy enemy;
+    List<ru.home.mywizard_bot.scenario.actions.Enemy> enemies = new ArrayList<>();
+    int combatTurn = 0;
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();
@@ -81,14 +85,25 @@ public class UserProfileData implements Serializable {
                 '}';
     }
 
-    public String getCombatInfo() {
-        return "Ваша сила=" + strength +
-                ", ловкость=" + dexterity;
+    public String getCombatInfo(boolean classicCombat) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ИГРОК").append("\n");
+        sb.append("Здоровье ").append(strength).append("/").append(initStrength).append("\n");
+        sb.append(classicCombat ? "Ловкость " : " Сила мысли ").append(classicCombat ? dexterity : thoughtPower).append("\n");
+        int dice = Dice.roll();
+        attackPower = dice * 2 + (classicCombat ? dexterity : thoughtPower);
+        sb.append("Мощность атаки ").append("(").append(dice).append(" x 2) + ")
+                .append(classicCombat ? dexterity : thoughtPower).append(" = ").append(attackPower).append("\n").append("\n");
+        return sb.toString();
     }
 
     public Paragraph getCurrentMenu(Story story) {
         if (currentMenu == null)
             currentMenu = story.getInitialMenuParagraph();
         return currentMenu;
+    }
+
+    public int getCombatTurn() {
+        return ++combatTurn;
     }
 }

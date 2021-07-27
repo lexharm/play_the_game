@@ -33,6 +33,8 @@ public class Story {
     private int strength;
     @Value("${startNewGame.dexterity}")
     private int dexterity;
+    @Value("${startNewGame.thoughtPower}")
+    private int thoughtPower;
     @Value("${startNewGame.damage}")
     private int damage;
 

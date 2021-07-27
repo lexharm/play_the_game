@@ -15,7 +15,11 @@ public class InitNewGame implements Feature {
         Story story = (Story) ApplicationContextHolder.getApplicationContext().getBean("story");
         profileData.setCurrentParagraph(story.getInitialStoryParagraph());
         profileData.setStrength(story.getStrength());
+        profileData.setInitStrength(story.getStrength());
         profileData.setDexterity(story.getDexterity());
+        profileData.setInitDexterity(story.getDexterity());
+        profileData.setThoughtPower(story.getThoughtPower());
+        profileData.setInitThoughtPower(story.getThoughtPower());
         profileData.setDamage(story.getDamage());
         profileData.setInventory(new HashMap<>());
         profileData.setChecks(new HashMap<>());

@@ -3,11 +3,11 @@ package ru.home.mywizard_bot.scenario;
 import lombok.Data;
 import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.Enemy;
 import ru.home.mywizard_bot.scenario.actions.Event;
 import ru.home.mywizard_bot.scenario.actions.InlineLink;
 import ru.home.mywizard_bot.scenario.actions.MovementLink;
 import ru.home.mywizard_bot.scenario.features.Feature;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ public class Paragraph implements Cloneable, Serializable {
     private List<Link> links = new ArrayList<>();
     private String imagePath;
     private boolean combat = false;
-    private Enemy enemy;
     private List<Feature> features = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
     private Illustration illustration;
@@ -41,13 +40,6 @@ public class Paragraph implements Cloneable, Serializable {
     public Paragraph(String id, String text, String postText) {
         this(id, text);
         this.postText = postText;
-    }
-
-    public Paragraph(String id, String text, boolean isCombat, Enemy enemy) {
-        this.id = id;
-        this.text = text;
-        this.combat = isCombat;
-        this.enemy = enemy;
     }
 
     public void engageFeatures(UserProfileData profileData) {
@@ -75,11 +67,17 @@ public class Paragraph implements Cloneable, Serializable {
         textsList.add(text);
     }
 
-    public List<Action> getMovementLinks() {
-        return actions.stream().filter(MovementLink.class::isInstance).collect(Collectors.toList());
+    public List<MovementLink> getMovementLinks() {
+        //return actions.stream().filter(MovementLink.class::isInstance).collect(Collectors.toList());
+        return actions.stream().filter(MovementLink.class::isInstance).map(MovementLink.class::cast).collect(Collectors.toList());
     }
 
     public List<Action> getInlineLinks1() {
-        return actions.stream().filter(InlineLink.class::isInstance).collect(Collectors.toList());
+        //return actions.stream().filter(InlineLink.class::isInstance).collect(Collectors.toList());
+        return actions.stream().filter(InlineLink.class::isInstance).map(InlineLink.class::cast).collect(Collectors.toList());
+    }
+
+    public List<Enemy> getEnemies() {
+        return actions.stream().filter(Enemy.class::isInstance).map(Enemy.class::cast).collect(Collectors.toList());
     }
 }

@@ -66,7 +66,6 @@ public abstract class Handler {
         List<Action> links = new ArrayList<>();
         links.addAll(currentParagraph.getMovementLinks());
         links.addAll(currentParagraph.getInlineLinks1());
-        links.addAll(currentParagraph.getMovementLinks());
 
         Paragraph newParagraph = currentParagraph;
         boolean paragraphChanged = false;

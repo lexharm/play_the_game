@@ -74,7 +74,7 @@ public class CombatCallbackHandler implements CallbackHandler {
                         break;
                     default:
                         //COMBAT
-                        newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
+                        newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo(true) + "\n"
                                 + profileData.getEnemy().getCombatInfo());
                         break;
                 }

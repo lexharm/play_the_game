@@ -5,6 +5,7 @@ import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.Handler;
 import ru.home.mywizard_bot.cache.UserDataCache;
 import ru.home.mywizard_bot.model.UserProfileData;
+import ru.home.mywizard_bot.scenario.Combat;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
@@ -32,8 +33,9 @@ public class PlayHandler extends Handler {
     @Override
     protected void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
         if (profileData.getBotState() == BotState.COMBAT) {
-            newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
-                    + profileData.getCombatInfo());
+            /*newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
+                    + profileData.getCombatInfo());*/
+            return;
         }
     }
 
@@ -42,7 +44,9 @@ public class PlayHandler extends Handler {
         switch (profileData.getBotState()) {
             case COMBAT:
                 profileData.setCurrentParagraph(newParagraph);
-                profileData.setEnemy(newParagraph.getEnemy());
+                profileData.setEnemies(newParagraph.getEnemies());
+                //profileData.getCurrentParagraph().addText();
+                Combat.newTurn(profileData);
                 break;
             case SHOW_MAIN_MENU:
                 profileData.setCurrentMenu(newParagraph);

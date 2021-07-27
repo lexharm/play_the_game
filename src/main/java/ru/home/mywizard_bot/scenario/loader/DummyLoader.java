@@ -186,7 +186,7 @@ public class DummyLoader extends Loader {
         links.add(new Link("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         paragraph.setLinks(links);
         enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
-        paragraph.setEnemy(enemy);
+        //paragraph.setEnemy(enemy);
         paragraph.setCombat(true);
         allParagraphs.put(id, paragraph);
 
@@ -269,7 +269,7 @@ public class DummyLoader extends Loader {
         links.add(new Link("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         paragraph.setLinks(links);
         enemy = new Enemy("Погонщик", "Drover", 10, 12, 25);
-        paragraph.setEnemy(enemy);
+        //paragraph.setEnemy(enemy);
         paragraph.setCombat(true);
         allParagraphs.put(id, paragraph);
 

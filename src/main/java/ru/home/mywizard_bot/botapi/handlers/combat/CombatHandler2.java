@@ -50,8 +50,8 @@ public class CombatHandler2 extends Handler {
                 break;
             default:
                 //COMBAT
-                newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
-                        + profileData.getEnemy().getCombatInfo());
+                /*newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
+                        + profileData.getEnemy().getCombatInfo());*/
                 break;
         }
     }

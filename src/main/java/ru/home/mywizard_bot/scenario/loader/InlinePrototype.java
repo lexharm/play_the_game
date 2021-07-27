@@ -197,22 +197,24 @@ public class InlinePrototype extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "999";
-        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох и вручает вам веревку. Не ждите пощады!",
-                "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
+        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох и вручает вам веревку. Не ждите пощады!");
         paragraph.setIllustration(new Illustration("", "static/images/monster_2.jpg"));
         actions = new ArrayList<>();
-
-        paragraph.addFeature(new SetStateCombat());
-        paragraph.addFeature(new AddCombatCheck());
-        paragraph.addFeature(new GiveItem(new Item("Rope", "Веревка")));
+        actions.add(new Event(new SetStateCombat()));
+        actions.add(new Event(new AddCombatCheck()));
+        actions.add(new Event(new GiveItem(new Item("Rope", "Веревка"))));
         link = new MovementLink("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
         link.addEffect(new SetStateScenario());
         actions.add(link);
         actions.add(new MovementLink("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
-        /*enemy = new Enemy("Майлин", "Mayline", 10, 12, 25);
-        paragraph.setEnemy(enemy);
-        paragraph.setCombat(true);*/
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Майлин", "Mayline", 10, 12, 25));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "999-1";
+        paragraph = new Paragraph(id, "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Никто не смеет называть меня трусом!", "1"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -286,9 +288,9 @@ public class InlinePrototype extends Loader {
         id = "346";
         paragraph = new Paragraph(id, "Ненавижу хоббитов! - кричит погонщик и хватается за саблю. Битва неизбежна.",
                 "С трудом, но вы одолеваете пустынного жителя. Но что вы будете делать с остальными кочевниками?");
-        paragraph.addFeature(new SetStateCombat());
-        paragraph.addFeature(new AddCombatCheck());
         actions = new ArrayList<>();
+        actions.add(new Event(new SetStateCombat()));
+        actions.add(new Event(new AddCombatCheck()));
         actions.add(new MovementLink("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Погонщик", "Drover", 10, 12, 25));
         paragraph.setActions(actions);

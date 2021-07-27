@@ -63,7 +63,7 @@ public class PlayScenarioCallbackHandler implements CallbackHandler {
                 switch (profileData.getBotState()) {
                     case COMBAT:
                         profileData.setCurrentParagraph(newParagraph);
-                        profileData.setEnemy(newParagraph.getEnemy());
+                        profileData.setEnemies(newParagraph.getEnemies());
                         break;
                     case SHOW_MAIN_MENU:
                         profileData.setCurrentMenu(newParagraph);
@@ -80,7 +80,7 @@ public class PlayScenarioCallbackHandler implements CallbackHandler {
         userDataCache.saveUserProfileData(userId, profileData);
         if (profileData.getBotState() == BotState.COMBAT) {
             newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
-                    + profileData.getCombatInfo());
+                    + profileData.getCombatInfo(true));
         }
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (isParagraphChanged)
