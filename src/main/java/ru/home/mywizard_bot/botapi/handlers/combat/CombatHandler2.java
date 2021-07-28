@@ -5,7 +5,7 @@ import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.Handler;
 import ru.home.mywizard_bot.cache.UserDataCache;
 import ru.home.mywizard_bot.model.UserProfileData;
-import ru.home.mywizard_bot.scenario.Enemy;
+import ru.home.mywizard_bot.scenario.Combat;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
@@ -19,14 +19,24 @@ public class CombatHandler2 extends Handler {
     }
 
     @Override
+    protected Paragraph getCurrentParagraph(UserProfileData profileData) {
+        return profileData.getCurrentCombatTurn();
+    }
+
+    @Override
     protected Paragraph getNewParagraph(Action link, Paragraph currentParagraph) {
-        return story.getCombatParagraph(link, currentParagraph);
+        return new Paragraph();
     }
 
     @Override
     protected void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData) {
-        if (!newParagraph.getId().equals(currentParagraph.getId())) {
-            newParagraph.engageFeatures(profileData);
+        if (profileData.getBotState() != BotState.SHOW_MAIN_MENU) {
+            if (profileData.getCombatChecks().stream().allMatch(x -> x.test(profileData))) {
+                profileData.appendCombatStatus("Поединок закончен.");
+                profileData.setBotState(BotState.PLAY_SCENARIO);
+            } else {
+                profileData.incCombatTurn();
+            }
         }
     }
 
@@ -39,19 +49,18 @@ public class CombatHandler2 extends Handler {
     protected void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph) {
         switch (profileData.getBotState()) {
             case PLAY_SCENARIO:
-                profileData.setCurrentParagraph(newParagraph);
-                profileData.setEnemy(new Enemy("dummy", "dummy", 0, 0, 0));
-                if (newParagraph.getPostText().length() > 0) {
-                    newParagraph.setText(newParagraph.getPostText());
-                }
+                newParagraph.addText(profileData.getCombatStatus());
+                profileData.setCurrentCombatTurn(newParagraph);
+                Combat.combatEnd(profileData);
                 break;
             case SHOW_MAIN_MENU:
                 profileData.setCurrentMenu(newParagraph);
                 break;
             default:
                 //COMBAT
-                /*newParagraph.setText(profileData.getMessage() + "\n" + profileData.getCombatInfo() + "\n"
-                        + profileData.getEnemy().getCombatInfo());*/
+                newParagraph.addText(profileData.getCombatStatus());
+                profileData.setCurrentCombatTurn(newParagraph);
+                Combat.newTurn(profileData);
                 break;
         }
     }

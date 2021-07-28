@@ -92,7 +92,7 @@ public abstract class Handler {
             return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
     }
 
-    protected Paragraph getCurrentParagraph( UserProfileData profileData) {
+    protected Paragraph getCurrentParagraph(UserProfileData profileData) {
         return profileData.getCurrentParagraph();
     };
 

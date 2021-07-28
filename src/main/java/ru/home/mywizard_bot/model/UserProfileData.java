@@ -26,10 +26,12 @@ public class UserProfileData implements Serializable {
     @Id
     String id;
     long chatId;
+    String userName;
     boolean activeGame;
     BotState botState;
     Paragraph currentMenu;
     Paragraph currentParagraph = new Paragraph("dummy", "dummy");
+    Paragraph currentCombatTurn;
     int enemyStrength;
     int strength;
     int initStrength;
@@ -41,7 +43,8 @@ public class UserProfileData implements Serializable {
     int damage;
     Enemy enemy;
     List<ru.home.mywizard_bot.scenario.actions.Enemy> enemies = new ArrayList<>();
-    int combatTurn = 0;
+    int combatTurn = 1;
+    String combatStatus;
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();
@@ -104,6 +107,14 @@ public class UserProfileData implements Serializable {
     }
 
     public int getCombatTurn() {
-        return ++combatTurn;
+        return combatTurn;
+    }
+
+    public void appendCombatStatus(String s) {
+        combatStatus += s;
+    }
+
+    public void incCombatTurn() {
+        combatTurn++;
     }
 }

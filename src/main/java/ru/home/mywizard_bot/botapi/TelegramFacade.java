@@ -120,6 +120,7 @@ public class TelegramFacade {
                 //userDataCache.clearCache();
                 profileDataService.deleteByChatId(chatId);
                 UserProfileData profileData = new UserProfileData();
+                profileData.setUserName(message.getFrom().getUserName());
                 profileData.setChatId(chatId);
                 profileData.setBotState(BotState.SHOW_MAIN_MENU);
                 profileDataService.saveUserProfileData(profileData);
@@ -142,6 +143,7 @@ public class TelegramFacade {
             case "/start":
                 profileDataService.deleteByChatId(chatId);
                 UserProfileData profileData = new UserProfileData();
+                profileData.setUserName(buttonQuery.getMessage().getFrom().getUserName());
                 profileData.setChatId(chatId);
                 profileData.setBotState(BotState.SHOW_MAIN_MENU);
                 profileDataService.saveUserProfileData(profileData);

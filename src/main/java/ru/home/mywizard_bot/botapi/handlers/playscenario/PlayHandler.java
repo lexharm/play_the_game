@@ -44,9 +44,10 @@ public class PlayHandler extends Handler {
         switch (profileData.getBotState()) {
             case COMBAT:
                 profileData.setCurrentParagraph(newParagraph);
+                profileData.setCurrentCombatTurn(newParagraph);
                 profileData.setEnemies(newParagraph.getEnemies());
-                //profileData.getCurrentParagraph().addText();
                 Combat.newTurn(profileData);
+                newParagraph = profileData.getCurrentCombatTurn();
                 break;
             case SHOW_MAIN_MENU:
                 profileData.setCurrentMenu(newParagraph);

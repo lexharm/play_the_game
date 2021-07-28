@@ -12,6 +12,7 @@ public class Enemy extends Action {
     private Integer dexterity;
     private Integer thoughtPower;
     private Integer attackPower;
+    private Integer damage = 2;
 
     public Enemy() {
     }

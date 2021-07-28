@@ -206,7 +206,7 @@ public class InlinePrototype extends Loader {
         link = new MovementLink("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
         link.addEffect(new SetStateScenario());
         actions.add(link);
-        actions.add(new MovementLink("Продолжить", "1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        actions.add(new MovementLink("Продолжить", "999-1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Майлин", "Mayline", 10, 12, 25));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);

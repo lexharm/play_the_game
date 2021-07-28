@@ -29,9 +29,12 @@ public class Paragraph implements Cloneable, Serializable {
 
     public Paragraph() {}
 
+    public Paragraph(String text) {
+        textsList.add(text);
+    }
+
     public Paragraph(String id, String text) {
         this.id = id;
-        //this.text = text;
         textsList.add(text);
         combat = false;
         postText = "";
@@ -68,16 +71,18 @@ public class Paragraph implements Cloneable, Serializable {
     }
 
     public List<MovementLink> getMovementLinks() {
-        //return actions.stream().filter(MovementLink.class::isInstance).collect(Collectors.toList());
         return actions.stream().filter(MovementLink.class::isInstance).map(MovementLink.class::cast).collect(Collectors.toList());
     }
 
-    public List<Action> getInlineLinks1() {
-        //return actions.stream().filter(InlineLink.class::isInstance).collect(Collectors.toList());
+    public List<InlineLink> getInlineLinks1() {
         return actions.stream().filter(InlineLink.class::isInstance).map(InlineLink.class::cast).collect(Collectors.toList());
     }
 
     public List<Enemy> getEnemies() {
         return actions.stream().filter(Enemy.class::isInstance).map(Enemy.class::cast).collect(Collectors.toList());
+    }
+
+    public void addAction(Action action) {
+        actions.add(action);
     }
 }

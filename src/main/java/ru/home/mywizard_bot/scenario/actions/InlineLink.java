@@ -14,7 +14,7 @@ public class InlineLink extends Action {
     }
 
     public InlineLink(String caption, String id, boolean newMessage) {
-        super(caption, id);
+        this(caption, id);
         this.newMessage = newMessage;
     }
 
@@ -24,6 +24,7 @@ public class InlineLink extends Action {
 
     public InlineLink(String caption, String id, Feature feature) {
         super(caption, id, feature);
+        //this.newMessage = false;
     }
 
     public InlineLink(String caption, String id, Check check, Feature feature) {

@@ -5,6 +5,6 @@ import ru.home.mywizard_bot.model.UserProfileData;
 public class EnemyDead extends Check {
     @Override
     public boolean test(UserProfileData profileData) {
-        return profileData.getEnemy().getStrength() <= 0;
+        return profileData.getEnemies().stream().allMatch(x -> x.getStrength() <= 0);
     }
 }
