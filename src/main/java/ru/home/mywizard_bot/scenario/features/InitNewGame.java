@@ -5,6 +5,7 @@ import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.service.ApplicationContextHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Component
@@ -23,7 +24,7 @@ public class InitNewGame implements Feature {
         profileData.setDamage(story.getDamage());
         profileData.setInventory(new HashMap<>());
         profileData.setChecks(new HashMap<>());
-        profileData.clearEnemy();
+        profileData.setEnemies(new ArrayList<>());
         profileData.setActiveGame(true);
     }
 }

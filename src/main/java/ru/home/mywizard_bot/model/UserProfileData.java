@@ -10,10 +10,7 @@ import ru.home.mywizard_bot.scenario.*;
 import ru.home.mywizard_bot.scenario.checks.Check;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Данные анкеты пользователя
@@ -32,7 +29,6 @@ public class UserProfileData implements Serializable {
     Paragraph currentMenu;
     Paragraph currentParagraph = new Paragraph("dummy", "dummy");
     Paragraph currentCombatTurn;
-    int enemyStrength;
     int strength;
     int initStrength;
     int dexterity;
@@ -41,25 +37,16 @@ public class UserProfileData implements Serializable {
     int initThoughtPower;
     int attackPower;
     int damage;
-    Enemy enemy;
     List<ru.home.mywizard_bot.scenario.actions.Enemy> enemies = new ArrayList<>();
     int combatTurn = 1;
     String combatStatus;
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();
-    String message = "";
     Integer lastMessageId;
     boolean hasReplyKeyboard = false;
     boolean hasInlineKeyboard = false;
-
-    public void setEnemy(Enemy enemy) {
-        this.enemy = new Enemy(enemy.getName(), enemy.getId(), enemy.getDexterity(), enemy.getStrength(), enemy.getIntelligence());
-    }
-
-    public void clearEnemy() {
-        this.enemy = new Enemy("dummy", "dummy", 0, 0, 0);
-    }
+    Date lastInteractionDate;
 
     public void addItem(Item item) {
         if (item.isVisible()) {

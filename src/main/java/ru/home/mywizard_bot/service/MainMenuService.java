@@ -43,16 +43,10 @@ public class MainMenuService {
     }
 
     public List<PartialBotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story, boolean newMessage) {
-        //final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard(paragraph, profileData, story);
         List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
-        //final ReplyKeyboard replyKeyboard = getKeyboard(paragraph, profileData, story);
         InlineKeyboardMarkup inlineKeyboard = getInlineKeyboard(paragraph, profileData, story);
         ReplyKeyboardMarkup replyKeyboard = getReplyKeyboard(paragraph, profileData, story);
-        /*String messageText = "";
-        if (profileData.getMessage().length() > 0) {
-            messageText = profileData.getMessage() + "\n";
-        }
-        messageText += paragraph.getText();*/
+
         if (newMessage && profileData.isHasInlineKeyboard()) {
             replyMessagesList.add(new EditMessageReplyMarkup()
                     .setChatId(chatId)
@@ -66,16 +60,24 @@ public class MainMenuService {
                 File image = ResourceUtils.getFile("classpath:" + illustration.getImagePath());
                 replyMessagesList.add(new SendPhoto().setChatId(chatId).setCaption(illustration.getCaption()).setPhoto(image));
             } catch (FileNotFoundException e) {
-                log.info("There is no image file: " + illustration.getImagePath());
+                log.info("There is no image file: {}", illustration.getImagePath());
             }
         }
 
-        for (String text : paragraph.getTextsList()) {
+        /*for (String text : paragraph.getTextsList()) {
             if (newMessage) {
                 replyMessagesList.add(new SendMessage().setChatId(chatId).setText(text));
             } else {
                 replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(text));
             }
+        }*/
+
+        for (int i = 0; i < paragraph.getTextsList().size(); i++) {
+            if (i == 0 && !newMessage) {
+                replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(paragraph.getTextsList().get(i)));
+                continue;
+            }
+            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(paragraph.getTextsList().get(i)));
         }
 
         if (replyKeyboard != null && inlineKeyboard != null) {

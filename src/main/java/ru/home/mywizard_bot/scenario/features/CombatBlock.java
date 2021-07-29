@@ -5,6 +5,6 @@ import ru.home.mywizard_bot.model.UserProfileData;
 public class CombatBlock implements Feature {
     @Override
     public void engage(UserProfileData profileData) {
-        profileData.setCombatStatus("Игрок занимает оборону.");
+        profileData.setCombatStatus("Ход " + profileData.getCombatTurn() + ": Игрок занимает оборону.");
     }
 }

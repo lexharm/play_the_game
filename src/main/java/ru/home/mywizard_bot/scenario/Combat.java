@@ -20,13 +20,8 @@ public class Combat {
     }
 
     public static void combatEnd(UserProfileData profileData) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Ход ").append(profileData.getCombatTurn()).append("\n");
-        profileData.getEnemies().forEach(sb::append);
-        boolean classicCombat = profileData.getEnemies().get(0).getInitDexterity() != 0;
-        sb.append(profileData.getCombatInfo(classicCombat));
         Paragraph paragraph = profileData.getCurrentCombatTurn();
-        paragraph.addText(sb.toString());
+        paragraph.addText("Поединок закончился.");
         profileData.getCurrentParagraph().getMovementLinks().forEach(paragraph::addAction);
     }
 }

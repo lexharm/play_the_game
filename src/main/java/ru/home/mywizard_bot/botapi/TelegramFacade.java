@@ -34,7 +34,6 @@ public class TelegramFacade {
         return sleepTime;
     }
 
-
     public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
@@ -50,22 +49,6 @@ public class TelegramFacade {
         return profileDataService;
     }
 
-    /*public BotApiMethod<?> handleUpdate(Update update) {
-            SendMessage replyMessage = null;
-            if (update.hasCallbackQuery()) {
-                CallbackQuery callbackQuery = update.getCallbackQuery();
-                log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
-                        callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
-                return processCallbackQuery(callbackQuery);
-            }
-            Message message = update.getMessage();
-            if (message != null && message.hasText()) {
-                log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
-                        message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
-                replyMessage = handleInputMessage(message);
-            }
-            return replyMessage;
-        }*/
     public List<PartialBotApiMethod<?>> handleUpdate(Update update) {
         List<PartialBotApiMethod<?>> replyMessagesList = null;
         if (update.hasCallbackQuery()) {
@@ -89,26 +72,6 @@ public class TelegramFacade {
         return replyMessagesList;
     }
 
-    /*@Deprecated
-    private SendMessage handleInputMessage_old(Message message) {
-        String inputMsg = message.getText();
-        long chatId = message.getChatId();
-        int userId = message.getFrom().getId();
-        BotState botState;
-        SendMessage replyMessage;
-        switch (inputMsg) {
-            case "/start":
-                botState = BotState.SHOW_MAIN_MENU;
-                break;
-            default:
-                botState = userDataCache.getUsersCurrentBotState(userId);
-                break;
-        }
-        userDataCache.setUsersCurrentBotState(userId, botState);
-        replyMessage = botStateContext.processInputMessage(botState, message);
-        return replyMessage;
-    }*/
-
     private List<PartialBotApiMethod<?>> handleInputMessage(Message message) {
         String inputMsg = message.getText();
         long chatId = message.getChatId();
@@ -128,7 +91,7 @@ public class TelegramFacade {
                 break;
             default:
                 //botState = userDataCache.getUsersCurrentBotState(userId);
-                botState = profileDataService.getUserBotState(userId);
+                botState = profileDataService.getUserBotState(userId, message);
                 break;
         }
         //userDataCache.setUsersCurrentBotState(userId, botState);
@@ -151,57 +114,10 @@ public class TelegramFacade {
                 break;
             default:
                 //botState = userDataCache.getUsersCurrentBotState(userId);
-                botState = profileDataService.getUserBotState(chatId);
+                botState = profileDataService.getUserBotState(chatId, buttonQuery.getMessage());
                 break;
         }
-        //userDataCache.setUsersCurrentBotState(userId, botState);
-        //BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Воспользуйтесь главным меню");
-        //List<PartialBotApiMethod<?>> callBackAnswer = botStateContext.processCallbackQuery(botState, buttonQuery);
         List<PartialBotApiMethod<?>> callBackAnswer = botStateContext.processInputMessage(botState, buttonQuery);
-        /*List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
-        InlineKeyboardButton button = new InlineKeyboardButton().setText("Ok!");
-        button.setCallbackData("123");
-        List<InlineKeyboardButton> buttonList = new ArrayList<>();
-        buttonList.add(button);
-        inlineKeyboard.add(buttonList);
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        inlineKeyboardMarkup.setKeyboard(inlineKeyboard);
-        BotApiMethod<?> callBackAnswer = new EditMessageText()
-                .setChatId(chatId)
-                .setMessageId(buttonQuery.getMessage().getMessageId())
-                .setText("Hello there, general Kenobi!")
-                .setReplyMarkup(inlineKeyboardMarkup);*/
-        /*BotApiMethod<?> callBackAnswer = new EditMessageReplyMarkup()
-                .setReplyMarkup(inlineKeyboardMarkup)
-                .setMessageId(buttonQuery.getMessage().getMessageId())
-                .setChatId(chatId);*/
-
-        /*//From Destiny choose buttons
-        if (buttonQuery.getData().equals("buttonYes")) {
-            callBackAnswer = new SendMessage(chatId, "Как тебя зовут ?");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
-        } else if (buttonQuery.getData().equals("buttonNo")) {
-            callBackAnswer = sendAnswerCallbackQuery("Возвращайся, когда будешь готов", false, buttonQuery);
-        } else if (buttonQuery.getData().equals("buttonIwillThink")) {
-            callBackAnswer = sendAnswerCallbackQuery("Данная кнопка не поддерживается", true, buttonQuery);
-        }
-
-        //From Gender choose buttons
-        else if (buttonQuery.getData().equals("buttonMan")) {
-            UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
-            userProfileData.setGender("М");
-            userDataCache.saveUserProfileData(userId, userProfileData);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_COLOR);
-            callBackAnswer = new SendMessage(chatId, "Твоя любимая цифра");
-        } else if (buttonQuery.getData().equals("buttonWoman")) {
-            UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
-            userProfileData.setGender("Ж");
-            userDataCache.saveUserProfileData(userId, userProfileData);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_COLOR);
-            callBackAnswer = new SendMessage(chatId, "Твоя любимая цифра");
-        } else {
-            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
-        }*/
         return callBackAnswer;
     }
 

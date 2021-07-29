@@ -1,10 +1,12 @@
 package ru.home.mywizard_bot.service;
 
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.repository.UsersProfileMongoRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,6 +22,7 @@ public class UsersProfileDataService {
     }
 
     public void saveUserProfileData(UserProfileData userProfileData) {
+        userProfileData.setLastInteractionDate(new Date());
         profileMongoRepository.save(userProfileData);
     }
 
@@ -35,10 +38,19 @@ public class UsersProfileDataService {
         profileMongoRepository.deleteByChatId(chatId);
     }
 
-    public BotState getUserBotState(long chatId) {
-        BotState botState = profileMongoRepository.findByChatId(chatId).getBotState();
-        if (botState == null) {
-            botState = BotState.SHOW_MAIN_MENU;
+    public BotState getUserBotState(long chatId, Message message) {
+        BotState botState = BotState.SHOW_MAIN_MENU;
+        try {
+            botState = profileMongoRepository.findByChatId(chatId).getBotState();
+            if (botState == null) {
+                botState = BotState.SHOW_MAIN_MENU;
+            }
+        } catch (NullPointerException e) {
+            UserProfileData profileData = new UserProfileData();
+            profileData.setUserName(message.getFrom().getUserName());
+            profileData.setChatId(chatId);
+            profileData.setBotState(BotState.SHOW_MAIN_MENU);
+            saveUserProfileData(profileData);
         }
         return botState;
     }

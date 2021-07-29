@@ -51,8 +51,6 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        /*final BotApiMethod<?> replyMessageToUser = telegramFacade.handleUpdate(update);
-        return replyMessageToUser;*/
         List<PartialBotApiMethod<?>> replyMessagesList = telegramFacade.handleUpdate(update);
         int i = 0;
         if (replyMessagesList.size() > 1) {
@@ -72,7 +70,6 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
                         log.info("EditMessageReplyMarkup msg to User: {}, userId: {}, with Id: {}", message.getFrom().getUserName(),
                                 message.getFrom().getId(), message.getMessageId());
                     } else {
-                        //BotApiMethod<?> botApiMethod = (BotApiMethod<?>) replyMessagesList.get(i++);
                         PartialBotApiMethod<?> botApiMethod = replyMessagesList.get(i++);
                         if (botApiMethod instanceof SendPhoto) {
                             execute((SendPhoto) botApiMethod);
@@ -80,18 +77,16 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
                             BotApiMethod<?> botApiMethod2 = (BotApiMethod<?>) botApiMethod;
                             execute(botApiMethod2);
                         }
-
-                        log.info("Execute success");
                     }
                     if (message != null) {
-                        //userDataCache.setLastMessageId(message.getChatId(), message.getMessageId());
                         profileDataService.setLastMessageId(message.getChatId(), message.getMessageId());
                     }
+                    /* TODO: make dynamic sleep depending on length of messages
                     try {
                         Thread.sleep(telegramFacade.getSleepTime());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }

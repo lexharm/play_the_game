@@ -23,6 +23,6 @@ public class HitEnemy implements Feature {
         } else {
             status = "Вы парируете удар.\n\n";
         }
-        profileData.setCombatStatus(status);
+        profileData.setCombatStatus("Ход " + profileData.getCombatTurn() + ": " + status);
     }
 }

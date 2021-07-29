@@ -14,33 +14,11 @@ import java.util.Map;
  */
 @Component
 public class BotStateContext {
-    private Map<BotState, Handler> messageHandlers = new HashMap<>();
-    private Map<BotState, CallbackHandler> callbackHandlers = new HashMap<>();
+    private final Map<BotState, Handler> messageHandlers = new HashMap<>();
 
-    public BotStateContext(List<Handler> messageHandlers, List<CallbackHandler> callbackHandlers) {
+    public BotStateContext(List<Handler> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandlerName(), handler));
-        callbackHandlers.forEach(handler -> this.callbackHandlers.put(handler.getHandlerName(), handler));
     }
-
-    /*public List<PartialBotApiMethod<?>> processCallbackQuery(BotState currentState, CallbackQuery callbackQuery) {
-        CallbackHandler currentMessageHandler = findCallbackHandler(currentState);
-        return currentMessageHandler.handle(callbackQuery);
-    }*/
-
-    private CallbackHandler findCallbackHandler(BotState currentState) {
-        return callbackHandlers.get(currentState);
-    }
-
-    /*@Deprecated
-    public SendMessage processInputMessage_old(BotState currentState, Message message) {
-        InputMessageHandler currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.handle(message);
-    }*/
-
-    /*public List<PartialBotApiMethod<?>> processInputMessage(BotState currentState, Message message) {
-        Handler currentMessageHandler = findMessageHandler(currentState);
-        return currentMessageHandler.handle(message);
-    }*/
 
     public List<PartialBotApiMethod<?>> processInputMessage(BotState currentState, BotApiObject message) {
         Handler currentMessageHandler = findMessageHandler(currentState);
