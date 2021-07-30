@@ -74,10 +74,10 @@ public class MainMenuService {
 
         for (int i = 0; i < paragraph.getTextsList().size(); i++) {
             if (i == 0 && !newMessage) {
-                replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(paragraph.getTextsList().get(i)));
+                replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(paragraph.getTextsList().get(i)).enableMarkdown(true));
                 continue;
             }
-            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(paragraph.getTextsList().get(i)));
+            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(paragraph.getTextsList().get(i)).enableMarkdown(true));
         }
 
         if (replyKeyboard != null && inlineKeyboard != null) {
@@ -259,7 +259,7 @@ public class MainMenuService {
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }*/
-    @Deprecated
+    /*@Deprecated
     private ReplyKeyboard getKeyboard(Paragraph paragraph, UserProfileData profileData, Story story) {
         List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
         for (Link link : paragraph.getInlineLinks()) {
@@ -295,7 +295,7 @@ public class MainMenuService {
         keyboard.add(extraRow);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
-    }
+    }*/
 
     private InlineKeyboardMarkup getInlineKeyboard(Paragraph paragraph, UserProfileData profileData, Story story) {
         InlineKeyboardMarkup inlineKeyboardMarkup = null;
@@ -380,15 +380,15 @@ public class MainMenuService {
         return replyKeyboardMarkup;
     }
 
-    @Deprecated
+    /*@Deprecated
     public SendMessage getMainMenuMessageForCombat(final long chatId, final String textMessage, final Paragraph paragraph, Enemy enemy, int playerStrength) {
         String text = textMessage + " " + enemy.toString() + " Ваше здоровье " + playerStrength;
         final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboardCombat(paragraph);
         final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, text, replyKeyboardMarkup);
         return mainMenuMessage;
-    }
+    }*/
 
-    @Deprecated
+    /*@Deprecated
     private ReplyKeyboardMarkup getMainMenuKeyboardCombat(Paragraph paragraph) {
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -415,5 +415,5 @@ public class MainMenuService {
 //        keyboard.add(row3);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
-    }
+    }*/
 }

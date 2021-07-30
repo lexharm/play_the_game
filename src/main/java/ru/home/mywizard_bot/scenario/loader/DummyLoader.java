@@ -21,7 +21,7 @@ public class DummyLoader extends Loader {
 
         //Extra menu buttons for SHOW_MAIN_MENU
         links = new ArrayList<>();
-        links.add(new Link("Купи игру! Игру купи!", "buyTheGame"));
+        links.add(new Link("Купи игру\\! Игру купи\\!", "buyTheGame"));
         extraLinks.put(BotState.SHOW_MAIN_MENU, links);
 
         //Extra menu buttons for PLAY_SCENARIO
@@ -56,11 +56,11 @@ public class DummyLoader extends Loader {
         actions.add(new InlineLink("Описание телепатических способностей", "inventory"));
         actions.add(new InlineLink("Вернуться в игру", "inventory", new ReturnToGame()));
         paragraph.setActions(actions);
-        paragraph.addFeature(new ShowInventory());
+        //paragraph.addFeature(new ShowInventory());
         allParagraphs.put(id, paragraph);
 
         id = "initialMenu";
-        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!");
+        paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME\\!");
         paragraph.addText("Для ознакомления с правилами игры, рекомендуем ознакомиться с Руководством.");
         paragraph.setIllustration(new Illustration("", "static/images/art_1.jpg"));
         actions = new ArrayList<>();
@@ -124,7 +124,7 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "10019";
-        paragraph = new Paragraph(id, "Имена этих людей слишком хорошо известны, чтобы их называть!");
+        paragraph = new Paragraph(id, "Имена этих людей слишком хорошо известны, чтобы их называть\\!");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Понятно, очень приятно", "10005"));
         paragraph.setActions(actions);
@@ -133,7 +133,7 @@ public class DummyLoader extends Loader {
         id = "10018";
         paragraph = new Paragraph(id, "Хороший сценарий?");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Да!", "10005"));
+        actions.add(new InlineLink("Да\\!", "10005"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -149,7 +149,7 @@ public class DummyLoader extends Loader {
 
         id = "combatDefeat";
         paragraph = new Paragraph(id, "Вам не хватило сил одержать победу в этой схватке. Вам конец.");
-        paragraph.addFeature(new EndGame());
+        //paragraph.addFeature(new EndGame());
         actions = new ArrayList<>();
         actions.add(new MovementLink("Начать заново", "10002"));
         actions.add(new MovementLink("Выйти в главное меню", "10000"));
@@ -160,7 +160,7 @@ public class DummyLoader extends Loader {
         paragraph = new Paragraph(id, "AN IMMORTALIS ES?");
         paragraph.setIllustration(new Illustration("", "static/images/barbarian_1.jpg"));
         actions = new ArrayList<>();
-        actions.add(new MovementLink("EX ANIMO, FRATER!", "1", new SetStateScenario()));
+        actions.add(new MovementLink("EX ANIMO, FRATER\\!", "1", new SetStateScenario()));
         /*paragraph.addFeature(new InitNewGame());
         paragraph.addFeature(new GiveItem(new Item("Sword", "Меч-хладинец")));*/
         actions.add(new Event(new InitNewGame()));
@@ -183,14 +183,14 @@ public class DummyLoader extends Loader {
         link.addCondition(new EventCheck("MaylineIsLaugh", false));
         actions.add(link);
 
-        link = new MovementLink("Майлин смеялся при виде ваших пяток. Нужно ему отомстить!", "999", new EventCheck("MaylineIsLaugh"));
+        link = new MovementLink("Майлин смеялся при виде ваших пяток. Нужно ему отомстить\\!", "999", new EventCheck("MaylineIsLaugh"));
         link.addCondition(new EventCheck("MaylineIsDead", false));
         actions.add(link);
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "999";
-        paragraph = new Paragraph(id, "Ах, так!? - вскрикивает маг и хватается за посох и вручает вам веревку. Не ждите пощады!");
+        paragraph = new Paragraph(id, "Ах, так\\!? - вскрикивает маг и хватается за посох и вручает вам веревку\\. Не ждите пощады\\!");
         paragraph.setIllustration(new Illustration("", "static/images/monster_2.jpg"));
         actions = new ArrayList<>();
         actions.add(new Event(new SetStateCombat()));
@@ -201,25 +201,26 @@ public class DummyLoader extends Loader {
         actions.add(link);
         actions.add(new MovementLink("Продолжить", "999-1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Майлин", "Mayline", 10, 12, 25));
+        //actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Вова", "Vova", 10, 12, 25));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "999-1";
         paragraph = new Paragraph(id, "С трудом, но вы одолеваете волшебника, но какой в этом был смысл?");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("Никто не смеет называть меня трусом!", "1"));
+        actions.add(new MovementLink("Никто не смеет называть меня трусом\\!", "1"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "1000";
-        paragraph = new Paragraph(id, "Победа! Теперь можно никуда не ходить.");
+        paragraph = new Paragraph(id, "Победа\\! Теперь можно никуда не ходить.");
         actions = new ArrayList<>();
         actions.add(new MovementLink("Начать заново", "1", new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "-2";
-        paragraph = new Paragraph(id, "Слабак! Тряпка! Дешёвка! Ты мёртв! - говорит Майлин скармливая ваш труп " +
+        paragraph = new Paragraph(id, "Слабак\\! Тряпка\\! Дешёвка\\! Ты мёртв\\! - говорит Майлин скармливая ваш труп " +
                 "кондорам. Однако во всём есть свои плюсы - теперь вам не нужно идти через пустыню :)");
         actions = new ArrayList<>();
         actions.add(new MovementLink("Начать заново", "1"));
@@ -243,13 +244,13 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "230";
-        paragraph = new Paragraph(id, "ВНЕЗАПНО вы находите монету с изображением профиля Императора! Это к удаче!");
+        paragraph = new Paragraph(id, "ВНЕЗАПНО вы находите монету с изображением профиля Императора\\! Это к удаче\\!");
         paragraph.addText("Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
                 "показаться в королевском дворце в Элгариоле. С непривычки ноги вязнут в песке, пот заливает глаза, " +
                 "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
                 "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется.");
         paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга наперерез вам. Ваше действие?");
-        paragraph.addFeature(new GiveItem(new Item("Coin", "Монета с профилем Императора")));
+        //paragraph.addFeature(new GiveItem(new Item("Coin", "Монета с профилем Императора")));
         actions = new ArrayList<>();
         actions.add(new MovementLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
         actions.add(new MovementLink("Идти дальше", "96"));
@@ -274,12 +275,12 @@ public class DummyLoader extends Loader {
         paragraph = new Paragraph(id, "- Ты чьих будешь, - спрашивает погонщик.");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Эм... ммм... Хоббитс, эээ?", "346", true));
-        actions.add(new InlineLink("Я - головка от буя!", "347", true));
+        actions.add(new InlineLink("Я - головка от буя\\!", "347", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
         id = "346";
-        paragraph = new Paragraph(id, "Ненавижу хоббитов! - кричит погонщик и хватается за саблю. Битва неизбежна.",
+        paragraph = new Paragraph(id, "Ненавижу хоббитов\\! - кричит погонщик и хватается за саблю. Битва неизбежна.",
                 "С трудом, но вы одолеваете пустынного жителя. Но что вы будете делать с остальными кочевниками?");
         actions = new ArrayList<>();
         actions.add(new Event(new SetStateCombat()));

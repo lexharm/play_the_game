@@ -46,8 +46,9 @@ public class PlayHandler extends Handler {
                 profileData.setCurrentParagraph(newParagraph);
                 profileData.setCurrentCombatTurn(newParagraph);
                 profileData.setEnemies(newParagraph.getEnemies());
+                profileData.calcPowerCombatRange();
                 Combat.newTurn(profileData);
-                newParagraph = profileData.getCurrentCombatTurn();
+                newParagraph.substitute(profileData.getCurrentCombatTurn());
                 break;
             case SHOW_MAIN_MENU:
                 profileData.setCurrentMenu(newParagraph);

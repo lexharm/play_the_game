@@ -8,8 +8,8 @@ import ru.home.mywizard_bot.scenario.features.HitEnemy;
 public class Combat {
     public static void newTurn(UserProfileData profileData) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Ход ").append(profileData.getCombatTurn()).append("\n");
-        profileData.getEnemies().forEach(sb::append);
+        sb.append("*Ход ").append(profileData.getCombatTurn()).append("*\n");
+        profileData.getEnemies().forEach(x -> sb.append(x.toString(profileData)));
         boolean classicCombat = profileData.getEnemies().get(0).getInitDexterity() != 0;
         sb.append(profileData.getCombatInfo(classicCombat));
         Paragraph paragraph = profileData.getCurrentCombatTurn();
@@ -21,7 +21,8 @@ public class Combat {
 
     public static void combatEnd(UserProfileData profileData) {
         Paragraph paragraph = profileData.getCurrentCombatTurn();
-        paragraph.addText("Поединок закончился.");
+        paragraph.addText("*Поединок закончился.*");
         profileData.getCurrentParagraph().getMovementLinks().forEach(paragraph::addAction);
+        profileData.setCombatTurn(1);
     }
 }

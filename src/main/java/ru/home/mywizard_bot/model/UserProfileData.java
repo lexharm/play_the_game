@@ -6,11 +6,15 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.scenario.*;
+import ru.home.mywizard_bot.scenario.Dice;
+import ru.home.mywizard_bot.scenario.Item;
+import ru.home.mywizard_bot.scenario.Paragraph;
+import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.checks.Check;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Данные анкеты пользователя
@@ -47,6 +51,7 @@ public class UserProfileData implements Serializable {
     boolean hasReplyKeyboard = false;
     boolean hasInlineKeyboard = false;
     Date lastInteractionDate;
+    List<Float> combatPowerRange = new ArrayList<>(7);
 
     public void addItem(Item item) {
         if (item.isVisible()) {
@@ -77,7 +82,7 @@ public class UserProfileData implements Serializable {
 
     public String getCombatInfo(boolean classicCombat) {
         StringBuilder sb = new StringBuilder();
-        sb.append("ИГРОК").append("\n");
+        sb.append("*").append(userName).append("*").append("\n");
         sb.append("Здоровье ").append(strength).append("/").append(initStrength).append("\n");
         sb.append(classicCombat ? "Ловкость " : " Сила мысли ").append(classicCombat ? dexterity : thoughtPower).append("\n");
         int dice = Dice.roll();
@@ -103,5 +108,22 @@ public class UserProfileData implements Serializable {
 
     public void incCombatTurn() {
         combatTurn++;
+    }
+
+    public void calcPowerCombatRange() {
+        boolean classicCombat = enemies.get(0).getInitDexterity() != 0;
+        int maxEnemyPower = enemies.stream()
+                .collect(Collectors.summarizingInt(x -> classicCombat ? x.getDexterity() : x.getThoughtPower())).getMax();
+        int minEnemyPower = enemies.stream()
+                .collect(Collectors.summarizingInt(x -> classicCombat ? x.getDexterity() : x.getThoughtPower())).getMin();
+        Float minEdge = (float) Math.min(minEnemyPower, classicCombat ? dexterity : thoughtPower) + 6;
+        Float maxEdge = (float) Math.max(maxEnemyPower, classicCombat ? dexterity : thoughtPower) + 12;
+        combatPowerRange.add(minEdge);
+        Float powerStep = (maxEdge - minEdge) / 6;
+        for (int i = 1; i < 6; i++) {
+            combatPowerRange.add(combatPowerRange.get(i - 1) + powerStep);
+        }
+        combatPowerRange.add(maxEdge);
+        combatPowerRange.forEach(System.out::println);
     }
 }

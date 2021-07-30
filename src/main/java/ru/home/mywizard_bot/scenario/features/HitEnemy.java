@@ -16,13 +16,13 @@ public class HitEnemy implements Feature {
         String status;
         if (enemy.getAttackPower() > profileData.getAttackPower()) {
             profileData.setStrength(profileData.getStrength() - enemy.getDamage());
-            status = enemy.getCaption() + " наносит урон " + enemy.getDamage() + " ед.\n\n";
+            status = profileData.getUserName() + " получает урон от " + enemy.getCaption().toUpperCase() + " " + enemy.getDamage() + " ед.\n\n";
         } else if (enemy.getAttackPower() < profileData.getAttackPower()) {
             enemy.setStrength(enemy.getStrength() - profileData.getDamage());
-            status = enemy.getCaption() + " получает урон " + enemy.getDamage() + " ед.\n\n";
+            status = enemy.getCaption().toUpperCase() + " получает урон " + enemy.getDamage() + " ед.\n\n";
         } else {
             status = "Вы парируете удар.\n\n";
         }
-        profileData.setCombatStatus("Ход " + profileData.getCombatTurn() + ": " + status);
+        profileData.setCombatStatus("*Ход " + profileData.getCombatTurn() + "*: _" + status + "_");
     }
 }
