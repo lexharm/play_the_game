@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class InventoryCheck extends Check {
 
+    public InventoryCheck() {}
+
     public InventoryCheck(String value) {
         super(value);
     }
@@ -16,10 +18,11 @@ public class InventoryCheck extends Check {
 
     @Override
     public boolean test(UserProfileData profileData) {
+        boolean found = false;
         for (Map.Entry<String, Integer> entry : profileData.getInventory().entrySet()) {
             if (entry.getKey().equals(value))
-                return true;
+                found = true;
         }
-        return false;
+        return found == presence;
     }
 }
