@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public abstract class Handler {
+public abstract class Handler { // Клас обработки сообщений
     private final UserDataCache userDataCache;
     private final UsersProfileDataService profileDataService;
     private final MainMenuService mainMenuService;
@@ -38,13 +38,13 @@ public abstract class Handler {
         String receivedText;
         Message message;
         String callbackQueryId = null;
-        if (botApiObject instanceof CallbackQuery) {
+        if (botApiObject instanceof CallbackQuery) {    // inline button
             CallbackQuery callbackQuery = (CallbackQuery) botApiObject;
             message = callbackQuery.getMessage();
             userId = callbackQuery.getFrom().getId();
             receivedText = callbackQuery.getData();
             callbackQueryId = callbackQuery.getId();
-        } else {
+        } else {                                        // general button
             message = (Message) botApiObject;
             userId = message.getFrom().getId();
             receivedText = message.getText();
@@ -64,8 +64,8 @@ public abstract class Handler {
         links.addAll(currentParagraph.getInlineLinks());
         links.addAll(story.getExtraLinks(getHandlerName()));*/
         List<Action> links = new ArrayList<>();
-        links.addAll(currentParagraph.getMovementLinks());
         links.addAll(currentParagraph.getInlineLinks1());
+        links.addAll(currentParagraph.getMovementLinks());
 
         Paragraph newParagraph = currentParagraph;
         boolean paragraphChanged = false;
