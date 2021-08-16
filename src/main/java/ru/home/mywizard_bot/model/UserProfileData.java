@@ -11,6 +11,7 @@ import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.checks.Check;
+import ru.home.mywizard_bot.utils.Emojis;
 
 import java.io.Serializable;
 import java.util.*;
@@ -87,8 +88,14 @@ public class UserProfileData implements Serializable {
         sb.append(classicCombat ? "Ловкость " : " Сила мысли ").append(classicCombat ? dexterity : thoughtPower).append("\n");
         int dice = Dice.roll();
         attackPower = dice * 2 + (classicCombat ? dexterity : thoughtPower);
-        sb.append("Мощность атаки ").append("(").append(dice).append(" x 2) + ")
-                .append(classicCombat ? dexterity : thoughtPower).append(" = ").append(attackPower).append("\n").append("\n");
+        StringBuilder attackPowerSB = new StringBuilder();
+        for (int i = 0; i < combatPowerRange.size() - 1; i++) {
+            float limit = combatPowerRange.get(i);
+            if (attackPower >= limit) {
+                attackPowerSB.append(classicCombat ? Emojis.DAGGER : Emojis.SPARKLES);
+            }
+        }
+        sb.append("Мощность атаки ").append(attackPowerSB).append(attackPower).append("\n").append("\n");
         return sb.toString();
     }
 
@@ -116,7 +123,7 @@ public class UserProfileData implements Serializable {
                 .collect(Collectors.summarizingInt(x -> classicCombat ? x.getDexterity() : x.getThoughtPower())).getMax();
         int minEnemyPower = enemies.stream()
                 .collect(Collectors.summarizingInt(x -> classicCombat ? x.getDexterity() : x.getThoughtPower())).getMin();
-        Float minEdge = (float) Math.min(minEnemyPower, classicCombat ? dexterity : thoughtPower) + 6;
+        Float minEdge = (float) Math.min(minEnemyPower, classicCombat ? dexterity : thoughtPower) + 2;
         Float maxEdge = (float) Math.max(maxEnemyPower, classicCombat ? dexterity : thoughtPower) + 12;
         combatPowerRange.add(minEdge);
         Float powerStep = (maxEdge - minEdge) / 6;
