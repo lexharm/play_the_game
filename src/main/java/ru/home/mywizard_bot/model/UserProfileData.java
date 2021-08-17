@@ -118,6 +118,7 @@ public class UserProfileData implements Serializable {
     }
 
     public void calcPowerCombatRange() {
+        combatPowerRange.clear();
         boolean classicCombat = enemies.get(0).getInitDexterity() != 0;
         int maxEnemyPower = enemies.stream()
                 .collect(Collectors.summarizingInt(x -> classicCombat ? x.getDexterity() : x.getThoughtPower())).getMax();

@@ -2,13 +2,20 @@ package ru.home.mywizard_bot.scenario.loader;
 
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.scenario.*;
+import ru.home.mywizard_bot.scenario.Illustration;
+import ru.home.mywizard_bot.scenario.Item;
+import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.actions.Action;
 import ru.home.mywizard_bot.scenario.actions.Event;
 import ru.home.mywizard_bot.scenario.actions.InlineLink;
 import ru.home.mywizard_bot.scenario.actions.MovementLink;
-import ru.home.mywizard_bot.scenario.checks.*;
+import ru.home.mywizard_bot.scenario.checks.ActiveGameCheck;
+import ru.home.mywizard_bot.scenario.checks.EnemyDead;
+import ru.home.mywizard_bot.scenario.checks.EventCheck;
+import ru.home.mywizard_bot.scenario.checks.PlayerDead;
 import ru.home.mywizard_bot.scenario.features.*;
+import ru.home.mywizard_bot.utils.Emojis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +28,7 @@ public class DummyLoader extends Loader {
 
         //Extra menu buttons for SHOW_MAIN_MENU
         links = new ArrayList<>();
-        links.add(new Link("Купи игру\\! Игру купи\\!", "buyTheGame"));
+        links.add(new Link("Купи игру! Игру купи!", "buyTheGame"));
         extraLinks.put(BotState.SHOW_MAIN_MENU, links);
 
         //Extra menu buttons for PLAY_SCENARIO
@@ -148,9 +155,9 @@ public class DummyLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "combatDefeat";
-        paragraph = new Paragraph(id, "Вам не хватило сил одержать победу в этой схватке. Вам конец.");
-        //paragraph.addFeature(new EndGame());
+        paragraph = new Paragraph(id, "Вам не хватило сил одержать победу в этой схватке. Вам конец " + Emojis.SKELETON);
         actions = new ArrayList<>();
+        actions.add(new Event(new EndGame()));
         actions.add(new MovementLink("Начать заново", "10002"));
         actions.add(new MovementLink("Выйти в главное меню", "10000"));
         paragraph.setActions(actions);
@@ -196,10 +203,11 @@ public class DummyLoader extends Loader {
         actions.add(new Event(new SetStateCombat()));
         actions.add(new Event(new AddCombatCheck()));
         actions.add(new Event(new GiveItem(new Item("Rope", "Веревка"))));
-        link = new MovementLink("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
+        /*link = new MovementLink("Трусливо сбежать", "1", new EnemyAlive(), new GiveItem(new Item("MaylineIsLaugh", "MaylineIsLaugh", false)));
         link.addEffect(new SetStateScenario());
-        actions.add(link);
+        actions.add(link);*/
         actions.add(new MovementLink("Продолжить", "999-1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Майлин", "Mayline", 10, 12, 25));
         //actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Вова", "Vova", 10, 12, 25));
         paragraph.setActions(actions);

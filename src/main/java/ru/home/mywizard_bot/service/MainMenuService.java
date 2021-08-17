@@ -184,7 +184,8 @@ public class MainMenuService {
                 }
                 replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
-                        .setReplyMarkup(inlineKeyboard));
+                        .setReplyMarkup(inlineKeyboard)
+                        .setMessageId(profileData.getLastMessageId()));
             } else if (replyMessagesList.size() == 2) {
                 log.info("inlineKeyboard != null && size = 2");
                 if (profileData.isHasReplyKeyboard()) {
@@ -326,13 +327,13 @@ public class MainMenuService {
                 keyboard.add(row);
             }
         }
-        KeyboardRow extraRow = new KeyboardRow();
+        /*KeyboardRow extraRow = new KeyboardRow();
         for (Link link : story.getExtraLinks().get(profileData.getBotState())) {
             extraRow.add(new KeyboardButton(link.getText()));
         }
         if (extraRow.size() > 0) {
             keyboard.add(extraRow);
-        }
+        }*/
         if (keyboard.size() > 0) {
             replyKeyboardMarkup = new ReplyKeyboardMarkup();
             replyKeyboardMarkup.setSelective(true);

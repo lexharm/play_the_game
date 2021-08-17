@@ -6,6 +6,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -53,17 +54,17 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         List<PartialBotApiMethod<?>> replyMessagesList = telegramFacade.handleUpdate(update);
         int i = 0;
-        if (replyMessagesList.size() > 1) {
-            do {
+       // if (replyMessagesList.size() > 1) {
+            while (i < replyMessagesList.size()) {
                 try {
                     Message message = null;
-                    if (replyMessagesList.get(i+1) instanceof DeleteMessage) {
+                    if (i+1 < replyMessagesList.size() - 1 && replyMessagesList.get(i+1) instanceof DeleteMessage) {
                         BotApiMethod<?> botApiMethod = (BotApiMethod<?>) replyMessagesList.get(i++);
                         message = (Message) execute(botApiMethod);
                         ((DeleteMessage) replyMessagesList.get(i)).setMessageId(message.getMessageId());
                         log.info("Delete msg to User: {}, userId: {}, with Id: {}", message.getFrom().getUserName(),
                                 message.getFrom().getId(), message.getMessageId());
-                    } else if (replyMessagesList.get(i+1) instanceof EditMessageReplyMarkup) {
+                    } else if (i+1 < replyMessagesList.size() - 1  && replyMessagesList.get(i) instanceof SendMessage && replyMessagesList.get(i+1) instanceof EditMessageReplyMarkup) {
                         BotApiMethod<?> botApiMethod = (BotApiMethod<?>) replyMessagesList.get(i++);
                         message = (Message) execute(botApiMethod);
                         ((EditMessageReplyMarkup) replyMessagesList.get(i)).setMessageId(message.getMessageId());
@@ -75,7 +76,11 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
                             execute((SendPhoto) botApiMethod);
                         } else {
                             BotApiMethod<?> botApiMethod2 = (BotApiMethod<?>) botApiMethod;
-                            execute(botApiMethod2);
+                            if (botApiMethod2 instanceof SendMessage) {
+                                message = (Message) execute(botApiMethod2);
+                            } else {
+                                execute(botApiMethod2);
+                            }
                         }
                     }
                     if (message != null) {
@@ -90,10 +95,11 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-            } while (i < replyMessagesList.size() - 1);
-        }
+            }
+        //}
 
-        return (BotApiMethod<?>) replyMessagesList.get(i);
+        //return (BotApiMethod<?>) replyMessagesList.get(i);
+        return new SendMessage();
     }
 
     public void setWebHookPath(String webHookPath) {
