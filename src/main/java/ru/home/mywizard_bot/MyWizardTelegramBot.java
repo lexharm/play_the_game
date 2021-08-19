@@ -58,13 +58,13 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
             while (i < replyMessagesList.size()) {
                 try {
                     Message message = null;
-                    if (i+1 < replyMessagesList.size() - 1 && replyMessagesList.get(i+1) instanceof DeleteMessage) {
+                    if (i+1 <= replyMessagesList.size() - 1 && replyMessagesList.get(i+1) instanceof DeleteMessage) {
                         BotApiMethod<?> botApiMethod = (BotApiMethod<?>) replyMessagesList.get(i++);
                         message = (Message) execute(botApiMethod);
                         ((DeleteMessage) replyMessagesList.get(i)).setMessageId(message.getMessageId());
                         log.info("Delete msg to User: {}, userId: {}, with Id: {}", message.getFrom().getUserName(),
                                 message.getFrom().getId(), message.getMessageId());
-                    } else if (i+1 < replyMessagesList.size() - 1  && replyMessagesList.get(i) instanceof SendMessage && replyMessagesList.get(i+1) instanceof EditMessageReplyMarkup) {
+                    } else if (i+1 <= replyMessagesList.size() - 1  && replyMessagesList.get(i) instanceof SendMessage && replyMessagesList.get(i+1) instanceof EditMessageReplyMarkup) {
                         BotApiMethod<?> botApiMethod = (BotApiMethod<?>) replyMessagesList.get(i++);
                         message = (Message) execute(botApiMethod);
                         ((EditMessageReplyMarkup) replyMessagesList.get(i)).setMessageId(message.getMessageId());

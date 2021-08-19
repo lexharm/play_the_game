@@ -209,7 +209,7 @@ public class DummyLoader extends Loader {
         actions.add(new MovementLink("Продолжить", "999-1", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
         actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Майлин", "Mayline", 10, 12, 25));
-        //actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Вова", "Vova", 10, 12, 25));
+        actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Король Элгариола", "King", 10, 12, 25));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 

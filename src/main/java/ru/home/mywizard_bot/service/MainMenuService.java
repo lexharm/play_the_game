@@ -196,7 +196,8 @@ public class MainMenuService {
                 lastMessage.setReplyMarkup(new InlineKeyboardMarkup());
                 replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
-                        .setReplyMarkup(inlineKeyboard));
+                        .setReplyMarkup(inlineKeyboard)
+                        .setMessageId(profileData.getLastMessageId()));
             } else {
                 log.info("inlineKeyboard != null && size > 2");
                 if (profileData.isHasReplyKeyboard()) {

@@ -48,20 +48,24 @@ public class Enemy extends Action {
         gapLength = (paramTitle.length() - paramValue.length()) / 2;
         params += Strings.repeat(" ", gapLength) + paramValue;
         sb.append(params).append("`\n");*/
-        sb.append("Здоровье ").append(hide(profileData, strength.toString() + "/" + initStrength.toString(), dexterity != 0 ? 4 : 5))
-                .append("\n").append((dexterity != 0) ? "Ловкость " : "Сила мысли ")
-                .append((dexterity != 0) ? hide(profileData, dexterity.toString(), 8) : hide(profileData, thoughtPower.toString(), 9))
-                .append("\n");
-        int dice = Dice.roll();
-        attackPower = dice * 2 + (dexterity != 0 ? dexterity : thoughtPower);
-        StringBuilder attackPowerSB = new StringBuilder();
-        for (int i = 0; i < profileData.getCombatPowerRange().size() - 1; i++) {
-            float limit = profileData.getCombatPowerRange().get(i);
-            if (attackPower >= limit) {
-                attackPowerSB.append(classicCombat ? Emojis.DAGGER : Emojis.SPARKLES);
+        if (strength > 0) {
+            sb.append("Здоровье ").append(hide(profileData, strength.toString() + "/" + initStrength.toString(), dexterity != 0 ? 4 : 5))
+                    .append("\n").append((dexterity != 0) ? "Ловкость " : "Сила мысли ")
+                    .append((dexterity != 0) ? hide(profileData, dexterity.toString(), 8) : hide(profileData, thoughtPower.toString(), 9))
+                    .append("\n");
+            int dice = Dice.roll();
+            attackPower = dice * 2 + (dexterity != 0 ? dexterity : thoughtPower);
+            StringBuilder attackPowerSB = new StringBuilder();
+            for (int i = 0; i < profileData.getCombatPowerRange().size() - 1; i++) {
+                float limit = profileData.getCombatPowerRange().get(i);
+                if (attackPower >= limit) {
+                    attackPowerSB.append(classicCombat ? Emojis.DAGGER : Emojis.SPARKLES);
+                }
             }
+            sb.append("Мощность атаки ").append(attackPowerSB).append(hide(profileData, attackPower.toString(), dexterity != 0 ? 6 : 7)).append("\n\n");
+        } else {
+            sb.append(Emojis.SCULL_BONES).append("\n\n");
         }
-        sb.append("Мощность атаки ").append(attackPowerSB).append(hide(profileData, attackPower.toString(), dexterity != 0 ? 6 : 7)).append("\n").append("\n");
         return sb.toString();
     }
 
