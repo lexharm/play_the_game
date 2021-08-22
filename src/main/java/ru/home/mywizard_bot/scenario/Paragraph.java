@@ -15,11 +15,6 @@ public class Paragraph implements Cloneable, Serializable {
     String id;
     List<String> textsList = new ArrayList<>();
     String postText;
-    //private List<Link> inlineLinks = new ArrayList<>();
-    //private List<Link> links = new ArrayList<>();
-    //private String imagePath;
-    //private boolean combat = false;
-    //private List<Feature> features = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
     private Illustration illustration;
 
@@ -57,8 +52,11 @@ public class Paragraph implements Cloneable, Serializable {
     }*/
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Object clone() throws CloneNotSupportedException {
+        Paragraph clone = (Paragraph) super.clone();
+        clone.textsList = new ArrayList<>(this.textsList);
+        clone.actions = new ArrayList<>(this.actions);
+        return clone;
     }
 
     public void addText(String text) {

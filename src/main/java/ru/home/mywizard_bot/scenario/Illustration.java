@@ -3,7 +3,7 @@ package ru.home.mywizard_bot.scenario;
 import lombok.Getter;
 
 @Getter
-public class Illustration {
+public class Illustration implements Cloneable {
     private String caption;
     private String imagePath;
 

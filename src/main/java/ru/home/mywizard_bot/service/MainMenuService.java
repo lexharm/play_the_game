@@ -22,7 +22,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.*;
 import ru.home.mywizard_bot.scenario.actions.Action;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -44,9 +43,12 @@ public class MainMenuService {
 
     public List<PartialBotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story, boolean newMessage) {
         List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
+
+        //Step 0: get both keyboards: inline and reply
         InlineKeyboardMarkup inlineKeyboard = getInlineKeyboard(paragraph, profileData, story);
         ReplyKeyboardMarkup replyKeyboard = getReplyKeyboard(paragraph, profileData, story);
 
+        //Step 1: delete existing inline keyboard
         if (newMessage && profileData.isHasInlineKeyboard()) {
             replyMessagesList.add(new EditMessageReplyMarkup()
                     .setChatId(chatId)
@@ -54,6 +56,7 @@ public class MainMenuService {
                     .setReplyMarkup(new InlineKeyboardMarkup()));
         }
 
+        //Step 2: add illustration to reply
         Illustration illustration = paragraph.getIllustration();
         if (illustration != null) {
             try {
@@ -64,22 +67,17 @@ public class MainMenuService {
             }
         }
 
-        /*for (String text : paragraph.getTextsList()) {
-            if (newMessage) {
-                replyMessagesList.add(new SendMessage().setChatId(chatId).setText(text));
-            } else {
-                replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(text));
-            }
-        }*/
-
+        //Step 3: add paragraph texts
         for (int i = 0; i < paragraph.getTextsList().size(); i++) {
             if (i == 0 && !newMessage) {
+                //!newMessage means that reply changes existing message
                 replyMessagesList.add(new EditMessageText().setChatId(chatId).setMessageId(profileData.getLastMessageId()).setText(paragraph.getTextsList().get(i)).enableMarkdown(true));
                 continue;
             }
             replyMessagesList.add(new SendMessage().setChatId(chatId).setText(paragraph.getTextsList().get(i)).enableMarkdown(true));
         }
 
+        //Step 4: add additional methods
         if (replyKeyboard != null && inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size = 1");
@@ -201,7 +199,7 @@ public class MainMenuService {
             } else {
                 log.info("inlineKeyboard != null && size > 2");
                 if (profileData.isHasReplyKeyboard()) {
-                    SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
+                    SendMessage firstMessage = replyMessagesList.stream().filter(SendMessage.class::isInstance).findFirst().map(SendMessage.class::cast).get();
                     firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
                 }
                 SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
@@ -210,12 +208,6 @@ public class MainMenuService {
             profileData.setHasReplyKeyboard(false);
             profileData.setHasInlineKeyboard(true);
         }
-
-        //final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, messageText, replyKeyboard);
-        //profileData.setMessage("");
-        /*SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
-        lastMessage.enableMarkdown(true);
-        lastMessage.setReplyMarkup(replyKeyboard);*/
         return replyMessagesList;
     }
 

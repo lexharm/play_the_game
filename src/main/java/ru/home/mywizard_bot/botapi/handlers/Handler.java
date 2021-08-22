@@ -34,6 +34,7 @@ public abstract class Handler {
     }
 
     public final List<PartialBotApiMethod<?>> handle(BotApiObject botApiObject) {
+        List<PartialBotApiMethod<?>> resultList = new ArrayList<>();
         int userId;
         String receivedText;
         Message message;
@@ -84,12 +85,13 @@ public abstract class Handler {
         }
         engageParagraphFeaturesHook_2(newParagraph, currentParagraph, profileData, paragraphChanged);
         //userDataCache.saveUserProfileData(userId, profileData);
-        profileDataService.saveUserProfileData(profileData);
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (callbackQueryId != null && !paragraphChanged)
-            return mainMenuService.getIllegalActionMessage(callbackQueryId);
+            resultList = mainMenuService.getIllegalActionMessage(callbackQueryId);
         else
-            return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+            resultList = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+        profileDataService.saveUserProfileData(profileData);
+        return resultList;
     }
 
     protected Paragraph getCurrentParagraph(UserProfileData profileData) {
