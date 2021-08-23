@@ -81,19 +81,21 @@ public class MainMenuService {
         if (replyKeyboard != null && inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size = 1");
-                replyMessagesList.add(0, new SendMessage()
-                        .setChatId(chatId)
-                        .setReplyMarkup(replyKeyboard)
-                        .enableMarkdown(true)
-                        .setText(messagesService.getText("bot.reportUs")));
-                replyMessagesList.add(1, new DeleteMessage(chatId, 0));
-                BotApiMethod botApiMethod = (BotApiMethod) replyMessagesList.get(2);
+                BotApiMethod botApiMethod = (BotApiMethod) replyMessagesList.get(0);
                 if (botApiMethod instanceof SendMessage) {
-                    ((SendMessage) botApiMethod).setReplyMarkup(new InlineKeyboardMarkup());
+                    ((SendMessage) botApiMethod).setReplyMarkup(inlineKeyboard);
                 }
-                replyMessagesList.add(new EditMessageReplyMarkup()
+                /*replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
-                        .setReplyMarkup(inlineKeyboard));
+                        .setReplyMarkup(inlineKeyboard));*/
+                if (!profileData.equalsReplyKeyboard(replyKeyboard)) {
+                    replyMessagesList.add(0, new SendMessage()
+                            .setChatId(chatId)
+                            .setReplyMarkup(replyKeyboard)
+                            .enableMarkdown(true)
+                            .setText(messagesService.getText("bot.reportUs")));
+                    replyMessagesList.add(1, new DeleteMessage(chatId, 0));
+                }
             } else if (replyMessagesList.size() == 2) {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size = 2");
                 PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
@@ -128,8 +130,8 @@ public class MainMenuService {
                         .setChatId(chatId)
                         .setReplyMarkup(inlineKeyboard));
             }
-            profileData.setHasReplyKeyboard(true);
-            profileData.setHasInlineKeyboard(true);
+            profileData.setReplyKeyboardHash(replyKeyboard.hashCode());
+            profileData.setInlineKeyboardHash(inlineKeyboard.hashCode());
         } else if (replyKeyboard != null) {
             if (replyMessagesList.size() == 1) {
                 log.info("replyKeyboard != null && size = 1");
@@ -160,8 +162,8 @@ public class MainMenuService {
                             .enableMarkdown(true);
                 }
             }
-            profileData.setHasReplyKeyboard(true);
-            profileData.setHasInlineKeyboard(false);
+            profileData.setReplyKeyboardHash(replyKeyboard.hashCode());
+            profileData.setInlineKeyboardHash(null);
         } else if (inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
                 log.info("inlineKeyboard != null && size = 1");
@@ -205,8 +207,8 @@ public class MainMenuService {
                 SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
                 lastMessage.setReplyMarkup(inlineKeyboard);
             }
-            profileData.setHasReplyKeyboard(false);
-            profileData.setHasInlineKeyboard(true);
+            profileData.setReplyKeyboardHash(null);
+            profileData.setInlineKeyboardHash(inlineKeyboard.hashCode());
         }
         return replyMessagesList;
     }

@@ -178,8 +178,8 @@ public class DummyLoader extends Loader {
         id = "1";
         paragraph = new Paragraph(id, "Плодородные земли Элгариола позади. Перед вами пустыня. Вряд ли удастся " +
                 "обнаружить здесь тропинку, а тем более какую-нибудь дорогу, так что придется ориентироваться  только " +
-                "по солнцу. Одинокая гора должна быть где-то на востоке, но стоит ли отправляться туда сразу?");
-        paragraph.addText("В деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
+                "по солнцу. Одинокая гора должна быть где-то на востоке, но стоит ли отправляться туда сразу? " +
+                "В деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
         actions = new ArrayList<>();
@@ -294,6 +294,7 @@ public class DummyLoader extends Loader {
         actions.add(new Event(new SetStateCombat()));
         actions.add(new Event(new AddCombatCheck()));
         actions.add(new MovementLink("Продолжить", "347", new EnemyDead(), new GiveItem(new Item("MaylineIsDead", "MaylineIsDead", false))));
+        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         actions.add(new ru.home.mywizard_bot.scenario.actions.Enemy("Погонщик", "Drover", 10, 12, 25));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);

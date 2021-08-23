@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Dice;
 import ru.home.mywizard_bot.scenario.Item;
@@ -49,8 +51,8 @@ public class UserProfileData implements Serializable {
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();
     Integer lastMessageId;
-    boolean hasReplyKeyboard = false;
-    boolean hasInlineKeyboard = false;
+    Integer replyKeyboardHash;
+    Integer inlineKeyboardHash;
     Date lastInteractionDate;
     List<Float> combatPowerRange = new ArrayList<>(7);
 
@@ -133,5 +135,27 @@ public class UserProfileData implements Serializable {
         }
         combatPowerRange.add(maxEdge);
         combatPowerRange.forEach(System.out::println);
+    }
+
+    public boolean isHasInlineKeyboard() {
+        return inlineKeyboardHash != null;
+    }
+
+    public boolean isHasReplyKeyboard() {
+        return replyKeyboardHash != null;
+    }
+
+    public boolean equalsInlineKeyboard(InlineKeyboardMarkup inlineKeyboard) {
+        if (inlineKeyboard != null && inlineKeyboardHash != null) {
+            return inlineKeyboard.hashCode() == inlineKeyboardHash;
+        }
+        return false;
+    }
+
+    public boolean equalsReplyKeyboard(ReplyKeyboardMarkup replyKeyboard) {
+        if (replyKeyboard != null && replyKeyboardHash != null) {
+            return replyKeyboard.hashCode() == replyKeyboardHash;
+        }
+        return false;
     }
 }
