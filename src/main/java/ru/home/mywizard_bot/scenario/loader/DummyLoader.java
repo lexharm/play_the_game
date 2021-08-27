@@ -114,6 +114,7 @@ public class DummyLoader extends Loader {
 
         id = "10004";
         paragraph = new Paragraph(id, "Выберите раздел");
+        paragraph.addText("Если не боитесь, конечно...");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Персональная статистика", "10016"));
         actions.add(new InlineLink("Глобальная статистика", "10017"));

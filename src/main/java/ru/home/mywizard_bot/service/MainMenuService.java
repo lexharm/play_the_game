@@ -81,6 +81,7 @@ public class MainMenuService {
         if (replyKeyboard != null && inlineKeyboard != null) {
             if (replyMessagesList.size() == 1) {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size = 1");
+                //TODO: what if 1st message is edit method?
                 BotApiMethod botApiMethod = (BotApiMethod) replyMessagesList.get(0);
                 if (botApiMethod instanceof SendMessage) {
                     ((SendMessage) botApiMethod).setReplyMarkup(inlineKeyboard);
@@ -98,68 +99,76 @@ public class MainMenuService {
                 }
             } else if (replyMessagesList.size() == 2) {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size = 2");
+                //TODO: what if 1st message is photo? we have to put reply keyboard into dummy message?
                 PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
                 if (botApiMethod instanceof SendMessage) {
                     ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
                 }
                 BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(1);
                 if (botApiMethod2 instanceof SendMessage) {
-                    ((SendMessage) botApiMethod2).setReplyMarkup(new InlineKeyboardMarkup());
+                    ((SendMessage) botApiMethod2).setReplyMarkup(inlineKeyboard);
                 }
-                replyMessagesList.add(new EditMessageReplyMarkup()
+                /*replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
-                        .setReplyMarkup(inlineKeyboard));
+                        .setReplyMarkup(inlineKeyboard));*/
             } else {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size > 2");
+                //TODO: what if 1st message is photo? we have to delete keyboard into dummy message?
                 PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
-                //BotApiMethod botApiMethod = (BotApiMethod) replyMessagesList.get(0);
                 if (botApiMethod instanceof SendMessage) {
-                    ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                    if (!profileData.equalsReplyKeyboard(replyKeyboard)) {
+                        ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                    }
                 }
-                /*((SendMessage) replyMessagesList.get(replyMessagesList.size()-2))
-                        .setReplyMarkup(replyKeyboard)
-                        .enableMarkdown(true);
-                ((SendMessage) replyMessagesList.get(replyMessagesList.size()-1)).setReplyMarkup(inlineKeyboard);*/
                 BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(replyMessagesList.size()-1);
                 if (botApiMethod2 instanceof SendMessage) {
                     ((SendMessage) botApiMethod2)
-                            .setReplyMarkup(new InlineKeyboardMarkup())
+                            .setReplyMarkup(inlineKeyboard)
                             .enableMarkdown(true);
                 }
-                replyMessagesList.add(new EditMessageReplyMarkup()
+                /*replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
-                        .setReplyMarkup(inlineKeyboard));
+                        .setReplyMarkup(inlineKeyboard));*/
             }
             profileData.setReplyKeyboardHash(replyKeyboard.hashCode());
             profileData.setInlineKeyboardHash(inlineKeyboard.hashCode());
         } else if (replyKeyboard != null) {
             if (replyMessagesList.size() == 1) {
                 log.info("replyKeyboard != null && size = 1");
-                PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
-                if (botApiMethod instanceof SendMessage) {
-                    ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                if (!profileData.equalsReplyKeyboard(replyKeyboard)) {
+                    PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
+                    //TODO: what if 1st message is edit method?
+                    if (botApiMethod instanceof SendMessage) {
+                        ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                    }
                 }
             } else if (replyMessagesList.size() == 2) {
                 log.info("replyKeyboard != null && size = 2");
-                PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
-                if (botApiMethod instanceof SendMessage) {
-                    ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
-                }
-                BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(1);
-                if (botApiMethod2 instanceof SendMessage) {
-                    ((SendMessage) botApiMethod2).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                //TODO: what if 1st message is photo? we have to put reply keyboard into dummy message?
+                if (!profileData.equalsReplyKeyboard(replyKeyboard)) {
+                    PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
+                    if (botApiMethod instanceof SendMessage) {
+                        //we delete keyboard cuz we will probably have delay in sending messages
+                        ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                    }
+                    BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(1);
+                    if (botApiMethod2 instanceof SendMessage) {
+                        ((SendMessage) botApiMethod2).setReplyMarkup(replyKeyboard).enableMarkdown(true);
+                    }
                 }
             } else {
                 log.info("replyKeyboard != null && size > 2");
-                PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
-                if (botApiMethod instanceof SendMessage) {
-                    ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
-                }
-                BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(replyMessagesList.size()-1);
-                if (botApiMethod2 instanceof SendMessage) {
-                    ((SendMessage) botApiMethod2)
-                            .setReplyMarkup(replyKeyboard)
-                            .enableMarkdown(true);
+                if (!profileData.equalsReplyKeyboard(replyKeyboard)) {
+                    PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
+                    if (botApiMethod instanceof SendMessage) {
+                        ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                    }
+                    BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(replyMessagesList.size() - 1);
+                    if (botApiMethod2 instanceof SendMessage) {
+                        ((SendMessage) botApiMethod2)
+                                .setReplyMarkup(replyKeyboard)
+                                .enableMarkdown(true);
+                    }
                 }
             }
             profileData.setReplyKeyboardHash(replyKeyboard.hashCode());
@@ -176,28 +185,30 @@ public class MainMenuService {
                             .setText(messagesService.getText("bot.reportUs")));
                     replyMessagesList.add(i++, new DeleteMessage(chatId, 0));
                 }
-                //((SendMessage) replyMessagesList.get(2)).setReplyMarkup(new InlineKeyboardMarkup());
                 if (replyMessagesList.get(i) instanceof SendMessage) {
-                    ((SendMessage) replyMessagesList.get(i)).setReplyMarkup(new InlineKeyboardMarkup());
+                    ((SendMessage) replyMessagesList.get(i)).setReplyMarkup(inlineKeyboard);
                 } else if (replyMessagesList.get(i) instanceof EditMessageReplyMarkup) {
-                    ((EditMessageText) replyMessagesList.get(i)).setReplyMarkup(new InlineKeyboardMarkup());
+                    ((EditMessageReplyMarkup) replyMessagesList.get(i)).setReplyMarkup(inlineKeyboard);
+                } else if (replyMessagesList.get(i) instanceof EditMessageText) {
+                    ((EditMessageText) replyMessagesList.get(i)).setReplyMarkup(inlineKeyboard);
                 }
-                replyMessagesList.add(new EditMessageReplyMarkup()
+                /*replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
                         .setReplyMarkup(inlineKeyboard)
-                        .setMessageId(profileData.getLastMessageId()));
+                        .setMessageId(profileData.getLastMessageId()));*/
             } else if (replyMessagesList.size() == 2) {
                 log.info("inlineKeyboard != null && size = 2");
                 if (profileData.isHasReplyKeyboard()) {
+                    //TODO: 1st message can be of another type
                     SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
                     firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
                 }
                 SendMessage lastMessage = (SendMessage) replyMessagesList.get(1);
-                lastMessage.setReplyMarkup(new InlineKeyboardMarkup());
-                replyMessagesList.add(new EditMessageReplyMarkup()
+                lastMessage.setReplyMarkup(inlineKeyboard);
+                /*replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)
                         .setReplyMarkup(inlineKeyboard)
-                        .setMessageId(profileData.getLastMessageId()));
+                        .setMessageId(profileData.getLastMessageId()));*/
             } else {
                 log.info("inlineKeyboard != null && size > 2");
                 if (profileData.isHasReplyKeyboard()) {
