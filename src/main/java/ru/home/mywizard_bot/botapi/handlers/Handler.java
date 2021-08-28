@@ -12,7 +12,7 @@ import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
-import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.service.ReplyMessagesService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ import java.util.List;
 public abstract class Handler {
     private final UserDataCache userDataCache;
     private final UsersProfileDataService profileDataService;
-    private final MainMenuService mainMenuService;
+    private final ReplyMessagesService replyMessagesService;
     protected final Story story;
 
-    protected Handler(UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService, Story story) {
+    protected Handler(UserDataCache userDataCache, UsersProfileDataService profileDataService, ReplyMessagesService replyMessagesService, Story story) {
         this.userDataCache = userDataCache;
         this.profileDataService = profileDataService;
-        this.mainMenuService = mainMenuService;
+        this.replyMessagesService = replyMessagesService;
         this.story = story;
     }
 
@@ -87,9 +87,9 @@ public abstract class Handler {
         //userDataCache.saveUserProfileData(userId, profileData);
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (callbackQueryId != null && !paragraphChanged)
-            resultList = mainMenuService.getIllegalActionMessage(callbackQueryId);
+            resultList = replyMessagesService.getIllegalActionMessage(callbackQueryId);
         else
-            resultList = mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+            resultList = replyMessagesService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
         profileDataService.saveUserProfileData(profileData);
         return resultList;
     }

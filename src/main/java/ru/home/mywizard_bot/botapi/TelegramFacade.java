@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.mywizard_bot.cache.UserDataCache;
 import ru.home.mywizard_bot.model.UserProfileData;
-import ru.home.mywizard_bot.service.MainMenuService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
     private UsersProfileDataService profileDataService;
-    private MainMenuService mainMenuService;
     @Value("${telegrambot.sleep}")
     private int sleepTime;
 
@@ -34,10 +32,9 @@ public class TelegramFacade {
         return sleepTime;
     }
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, UsersProfileDataService profileDataService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
-        this.mainMenuService = mainMenuService;
         this.profileDataService = profileDataService;
     }
 

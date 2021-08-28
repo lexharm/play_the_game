@@ -8,13 +8,13 @@ import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
-import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.service.ReplyMessagesService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 @Component
 public class MenuHandler extends Handler {
-    protected MenuHandler(UserDataCache userDataCache, UsersProfileDataService profileDataService, MainMenuService mainMenuService, Story story) {
-        super(userDataCache, profileDataService, mainMenuService, story);
+    protected MenuHandler(UserDataCache userDataCache, UsersProfileDataService profileDataService, ReplyMessagesService replyMessagesService, Story story) {
+        super(userDataCache, profileDataService, replyMessagesService, story);
     }
 
     @Override
