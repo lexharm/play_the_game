@@ -28,22 +28,27 @@ public class MenuHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData) {
+    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData) {
 
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
-        if ((!newParagraph.getId().equals(currentParagraph.getId())) && (!newParagraph.getId().equals(profileData.getCurrentParagraph().getId()))) {
-            newParagraph.applyActions(profileData);
-        }
+    protected void engageParagraphFeaturesHook_2(Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
+        try {
+            Paragraph newParagraph = profileData.getNewParagraph();
+            if ((!newParagraph.getId().equals(currentParagraph.getId())) && (!newParagraph.getId().equals(profileData.getCurrentParagraph().getId()))) {
+                newParagraph.applyActions(profileData);
+            }
+        } catch (Exception e) {}
     }
 
     @Override
-    protected void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph) {
+    protected void processStates(BotState botState, UserProfileData profileData) {
+        Paragraph newParagraph = profileData.getNewParagraph();
         switch (profileData.getBotState()) {
             case PLAY_SCENARIO:
             case COMBAT:
+                //TODO: Looks like here is some bug...
                 newParagraph = profileData.getCurrentParagraph();
                 break;
             default:

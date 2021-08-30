@@ -48,8 +48,10 @@ public class ReplyMessagesService {
         return localeMessageService.getMessage(replyText);
     }
 
-    public List<PartialBotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story, boolean newMessage) {
+    public List<PartialBotApiMethod<?>> getMainMenuMessage(long chatId, UserProfileData profileData, Story story, boolean newMessage) {
         List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
+
+        Paragraph paragraph = profileData.getNewParagraph();
 
         //Step 0: get both keyboards: inline and reply
         InlineKeyboardMarkup inlineKeyboard = getInlineKeyboard(paragraph, profileData, story);
@@ -72,6 +74,13 @@ public class ReplyMessagesService {
             } catch (FileNotFoundException e) {
                 log.info("There is no image file: {}", illustration.getImagePath());
             }
+        }
+
+        //Step 2-1: Add status
+        String additionalStatus = profileData.getCombatStatus();
+        if (additionalStatus.length() > 0) {
+            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(additionalStatus));
+            profileData.setCombatStatus("");
         }
 
         //Step 3: add paragraph texts

@@ -36,6 +36,7 @@ public class UserProfileData implements Serializable {
     Paragraph currentMenu;
     Paragraph currentParagraph = new Paragraph("dummy", "dummy");
     Paragraph currentCombatTurn;
+    Paragraph newParagraph;
     int strength;
     int initStrength;
     int dexterity;
@@ -46,7 +47,7 @@ public class UserProfileData implements Serializable {
     int damage;
     List<ru.home.mywizard_bot.scenario.actions.Enemy> enemies = new ArrayList<>();
     int combatTurn = 1;
-    String combatStatus;
+    String combatStatus = "";
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();

@@ -29,7 +29,7 @@ public class CombatHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData) {
+    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData) {
         if (profileData.getBotState() != BotState.SHOW_MAIN_MENU) {
             if (profileData.getCombatChecks().stream().allMatch(x -> x.test(profileData)) || profileData.getStrength() <= 0) {
                 profileData.setBotState(BotState.PLAY_SCENARIO);
@@ -40,12 +40,13 @@ public class CombatHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
+    protected void engageParagraphFeaturesHook_2(Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
 
     }
 
     @Override
-    protected void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph) {
+    protected void processStates(BotState botState, UserProfileData profileData) {
+        Paragraph newParagraph = profileData.getNewParagraph();
         switch (profileData.getBotState()) {
             case PLAY_SCENARIO:
                 newParagraph.addText(profileData.getCombatStatus());
