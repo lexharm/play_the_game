@@ -1,17 +1,13 @@
 package ru.home.mywizard_bot.scenario;
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.scenario.actions.Action;
 import ru.home.mywizard_bot.scenario.loader.Loader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +33,8 @@ public class Story {
     private int strength;
     @Value("${startNewGame.dexterity}")
     private int dexterity;
+    @Value("${startNewGame.thoughtPower}")
+    private int thoughtPower;
     @Value("${startNewGame.damage}")
     private int damage;
 
@@ -66,16 +64,16 @@ public class Story {
         return res;
     }
 
-    public Paragraph getMenuParagraph(Link link) {
-        return getParagraph(link.id, BotState.SHOW_MAIN_MENU);
+    public Paragraph getMenuParagraph(Action link) {
+        return getParagraph(link.getId(), BotState.SHOW_MAIN_MENU);
     }
 
-    public Paragraph getStoryParagraph(Link link) {
-        return getParagraph(link.id, BotState.PLAY_SCENARIO);
+    public Paragraph getStoryParagraph(Action link) {
+        return getParagraph(link.getId(), BotState.PLAY_SCENARIO);
     }
 
-    public Paragraph getCombatParagraph(Link link, Paragraph currentParagraph) {
-        String id = link.id;
+    public Paragraph getCombatParagraph(Action link, Paragraph currentParagraph) {
+        String id = link.getId();
         Paragraph paragraph = null;
         for (Link extraLink : extraLinks.get(BotState.COMBAT)) {
             if (id.equals(extraLink.id)) {
@@ -104,14 +102,14 @@ public class Story {
     }
 
     public Paragraph getInitialMenuParagraph() {
-        return getMenuParagraph(new Link(initialMenuParagraph));
+        return getMenuParagraph(new Action(initialMenuParagraph));
     }
 
     public Paragraph getInitialStoryParagraph() {
-        return getStoryParagraph(new Link(initialStoryParagraph));
+        return getStoryParagraph(new Action(initialStoryParagraph));
     }
 
     public Paragraph getCombatDefeatParagraph() {
-        return getStoryParagraph(new Link(combatDefeatParagraph));
+        return getStoryParagraph(new Action(combatDefeatParagraph));
     }
 }

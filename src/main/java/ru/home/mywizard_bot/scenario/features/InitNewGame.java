@@ -1,17 +1,11 @@
 package ru.home.mywizard_bot.scenario.features;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.service.ApplicationContextHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Component
@@ -22,11 +16,15 @@ public class InitNewGame implements Feature {
         Story story = (Story) ApplicationContextHolder.getApplicationContext().getBean("story");
         profileData.setCurrentParagraph(story.getInitialStoryParagraph());
         profileData.setStrength(story.getStrength());
+        profileData.setInitStrength(story.getStrength());
         profileData.setDexterity(story.getDexterity());
+        profileData.setInitDexterity(story.getDexterity());
+        profileData.setThoughtPower(story.getThoughtPower());
+        profileData.setInitThoughtPower(story.getThoughtPower());
         profileData.setDamage(story.getDamage());
         profileData.setInventory(new HashMap<>());
         profileData.setChecks(new HashMap<>());
-        profileData.clearEnemy();
+        profileData.setEnemies(new ArrayList<>());
         profileData.setActiveGame(true);
     }
 }

@@ -1,6 +1,6 @@
 package ru.home.mywizard_bot.scenario.checks;
 
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 
 public class ActiveGameCheck extends Check {
     @Override

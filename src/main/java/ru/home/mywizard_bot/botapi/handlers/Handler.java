@@ -7,13 +7,13 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
-import ru.home.mywizard_bot.scenario.Enemy;
-import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
-import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.service.ReplyMessagesService;
+import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +22,19 @@ import java.util.List;
 @Slf4j
 public abstract class Handler {
     private final UserDataCache userDataCache;
-    private final MainMenuService mainMenuService;
+    private final UsersProfileDataService profileDataService;
+    private final ReplyMessagesService replyMessagesService;
     protected final Story story;
 
-    protected Handler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
+    protected Handler(UserDataCache userDataCache, UsersProfileDataService profileDataService, ReplyMessagesService replyMessagesService, Story story) {
         this.userDataCache = userDataCache;
-        this.mainMenuService = mainMenuService;
+        this.profileDataService = profileDataService;
+        this.replyMessagesService = replyMessagesService;
         this.story = story;
     }
 
     public final List<PartialBotApiMethod<?>> handle(BotApiObject botApiObject) {
+        List<PartialBotApiMethod<?>> resultList = new ArrayList<>();
         int userId;
         String receivedText;
         Message message;
@@ -53,22 +56,27 @@ public abstract class Handler {
                 this.getClass().getSimpleName(), (callbackQueryId != null) ? "with callback" : "",
                 message.getFrom().getUserName(), userId, chatId, receivedText);
 
-        UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        //UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        UserProfileData profileData = profileDataService.getUserProfileData(chatId);
 
         Paragraph currentParagraph = getCurrentParagraph(profileData);
-        List<Link> links = new ArrayList<>();
+        /*List<Link> links = new ArrayList<>();
         links.addAll(currentParagraph.getLinks());
-        links.addAll(story.getExtraLinks(getHandlerName()));
+        links.addAll(currentParagraph.getInlineLinks());
+        links.addAll(story.getExtraLinks(getHandlerName()));*/
+        List<Action> links = new ArrayList<>();
+        links.addAll(currentParagraph.getMovementLinks());
+        links.addAll(currentParagraph.getInlineLinks1());
 
         Paragraph newParagraph = currentParagraph;
         boolean paragraphChanged = false;
-        Link matchedLink = null;
-        for (Link link : links) {
+        Action matchedLink = null;
+        for (Action link : links) {
             if ((botApiObject instanceof CallbackQuery && receivedText.equals(link.getId()))
-                    || (botApiObject instanceof Message && receivedText.equals(link.getText()))) {
+                    || (botApiObject instanceof Message && receivedText.equals(link.getCaption()))) {
                 matchedLink = link;
                 newParagraph = getNewParagraph(link, currentParagraph);
-                link.engageFeatures(profileData);
+                link.applyEffects(profileData);
                 engageParagraphFeaturesHook_1(newParagraph, currentParagraph, profileData);
                 processStates(profileData.getBotState(), profileData, newParagraph);
                 paragraphChanged = true;
@@ -76,19 +84,21 @@ public abstract class Handler {
             }
         }
         engageParagraphFeaturesHook_2(newParagraph, currentParagraph, profileData, paragraphChanged);
-        userDataCache.saveUserProfileData(userId, profileData);
+        //userDataCache.saveUserProfileData(userId, profileData);
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (callbackQueryId != null && !paragraphChanged)
-            return mainMenuService.getIllegalActionMessage(callbackQueryId);
+            resultList = replyMessagesService.getIllegalActionMessage(callbackQueryId);
         else
-            return mainMenuService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+            resultList = replyMessagesService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+        profileDataService.saveUserProfileData(profileData);
+        return resultList;
     }
 
-    protected Paragraph getCurrentParagraph( UserProfileData profileData) {
+    protected Paragraph getCurrentParagraph(UserProfileData profileData) {
         return profileData.getCurrentParagraph();
     };
 
-    protected abstract Paragraph getNewParagraph(Link link, Paragraph currentParagraph);
+    protected abstract Paragraph getNewParagraph(Action link, Paragraph currentParagraph);
 
     protected abstract void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData);
 

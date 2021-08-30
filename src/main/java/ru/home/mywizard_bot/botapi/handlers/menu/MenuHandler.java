@@ -3,17 +3,18 @@ package ru.home.mywizard_bot.botapi.handlers.menu;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.botapi.handlers.Handler;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 import ru.home.mywizard_bot.cache.UserDataCache;
-import ru.home.mywizard_bot.scenario.Link;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
-import ru.home.mywizard_bot.service.MainMenuService;
+import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.service.ReplyMessagesService;
+import ru.home.mywizard_bot.service.UsersProfileDataService;
 
 @Component
 public class MenuHandler extends Handler {
-    protected MenuHandler(UserDataCache userDataCache, MainMenuService mainMenuService, Story story) {
-        super(userDataCache, mainMenuService, story);
+    protected MenuHandler(UserDataCache userDataCache, UsersProfileDataService profileDataService, ReplyMessagesService replyMessagesService, Story story) {
+        super(userDataCache, profileDataService, replyMessagesService, story);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class MenuHandler extends Handler {
     }
 
     @Override
-    protected Paragraph getNewParagraph(Link link, Paragraph currentParagraph) {
+    protected Paragraph getNewParagraph(Action link, Paragraph currentParagraph) {
         return story.getMenuParagraph(link);
     }
 
@@ -34,7 +35,7 @@ public class MenuHandler extends Handler {
     @Override
     protected void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
         if ((!newParagraph.getId().equals(currentParagraph.getId())) && (!newParagraph.getId().equals(profileData.getCurrentParagraph().getId()))) {
-            newParagraph.engageFeatures(profileData);
+            newParagraph.applyActions(profileData);
         }
     }
 

@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ApplicationContextHolder implements ApplicationContextAware {
-    private static ApplicationContext ctx;
+    private static ApplicationContext context;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ApplicationContextHolder.ctx = applicationContext;
+        ApplicationContextHolder.context = applicationContext;
     }
 
     public static ApplicationContext getApplicationContext() {
-        return ctx;
+        return context;
     }
 }

@@ -1,6 +1,6 @@
 package ru.home.mywizard_bot.scenario.features;
 
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.scenario.checks.EnemyDead;
 

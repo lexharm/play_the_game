@@ -1,8 +1,7 @@
 package ru.home.mywizard_bot.scenario;
 
-import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
+import lombok.Data;
+import ru.home.mywizard_bot.model.UserProfileData;
 import ru.home.mywizard_bot.scenario.checks.Check;
 import ru.home.mywizard_bot.scenario.features.Feature;
 
@@ -17,6 +16,8 @@ public class Link {
     List<Feature> features = new ArrayList<>();
     Item item;
     boolean newMessage = true;
+
+    public Link() {}
 
     public Link(String id) {
         this.id = id;
