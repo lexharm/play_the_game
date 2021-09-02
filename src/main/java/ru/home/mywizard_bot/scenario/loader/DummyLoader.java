@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Illustration;
 import ru.home.mywizard_bot.scenario.Item;
-import ru.home.mywizard_bot.scenario.Link;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.actions.Action;
 import ru.home.mywizard_bot.scenario.actions.Event;
@@ -24,22 +23,22 @@ import java.util.List;
 public class DummyLoader extends Loader {
     @Override
     public void loadExtraLinks() {
-        List<Link> links;
+        List<MovementLink> links;
 
         //Extra menu buttons for SHOW_MAIN_MENU
         links = new ArrayList<>();
-        links.add(new Link("Купи игру! Игру купи!", "buyTheGame"));
+        //links.add(new Link("Купи игру! Игру купи!", "buyTheGame"));
         extraLinks.put(BotState.SHOW_MAIN_MENU, links);
 
         //Extra menu buttons for PLAY_SCENARIO
         links = new ArrayList<>();
-        links.add(new Link("Листок путешественника", "inventory", new SetStateMenu()));
-        links.add(new Link("Меню", "10000", new SetStateMenu()));
+        links.add(new MovementLink("Листок путешественника", "inventory", new ShowInventory()));
+        //links.add(new Link("Меню", "10000", new SetStateMenu()));
         extraLinks.put(BotState.PLAY_SCENARIO, links);
 
         //Extra menu buttons for COMBAT
         links = new ArrayList<>();
-        links.add(new Link("Меню", "10000", new SetStateMenu()));
+        //links.add(new Link("Меню", "10000", new SetStateMenu()));
         extraLinks.put(BotState.COMBAT, links);
     }
 
@@ -187,7 +186,7 @@ public class DummyLoader extends Loader {
         actions = new ArrayList<>();
         actions.add(new MovementLink("На северо-восток", "89", new EventCheck("MaylineIsDead")));
         actions.add(new MovementLink("На юго-восток", "230"));
-        actions.add(new InlineLink("Проверить удачу " + Emojis.DICE, "badLuck", new LuckCheck("goodLuck", "badLuck"), true));
+        //actions.add(new InlineLink("Проверить удачу " + Emojis.DICE, "badLuck", new LuckCheck("goodLuck", "badLuck"), true));
 
         MovementLink link = new MovementLink("Вернуться и подраться с Майлином", "999", new EventCheck("MaylineIsDead", false));
         link.addCondition(new EventCheck("MaylineIsLaugh", false));

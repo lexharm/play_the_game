@@ -30,7 +30,7 @@ public class LuckCheck implements Feature {
             status = "Вы не прошли проверку удачи " + Emojis.THUMBSUP;
         }
         status += "(" + dice + ")";
-        profileData.setCombatStatus(status);
+        profileData.setAdditionalStatus(status);
         profileData.setNewParagraph(story.getParagraph(resultId, BotState.PLAY_SCENARIO));
     }
 }

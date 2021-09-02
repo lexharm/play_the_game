@@ -23,6 +23,7 @@ import ru.home.mywizard_bot.scenario.Illustration;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.MovementLink;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,7 +78,7 @@ public class ReplyMessagesService {
         }
 
         //Step 2-1: Add status
-        String additionalStatus = profileData.getCombatStatus();
+        String additionalStatus = profileData.getAdditionalStatus();
         if (additionalStatus.length() > 0) {
             replyMessagesList.add(new SendMessage().setChatId(chatId).setText(additionalStatus));
             profileData.setCombatStatus("");
@@ -270,13 +271,13 @@ public class ReplyMessagesService {
             }
         }
         //TODO: add extra links
-        /*KeyboardRow extraRow = new KeyboardRow();
-        for (Link link : story.getExtraLinks().get(profileData.getBotState())) {
-            extraRow.add(new KeyboardButton(link.getText()));
+        KeyboardRow extraRow = new KeyboardRow();
+        for (MovementLink link : story.getExtraLinks().get(profileData.getBotState())) {
+            extraRow.add(new KeyboardButton(link.getCaption()));
         }
         if (extraRow.size() > 0) {
             keyboard.add(extraRow);
-        }*/
+        }
         if (keyboard.size() > 0) {
             replyKeyboardMarkup = new ReplyKeyboardMarkup();
             replyKeyboardMarkup.setSelective(true);

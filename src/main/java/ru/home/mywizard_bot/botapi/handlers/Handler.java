@@ -67,6 +67,7 @@ public abstract class Handler {
         List<Action> links = new ArrayList<>();
         links.addAll(currentParagraph.getMovementLinks());
         links.addAll(currentParagraph.getInlineLinks1());
+        links.addAll(story.getExtraLinks(getHandlerName()));
 
         Paragraph newParagraph = currentParagraph;
         profileData.setNewParagraph(newParagraph);
