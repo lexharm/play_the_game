@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.MovementLink;
 import ru.home.mywizard_bot.scenario.loader.Loader;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 @Component
 public class Story {
     private final Map<String, Paragraph> allParagraphs;
-    private final Map<BotState, List<Link>> extraLinks;
+    private final Map<BotState, List<MovementLink>> extraLinks;
     @Value("${story.noLinkParagraph}")
     private String noLinkParagraph;
     @Value("${story.noStoryParagraph}")
@@ -75,8 +76,8 @@ public class Story {
     public Paragraph getCombatParagraph(Action link, Paragraph currentParagraph) {
         String id = link.getId();
         Paragraph paragraph = null;
-        for (Link extraLink : extraLinks.get(BotState.COMBAT)) {
-            if (id.equals(extraLink.id)) {
+        for (MovementLink extraLink : extraLinks.get(BotState.COMBAT)) {
+            if (id.equals(extraLink.getId())) {
                 paragraph = allParagraphs.getOrDefault(id, currentParagraph);
             }
         }
@@ -93,7 +94,7 @@ public class Story {
         return res;
     }
 
-    public List<Link> getExtraLinks(BotState botState) {
+    public List<MovementLink> getExtraLinks(BotState botState) {
         return extraLinks.get(botState);
     }
 

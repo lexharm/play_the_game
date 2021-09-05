@@ -15,7 +15,9 @@ public enum Emojis {
     BROKEN_HEART(EmojiParser.parseToUnicode(":broken_heart:")),
     DAGGER(EmojiParser.parseToUnicode(":dagger_knife:")),
     SKELETON(EmojiParser.parseToUnicode(":skull:")),
-    SCULL_BONES(EmojiParser.parseToUnicode(":skull_crossbones:"));
+    SCULL_BONES(EmojiParser.parseToUnicode(":skull_crossbones:")),
+    THUMBSUP(EmojiParser.parseToUnicode("thumbsup")),
+    THUMBSDOWN(EmojiParser.parseToUnicode("thumbsdown"));
 
     private String emojiName;
 

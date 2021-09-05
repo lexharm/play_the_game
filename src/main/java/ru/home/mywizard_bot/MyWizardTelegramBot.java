@@ -86,9 +86,11 @@ public class MyWizardTelegramBot extends TelegramWebhookBot {
                     if (message != null) {
                         profileDataService.setLastMessageId(message.getChatId(), message.getMessageId());
                     }
-                    /* TODO: make dynamic sleep depending on length of messages
-                    try {
-                        Thread.sleep(telegramFacade.getSleepTime());
+                    //TODO: make dynamic sleep depending on length of messages
+                    /*try {
+                        if (update.getMessage().getChatId() == 149037203) {
+                            Thread.sleep(telegramFacade.getSleepTime());
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }*/

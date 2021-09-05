@@ -36,6 +36,7 @@ public class UserProfileData implements Serializable {
     Paragraph currentMenu;
     Paragraph currentParagraph = new Paragraph("dummy", "dummy");
     Paragraph currentCombatTurn;
+    Paragraph newParagraph;
     int strength;
     int initStrength;
     int dexterity;
@@ -46,7 +47,8 @@ public class UserProfileData implements Serializable {
     int damage;
     List<ru.home.mywizard_bot.scenario.actions.Enemy> enemies = new ArrayList<>();
     int combatTurn = 1;
-    String combatStatus;
+    String combatStatus = "";
+    String additionalStatus = "";
     Map<String, Integer> inventory = new HashMap<>();
     Map<String, Integer> checks = new HashMap<>();
     List<Check> combatChecks = new ArrayList<>();
@@ -81,6 +83,24 @@ public class UserProfileData implements Serializable {
                 "Предметы=" + inventory + "\n" +
                 "Проверки=" + checks +
                 '}';
+    }
+
+    public String showInventory() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("*").append(userName).append("*").append("\n");
+        sb.append(String.format("*%s:* _%d/%d_\n", "Здоровье", strength, initStrength));
+        sb.append(String.format("*%s:* _%d/%d_\n", "Ловкость", dexterity, initDexterity));
+        sb.append(String.format("*%s:* _%d/%d_\n", "Сила мысли", thoughtPower, initThoughtPower));
+        sb.append(String.format("*%s:* _%d_\n", "Наносимый урон", damage));
+        sb.append("*Предметы:*\n");
+        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
+            sb.append(String.format("*%s:* _%d шт._\n", entry.getKey(), entry.getValue()));
+        }
+        sb.append("*Проверки:*\n");
+        for (Map.Entry<String, Integer> entry : checks.entrySet()) {
+            sb.append(String.format("*%s:* _%d шт._\n", entry.getKey(), entry.getValue()));
+        }
+        return sb.toString();
     }
 
     public String getCombatInfo(boolean classicCombat) {

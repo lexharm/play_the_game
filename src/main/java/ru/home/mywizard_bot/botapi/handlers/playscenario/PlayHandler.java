@@ -24,14 +24,15 @@ public class PlayHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData) {
+    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData) {
+        Paragraph newParagraph = profileData.getNewParagraph();
         if (!newParagraph.getId().equals(currentParagraph.getId())) {
             newParagraph.applyActions(profileData);
         }
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
+    protected void engageParagraphFeaturesHook_2(Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged) {
         if (profileData.getBotState() == BotState.COMBAT) {
             /*newParagraph.setText(newParagraph.getText() + "\n" + profileData.getEnemy().getCombatInfo() + "\n"
                     + profileData.getCombatInfo());*/
@@ -40,7 +41,8 @@ public class PlayHandler extends Handler {
     }
 
     @Override
-    protected void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph) {
+    protected void processStates(BotState botState, UserProfileData profileData) {
+        Paragraph newParagraph = profileData.getNewParagraph();
         switch (profileData.getBotState()) {
             case COMBAT:
                 profileData.setCurrentParagraph(newParagraph);

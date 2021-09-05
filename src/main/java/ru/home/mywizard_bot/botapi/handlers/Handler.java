@@ -67,8 +67,10 @@ public abstract class Handler {
         List<Action> links = new ArrayList<>();
         links.addAll(currentParagraph.getMovementLinks());
         links.addAll(currentParagraph.getInlineLinks1());
+        links.addAll(story.getExtraLinks(getHandlerName()));
 
         Paragraph newParagraph = currentParagraph;
+        profileData.setNewParagraph(newParagraph);
         boolean paragraphChanged = false;
         Action matchedLink = null;
         for (Action link : links) {
@@ -76,20 +78,21 @@ public abstract class Handler {
                     || (botApiObject instanceof Message && receivedText.equals(link.getCaption()))) {
                 matchedLink = link;
                 newParagraph = getNewParagraph(link, currentParagraph);
+                profileData.setNewParagraph(newParagraph);
                 link.applyEffects(profileData);
-                engageParagraphFeaturesHook_1(newParagraph, currentParagraph, profileData);
-                processStates(profileData.getBotState(), profileData, newParagraph);
+                engageParagraphFeaturesHook_1(currentParagraph, profileData);
+                processStates(profileData.getBotState(), profileData);
                 paragraphChanged = true;
                 break;
             }
         }
-        engageParagraphFeaturesHook_2(newParagraph, currentParagraph, profileData, paragraphChanged);
+        engageParagraphFeaturesHook_2(currentParagraph, profileData, paragraphChanged);
         //userDataCache.saveUserProfileData(userId, profileData);
         boolean newMessage = matchedLink == null || matchedLink.isNewMessage();
         if (callbackQueryId != null && !paragraphChanged)
             resultList = replyMessagesService.getIllegalActionMessage(callbackQueryId);
         else
-            resultList = replyMessagesService.getMainMenuMessage(chatId, newParagraph, profileData, story, newMessage);
+            resultList = replyMessagesService.getMainMenuMessage(chatId, profileData, story, newMessage);
         profileDataService.saveUserProfileData(profileData);
         return resultList;
     }
@@ -100,11 +103,11 @@ public abstract class Handler {
 
     protected abstract Paragraph getNewParagraph(Action link, Paragraph currentParagraph);
 
-    protected abstract void engageParagraphFeaturesHook_1(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData);
+    protected abstract void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData);
 
-    protected abstract void engageParagraphFeaturesHook_2(Paragraph newParagraph, Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged);
+    protected abstract void engageParagraphFeaturesHook_2(Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged);
 
-    protected abstract void processStates(BotState botState, UserProfileData profileData, Paragraph newParagraph);
+    protected abstract void processStates(BotState botState, UserProfileData profileData);
 
     public abstract BotState getHandlerName();
 }

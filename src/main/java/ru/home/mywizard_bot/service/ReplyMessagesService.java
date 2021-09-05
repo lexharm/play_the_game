@@ -23,6 +23,7 @@ import ru.home.mywizard_bot.scenario.Illustration;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.MovementLink;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,8 +49,10 @@ public class ReplyMessagesService {
         return localeMessageService.getMessage(replyText);
     }
 
-    public List<PartialBotApiMethod<?>> getMainMenuMessage(final long chatId, final Paragraph paragraph, UserProfileData profileData, Story story, boolean newMessage) {
+    public List<PartialBotApiMethod<?>> getMainMenuMessage(long chatId, UserProfileData profileData, Story story, boolean newMessage) {
         List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
+
+        Paragraph paragraph = profileData.getNewParagraph();
 
         //Step 0: get both keyboards: inline and reply
         InlineKeyboardMarkup inlineKeyboard = getInlineKeyboard(paragraph, profileData, story);
@@ -72,6 +75,13 @@ public class ReplyMessagesService {
             } catch (FileNotFoundException e) {
                 log.info("There is no image file: {}", illustration.getImagePath());
             }
+        }
+
+        //Step 2-1: Add status
+        String additionalStatus = profileData.getAdditionalStatus();
+        if (additionalStatus.length() > 0) {
+            replyMessagesList.add(new SendMessage().setChatId(chatId).setText(additionalStatus));
+            profileData.setCombatStatus("");
         }
 
         //Step 3: add paragraph texts
@@ -261,13 +271,13 @@ public class ReplyMessagesService {
             }
         }
         //TODO: add extra links
-        /*KeyboardRow extraRow = new KeyboardRow();
-        for (Link link : story.getExtraLinks().get(profileData.getBotState())) {
-            extraRow.add(new KeyboardButton(link.getText()));
+        KeyboardRow extraRow = new KeyboardRow();
+        for (MovementLink link : story.getExtraLinks().get(profileData.getBotState())) {
+            extraRow.add(new KeyboardButton(link.getCaption()));
         }
         if (extraRow.size() > 0) {
             keyboard.add(extraRow);
-        }*/
+        }
         if (keyboard.size() > 0) {
             replyKeyboardMarkup = new ReplyKeyboardMarkup();
             replyKeyboardMarkup.setSelective(true);
