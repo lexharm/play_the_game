@@ -47,7 +47,7 @@ public class TelegramFacade {
     }
 
     public List<PartialBotApiMethod<?>> handleUpdate(Update update) {
-        List<PartialBotApiMethod<?>> replyMessagesList = null;
+        List<PartialBotApiMethod<?>> replyMessagesList = new ArrayList<>();
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
@@ -61,11 +61,11 @@ public class TelegramFacade {
             replyMessagesList = handleInputMessage(message);
         }
         log.info("replyMessagesList has size: {}", replyMessagesList != null ? replyMessagesList.size() : "null");
-        //TODO: It's needed to do smthng with unknown updates. Where is it from?
-        if (replyMessagesList == null) {
+        //TODO: It's needed to do smthng with unknown updates (arises when stop and block bot).
+        /*if (replyMessagesList == null) {
             replyMessagesList = new ArrayList<>();
             replyMessagesList.add(new SendMessage().setText("Catched unknown update").setChatId(new Long(149037203)));
-        }
+        }*/
         return replyMessagesList;
     }
 

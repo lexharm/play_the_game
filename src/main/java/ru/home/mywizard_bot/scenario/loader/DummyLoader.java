@@ -33,6 +33,7 @@ public class DummyLoader extends Loader {
         //Extra menu buttons for PLAY_SCENARIO
         links = new ArrayList<>();
         links.add(new MovementLink("Листок путешественника", "inventory", new ShowInventory()));
+        links.add(new MovementLink("Меню", "10000", new SetStateMenu()));
         //links.add(new Link("Меню", "10000", new SetStateMenu()));
         extraLinks.put(BotState.PLAY_SCENARIO, links);
 
@@ -80,7 +81,7 @@ public class DummyLoader extends Loader {
         id = "10000";
         paragraph = new Paragraph(id, "Главное меню");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Вернуться в игру", "10001", new ActiveGameCheck(), new ReturnToGame()));
+        actions.add(new InlineLink("Вернуться в игру", "10001", new ActiveGameCheck(), new ReturnToGame(), true));
         actions.add(new InlineLink("Новая игра", "10002", false));
         actions.add(new InlineLink("Руководство", "10003", false));
         actions.add(new InlineLink("Статистика", "10004", false));
@@ -140,7 +141,7 @@ public class DummyLoader extends Loader {
         id = "10018";
         paragraph = new Paragraph(id, "Хороший сценарий?");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Да\\!", "10005"));
+        actions.add(new InlineLink("Да!", "10005"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
