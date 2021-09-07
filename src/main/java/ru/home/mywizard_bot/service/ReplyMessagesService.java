@@ -81,7 +81,7 @@ public class ReplyMessagesService {
         String additionalStatus = profileData.getAdditionalStatus();
         if (additionalStatus.length() > 0) {
             replyMessagesList.add(new SendMessage().setChatId(chatId).setText(additionalStatus));
-            profileData.setCombatStatus("");
+            profileData.setAdditionalStatus("");
         }
 
         //Step 3: add paragraph texts
