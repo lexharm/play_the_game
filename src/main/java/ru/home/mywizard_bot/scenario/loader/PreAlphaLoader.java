@@ -5,12 +5,11 @@ import ru.home.mywizard_bot.botapi.BotState;
 import ru.home.mywizard_bot.scenario.Illustration;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Paragraph;
-import ru.home.mywizard_bot.scenario.actions.Action;
-import ru.home.mywizard_bot.scenario.actions.Event;
-import ru.home.mywizard_bot.scenario.actions.InlineLink;
-import ru.home.mywizard_bot.scenario.actions.MovementLink;
+import ru.home.mywizard_bot.scenario.actions.*;
 import ru.home.mywizard_bot.scenario.checks.ActiveGameCheck;
+import ru.home.mywizard_bot.scenario.checks.EnemyDead;
 import ru.home.mywizard_bot.scenario.checks.InventoryCheck;
+import ru.home.mywizard_bot.scenario.checks.PlayerDead;
 import ru.home.mywizard_bot.scenario.features.*;
 import ru.home.mywizard_bot.utils.Condition;
 import ru.home.mywizard_bot.utils.Emojis;
@@ -54,6 +53,7 @@ public class PreAlphaLoader extends Loader {
         items.put("Food", new Item("Food", "Еда"));
         items.put("Gold", new Item("Gold", "Золото"));
         items.put("CaravanGold", new Item("CaravanGold", "CaravanGold", false));
+        items.put("WINGED_MAN_DEAD", new Item("WINGED_MAN_DEAD", "WINGED_MAN", false));
 
         id = "noMenuParagraph";
         paragraph = new Paragraph(id, "Раздел отсутствует :(");
@@ -345,8 +345,7 @@ public class PreAlphaLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "250";
-        paragraph = new Paragraph(id, "Торговец настолько любезен, что укладывает вас спать прямо в своем шатре, " +
-                "не взяв за это ни гроша. Если вы приобрели товары на сумму больше 8 золотых, то <a l:href=\"#n_413\"><strong>413</strong></a>, если же меньше или вовсе ничего не покупали — <a l:href=\"#n_540\"><strong>540");
+        paragraph = new Paragraph(id, "Торговец настолько любезен, что укладывает вас спать прямо в своем шатре, не взяв за это ни гроша.");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Отдыхать", "413", new InventoryCheck(items.get("CaravanGold"), 8, Condition.MORE_EQUAL), true));
         actions.add(new InlineLink("Отдыхать", "540", new InventoryCheck(items.get("CaravanGold"), 8, Condition.LESS), true));
@@ -354,11 +353,48 @@ public class PreAlphaLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "20";
-        paragraph = new Paragraph(id, "Ночь приносит желанный отдых (можете восстановить 2 СИЛЫ), а утром решайте, " +
-                "куда идти дальше.");
+        paragraph = new Paragraph(id, "Ночь приносит желанный отдых, а утром решайте, куда идти дальше.");
         actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(2)));
         actions.add(new MovementLink("На северо-восток", "116"));
         actions.add(new MovementLink("На юго-восток", "93"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "93";
+        paragraph = new Paragraph(id, "Когда через некоторое время вы поднимаетесь на гребень одного из барханов, " +
+                "взгляду открывается следующая картина. Всего в нескольких десятках шагов на песке лежит изможденный " +
+                "человек в рваной, пропитанной кровью одежде. Над ним нависает огромная крылатая тень, которая, " +
+                "выпустив когти, пытается увернуться от его меча. Бой неравен, о чем ясно говорят кровоточащие " +
+                "раны на теле незнакомца. Еще немного, и он будет добит этим кошмарным чудовищем. Хотите вмешаться, " +
+                "или же предпочтете не участвовать в схватке?");
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Атаковать оружием", "480"));
+        actions.add(new MovementLink("Применить Силу мысли", "515"));
+        actions.add(new MovementLink("Не участвовать в схватке", "213"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "515";
+        paragraph = new Paragraph(id, "Вы концентрируетесь и наносите мысленный удар. Почувствовав боль, тварь " +
+                "взмывает в воздух, и теперь становится видно, что между огромными кожистыми крыльями, как у летучей " +
+                "мыши, у нее небольшое человеческое тело с лапами вместо ног.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new SetStateCombat()));
+        actions.add(new Event(new AddCombatCheck()));
+        actions.add(new Enemy("КРЫЛАТЫЙ ЧЕЛОВЕК", "WINGED_MAN", 10, 0, 3));
+        actions.add(new MovementLink("Продолжить", "238", new EnemyDead(), new GiveItem(items.get("WINGED_MAN_DEAD"))));
+        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "238";
+        paragraph = new Paragraph(id, "Как и обещал Майлин, первая же победа придала вам уверенности в себе и " +
+                "заменила многочасовые тренировки. Теперь при желании вы сможете чувствовать, есть ли поблизости " +
+                "разумная жизнь и, основываясь на этом, принимать решения.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyThoughtPower(1)));
+        actions.add(new MovementLink("Продолжить", "99"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
     }
