@@ -49,11 +49,18 @@ public class PreAlphaLoader extends Loader {
         Paragraph paragraph;
         List<Action> actions;
         Map<String, Item> items = new HashMap<>();
-        items.put("Sword", new Item("Sword", "Меч"));
+        items.put("Sword", new Item("Sword", "Обычный меч"));
         items.put("Food", new Item("Food", "Еда"));
         items.put("Gold", new Item("Gold", "Золото"));
         items.put("CaravanGold", new Item("CaravanGold", "CaravanGold", false));
         items.put("WINGED_MAN_DEAD", new Item("WINGED_MAN_DEAD", "WINGED_MAN", false));
+        items.put("Rope", new Item("Rope", "Веревка"));
+        items.put("Dove", new Item("Dove", "Голубь"));
+        items.put("Cloak", new Item("Cloak", "Накидка"));
+        items.put("FineSword", new Item("FineSword", "Хороший меч"));
+        items.put("Belt", new Item("Belt", "Пояс"));
+        items.put("Vial", new Item("Vial", "Флакон"));
+        items.put("Armor", new Item("Armor", "Доспехи"));
 
         id = "noMenuParagraph";
         paragraph = new Paragraph(id, "Раздел отсутствует :(");
@@ -276,6 +283,34 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "12";
+        paragraph = new Paragraph(id, "Нетрудно было догадаться, что перекати-поле вряд ли являются мыслящими " +
+                "существами. Ваша попытка не удается, а следующий шар взрывается прямо у ваших ног. Придется либо " +
+                "пытаться отбиться мечом, либо постараться увернуться.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(-4)));
+        actions.add(new MovementLink("Использовать меч", "105"));
+        actions.add(new MovementLink("Попытаться увернуться", "483"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "20";
+        paragraph = new Paragraph(id, "Ночь приносит желанный отдых, а утром решайте, куда идти дальше.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(2)));
+        actions.add(new InlineLink("На северо-восток", "116"));
+        actions.add(new InlineLink("На юго-восток", "93"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "30";
+        paragraph = new Paragraph(id, "Вам повезло: от всех остальных шаров удается увернуться. Куда вы теперь направитесь?");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("На восток", "486"));
+        actions.add(new InlineLink("На северо-восток", "110"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "89";
         paragraph = new Paragraph(id, "Решив, что хребет Лонсам все же предпочтительнее Мортлэндских болот, " +
                 "направляетесь на северо-восток. К полудню солнце печет настолько сильно, что вы уже еле-еле " +
@@ -289,75 +324,6 @@ public class PreAlphaLoader extends Loader {
         actions.add(new MovementLink("Свернуть в сторону", "514"));
         actions.add(new MovementLink("Продолжать путь", "479"));
         actions.add(new MovementLink("Остановиться и обножить меч", "344"));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "230";
-        paragraph = new Paragraph(id, "Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
-                "показаться в королевском дворце в Элгариоле. С непривычки ноги вязнут в песке, пот заливает глаза, " +
-                "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
-                "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется.");
-        paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга " +
-                "наперерез вам. Ваше действие?");
-        actions = new ArrayList<>();
-        actions.add(new MovementLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
-        actions.add(new MovementLink("Идти дальше", "96"));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "96";
-        paragraph = new Paragraph(id, "Часа через полтора вы догоняете караван. Погонщик первого верблюда " +
-                "выкрикивает какое-то протяжное слово на неизвестном языке, и все животные останавливаются. Смуглые " +
-                "худощавые люди спрыгивают на землю. Одни начинают расседлывать усталых животных, другие разбивают " +
-                "шатры. На вас никто не обращает внимания. Смеркается, и в самом деле пора подумать о ночлеге. " +
-                "Хотите подойти поговорить с одним из погонщиков или продолжите свой путь, решив, что ночь безопасней " +
-                "провести в одиночку, чем с незнакомыми людьми?");
-        actions = new ArrayList<>();
-        actions.add(new MovementLink("Поговорить с погонщиком", "345"));
-        actions.add(new MovementLink("Продолжить путь", "245"));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "345";
-        paragraph = new Paragraph(id, "Нельзя сказать, чтобы погонщик был особенно рад вашему появлению.");
-        actions = new ArrayList<>();
-        actions.add(new InlineLink("Проверить обаяние", "346", new LuckCheck("629", "245"), true));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "629";
-        paragraph = new Paragraph(id, "Иноземец вежливо приветствует вас, но вы не понимаете ни слова. В конце " +
-                "концов выясняется, что он говорит на языке Элгариола (хотя и очень плохо), и вы кое-как все же можете " +
-                "объясниться. О чем вы спросите?");
-        actions = new ArrayList<>();
-        actions.add(new InlineLink("Попроситься на ночлег", "250", true));
-        actions.add(new InlineLink("Торговать", "512", true));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "245";
-        paragraph = new Paragraph(id, "Пройдя мимо каравана, вы уходите в ночь, а усталые люди и верблюды вскоре " +
-                "скрываются из виду. Пора и вам отдохнуть. Расположившись на ночлег, быстро засыпаете, ведь завтра " +
-                "предстоит нелегкий путь");
-        actions = new ArrayList<>();
-        actions.add(new MovementLink("Отдыхать", "20"));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "250";
-        paragraph = new Paragraph(id, "Торговец настолько любезен, что укладывает вас спать прямо в своем шатре, не взяв за это ни гроша.");
-        actions = new ArrayList<>();
-        actions.add(new InlineLink("Отдыхать", "413", new InventoryCheck(items.get("CaravanGold"), 8, Condition.MORE_EQUAL), true));
-        actions.add(new InlineLink("Отдыхать", "540", new InventoryCheck(items.get("CaravanGold"), 8, Condition.LESS), true));
-        paragraph.setActions(actions);
-        allParagraphs.put(id, paragraph);
-
-        id = "20";
-        paragraph = new Paragraph(id, "Ночь приносит желанный отдых, а утром решайте, куда идти дальше.");
-        actions = new ArrayList<>();
-        actions.add(new Event(new ModifyStrength(2)));
-        actions.add(new MovementLink("На северо-восток", "116"));
-        actions.add(new MovementLink("На юго-восток", "93"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -375,6 +341,211 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "96";
+        paragraph = new Paragraph(id, "Часа через полтора вы догоняете караван. Погонщик первого верблюда " +
+                "выкрикивает какое-то протяжное слово на неизвестном языке, и все животные останавливаются. Смуглые " +
+                "худощавые люди спрыгивают на землю. Одни начинают расседлывать усталых животных, другие разбивают " +
+                "шатры. На вас никто не обращает внимания. Смеркается, и в самом деле пора подумать о ночлеге. " +
+                "Хотите подойти поговорить с одним из погонщиков или продолжите свой путь, решив, что ночь безопасней " +
+                "провести в одиночку, чем с незнакомыми людьми?");
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Поговорить с погонщиком", "345"));
+        actions.add(new MovementLink("Продолжить путь", "245"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "105";
+        paragraph = new Paragraph(id, "Вы опускаете меч на перекати-поле... и раздается взрыв. Меч оплавился, но " +
+                "устоял, а вот не столь прочная ваша правая рука серьезно ранена. Теперь от остальных шаров придется " +
+                "уворачиваться.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyDexterity(-1)));
+        actions.add(new InlineLink("Продолжить", "483"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "116";
+        paragraph = new Paragraph(id, "С бархана на бархан неторопливо, но верно вы продолжаете идти вперед. " +
+                "Вдруг видите, что навстречу быстро (насколько это позволяет песок) несутся несколько всадников. " +
+                "Свернуть в сторону уже поздно, остается только ждать их приближения. Осадив коней рядом с вами " +
+                "(не правда ли, несколько странный способ передвигаться по пустыне, где за все время не встретилось " +
+                "еще ни одного оазиса с водой), они спрашивают, куда вы держите путь. Судя по одежде и кривым саблям, " +
+                "это кочевники. Надо что-то ответить. Но что?");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Ищу мага, обитающего в скале посреди пустыни", "409", true));
+        actions.add(new InlineLink("Просто путешествую", "386", true));
+        actions.add(new InlineLink("Направляюсь к гномам, живущим внутри гор Лонсам", "508", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "230";
+        paragraph = new Paragraph(id, "Путешествие по пустыне оказывается совсем не таким приятным, как это могло " +
+                "показаться в королевском дворце в Элгариоле. С непривычки ноги вязнут в песке, пот заливает глаза, " +
+                "пустыня давит и окружает со всех сторон. А ведь еще предстоит пробраться через Мортлэндские топи, а " +
+                "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется.");
+        paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга " +
+                "наперерез вам. Ваше действие?");
+        actions = new ArrayList<>();
+        actions.add(new MovementLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
+        actions.add(new MovementLink("Идти дальше", "96"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "238";
+        paragraph = new Paragraph(id, "Как и обещал Майлин, первая же победа придала вам уверенности в себе и " +
+                "заменила многочасовые тренировки. Теперь при желании вы сможете чувствовать, есть ли поблизости " +
+                "разумная жизнь и, основываясь на этом, принимать решения.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyThoughtPower(1)));
+        actions.add(new MovementLink("Продолжить", "99"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "245";
+        paragraph = new Paragraph(id, "Пройдя мимо каравана, вы уходите в ночь, а усталые люди и верблюды вскоре " +
+                "скрываются из виду. Пора и вам отдохнуть. Расположившись на ночлег, быстро засыпаете, ведь завтра " +
+                "предстоит нелегкий путь.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Отдыхать", "20", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "247";
+        paragraph = new Paragraph(id, "Вскоре караван, уходя на север, скрывается из виду, а вы продолжаете свой путь.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Продолжить", "93"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "250";
+        paragraph = new Paragraph(id, "Торговец настолько любезен, что укладывает вас спать прямо в своем шатре, не взяв за это ни гроша.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Отдыхать", "413", new InventoryCheck(items.get("CaravanGold"), 8, Condition.MORE_EQUAL), true));
+        actions.add(new InlineLink("Отдыхать", "540", new InventoryCheck(items.get("CaravanGold"), 8, Condition.LESS), true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "254";
+        paragraph = new Paragraph(id, "Но попытка разрубить это странное перекати-поле оказывается еще более " +
+                "неудачной. Снова взрыв — на этот раз меч устоял, а вот ваша правая рука серьезно ранена. " +
+                "Теперь не остается ничего другого, кроме как уворачиваться от остальных шаров.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyDexterity(-1)));
+        actions.add(new InlineLink("Попытаться увернуться", "483"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "259";
+        paragraph = new Paragraph(id, "Моток веревки, которая всегда может пригодиться. Стоит 2 золотых.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Купить", "512",
+                new InventoryCheck(items.get("Gold"), 2, Condition.MORE_EQUAL),
+                new BuyItem(items.get("Rope"), 2), false));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "344";
+        paragraph = new Paragraph(id, "Первый шар, который должен был прокатиться в нескольких шагах от вас, резко " +
+                "поворачивает и устремляется в вашу сторону. Попытаетесь разрубить его мечом или посмотрите, что " +
+                "будет дальше?");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Использовать меч", "105"));
+        actions.add(new InlineLink("Ожидать", "496"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "345";
+        paragraph = new Paragraph(id, "Нельзя сказать, чтобы погонщик был особенно рад вашему появлению. Если не " +
+                "получится завести разговор, тогда придётся по-хорошему уйти.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Проверить обаяние", "346", new LuckCheck("629", "245"), true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "359";
+        paragraph = new Paragraph(id, "К сожалению, проворства вам явно не хватает. Отпрыгивая от одного шара, вы " +
+                "попадаете прямо на другой, взрыв следует за взрывом. Кто бы ни послал навстречу вам эти " +
+                "перекати-поле, он рассчитал правильно. Ваш труп так и останется в самом начале пути...");
+        actions = new ArrayList<>();
+        actions.add(new Event(new EndGame()));
+        actions.add(new MovementLink("Начать заново", "newGameConfirm"));
+        actions.add(new MovementLink("Выйти в главное меню", "mainMenu"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "479";
+        paragraph = new Paragraph(id, "Перекати-поле приближаются. Неожиданно первый шар, который должен был " +
+                "прокатиться в нескольких шагах от вас, резко сворачивает и, натолкнувшись на ногу, взрывается. " +
+                "Попытаетесь теперь увернуться от остальных, обнажите меч или воспользуетесь своей Силой мысли?");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(-4)));
+        actions.add(new InlineLink("Попытаться увернуться", "483"));
+        actions.add(new InlineLink("Обножить меч", "254"));
+        actions.add(new InlineLink("Использовать Силу мысли", "12"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "481";
+        paragraph = new Paragraph(id, "Теперь вы идете параллельно с караваном, который и не думает куда-нибудь " +
+                "сворачивать. Попробуете обогнуть его с юга или все же пойдете по направлению к верблюдам?");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Попытаться обойти", "247"));
+        actions.add(new InlineLink("Подойти к верблюдам", "96"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "483";
+        paragraph = new Paragraph(id, "ПРОВЕРЬТЕ СВОЮ УДАЧУ.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Проверить удачу", "30", new LuckCheck("30", "359"), true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "496";
+        paragraph = new Paragraph(id, "Шар натыкается на вашу ногу... и раздается взрыв. Попытаетесь теперь " +
+                "увернуться от остальных, разрубите следующий шар мечом или воспользуетесь своей Силой мысли?");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(-4)));
+        actions.add(new InlineLink("Попытаться увернуться", "483"));
+        actions.add(new InlineLink("Использовать меч", "254"));
+        actions.add(new InlineLink("Использовать Силу мысли", "12"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "512";
+        paragraph = new Paragraph(id, "Торговец дружелюбен и с удовольствием показывает товары в своем шатре, " +
+                "который слуги уже успели поставить. Можете купить у него все, что приглянется, — были бы деньги. " +
+                "А товары такие (в скобках указаны цены):\n" +
+                "моток веревки (2);\n" +
+                "почтовый голубь в изящной позолоченной клетке (5);\n" +
+                "накидка от песчаной бури (3);\n" +
+                "меч, на рукояти которого неизвестные вам письмена вязью (5);\n" +
+                "шелковый пояс (5);\n" +
+                "флакон с неизвестной жидкостью (6);\n" +
+                "рыцарские доспехи (2).\n" +
+                "После этого можете либо попрощаться и пойти дальше, решив, что лучше будет переночевать одному, " +
+                "либо попроситься на ночлег к любезному торговцу.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Веревка", "259", new InventoryCheck(items.get("Rope"), false)));
+        actions.add(new InlineLink("Голубь", "421", new InventoryCheck(items.get("Dove"), false)));
+        actions.add(new InlineLink("Накидка", "290", new InventoryCheck(items.get("Cloak"), false)));
+        actions.add(new InlineLink("Меч", "376", new InventoryCheck(items.get("FineSword"), false)));
+        actions.add(new InlineLink("Пояс", "59", new InventoryCheck(items.get("Belt"), false)));
+        actions.add(new InlineLink("Флакон", "121", new InventoryCheck(items.get("Vial"), false)));
+        actions.add(new InlineLink("Доспехи", "278", new InventoryCheck(items.get("Armor"), false)));
+        actions.add(new InlineLink("Попрощаться с торговцем", "446"));
+        actions.add(new InlineLink("Попроситься на ночлег", "250"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "514";
+        paragraph = new Paragraph(id, "Какое-то предчувствие заставляет вас не только свернуть, но и ускорить шаг. " +
+                "Перекати-поле проносятся мимо, а вы продолжаете свой путь на северо-восток.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Продолжить", "110"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "515";
         paragraph = new Paragraph(id, "Вы концентрируетесь и наносите мысленный удар. Почувствовав боль, тварь " +
                 "взмывает в воздух, и теперь становится видно, что между огромными кожистыми крыльями, как у летучей " +
@@ -388,13 +559,13 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
-        id = "238";
-        paragraph = new Paragraph(id, "Как и обещал Майлин, первая же победа придала вам уверенности в себе и " +
-                "заменила многочасовые тренировки. Теперь при желании вы сможете чувствовать, есть ли поблизости " +
-                "разумная жизнь и, основываясь на этом, принимать решения.");
+        id = "629";
+        paragraph = new Paragraph(id, "Иноземец вежливо приветствует вас, но вы не понимаете ни слова. В конце " +
+                "концов выясняется, что он говорит на языке Элгариола (хотя и очень плохо), и вы кое-как все же можете " +
+                "объясниться. О чем вы спросите?");
         actions = new ArrayList<>();
-        actions.add(new Event(new ModifyThoughtPower(1)));
-        actions.add(new MovementLink("Продолжить", "99"));
+        actions.add(new InlineLink("Попроситься на ночлег", "250", true));
+        actions.add(new InlineLink("Торговать", "512", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
     }

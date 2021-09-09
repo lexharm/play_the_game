@@ -10,6 +10,8 @@ public class InventoryCheck extends Check {
     int count;
     Condition condition;
 
+    public InventoryCheck() {}
+
     public InventoryCheck(String value) {
         super(value);
     }
@@ -26,6 +28,17 @@ public class InventoryCheck extends Check {
         this(item);
         this.count = count;
         this.condition = condition;
+    }
+
+    public InventoryCheck(Item item, boolean presence) {
+        this(item);
+        if (presence) {
+           this.count = 1;
+           this.condition = Condition.MORE_EQUAL;
+       } else {
+            this.count = 0;
+            this.condition = Condition.EQUAL;
+       }
     }
 
     @Override
