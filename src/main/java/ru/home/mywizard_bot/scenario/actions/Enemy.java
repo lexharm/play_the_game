@@ -29,6 +29,11 @@ public class Enemy extends Action {
         this.thoughtPower = thoughtPower;
     }
 
+    public Enemy(String caption, String id, Integer strength, Integer dexterity, Integer thoughtPower, Integer damage) {
+        this(caption, id, strength, dexterity, thoughtPower);
+        this.damage = damage;
+    }
+
     public String toString(UserProfileData profileData) {
         boolean classicCombat = dexterity != 0;
         StringBuilder sb = new StringBuilder();

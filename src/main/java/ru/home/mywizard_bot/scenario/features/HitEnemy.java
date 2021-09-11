@@ -28,23 +28,31 @@ public class HitEnemy implements Feature {
         }*/
 
         for (Enemy enemy : profileData.getEnemies()) {
+            int enemyDamage = enemy.getDamage();
+            if (profileData.getChecks().containsKey("decreaseEnemyDamage")) {
+                enemyDamage -= profileData.getChecks().get("decreaseEnemyDamage");
+            }
             if (enemy.getStrength() <= 0) continue;
             enemyPower = enemy.getAttackPower();
             if (enemy.getId().equals(enemyId) && enemyPower < playerPower) {
+                //Player hits
                 enemy.setStrength(enemy.getStrength() - profileData.getDamage());
                 status.append(String.format("%s (%d%s) наносит урон %d ед. %s (%d%s)\n\n",
                         profileData.getUserName(), playerPower, Emojis.DAGGER, enemy.getDamage(),
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));
             } else if (enemyPower > playerPower) {
+                //Player gets damage
                 profileData.setStrength(profileData.getStrength() - enemy.getDamage());
                 status.append(String.format("%s (%d%s) получает урон %d ед. от %s (%d%s)\n\n",
-                        profileData.getUserName(), playerPower, Emojis.DAGGER, enemy.getDamage(),
+                        profileData.getUserName(), playerPower, Emojis.DAGGER, enemyDamage,
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));
             } else if (enemy.getId().equals(enemyId) && enemyPower == playerPower) {
+                //Player blocks
                 status.append(String.format("%s (%d%s) парирует удар %s (%d%s)\n\n",
                         profileData.getUserName(), playerPower, Emojis.DAGGER,
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));
             } else {
+                //Player evades
                 status.append(String.format("%s (%d%s) ускользает от атаки %s (%d%s)\n\n",
                         profileData.getUserName(), playerPower, Emojis.DAGGER,
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));

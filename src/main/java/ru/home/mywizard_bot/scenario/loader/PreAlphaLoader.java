@@ -6,10 +6,7 @@ import ru.home.mywizard_bot.scenario.Illustration;
 import ru.home.mywizard_bot.scenario.Item;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.actions.*;
-import ru.home.mywizard_bot.scenario.checks.ActiveGameCheck;
-import ru.home.mywizard_bot.scenario.checks.EnemyDead;
-import ru.home.mywizard_bot.scenario.checks.InventoryCheck;
-import ru.home.mywizard_bot.scenario.checks.PlayerDead;
+import ru.home.mywizard_bot.scenario.checks.*;
 import ru.home.mywizard_bot.scenario.features.*;
 import ru.home.mywizard_bot.utils.Condition;
 import ru.home.mywizard_bot.utils.Emojis;
@@ -48,6 +45,8 @@ public class PreAlphaLoader extends Loader {
         String id;
         Paragraph paragraph;
         List<Action> actions;
+        InlineLink inlineLink;
+        int itemCost;
         Map<String, Item> items = new HashMap<>();
         items.put("Sword", new Item("Sword", "Обычный меч"));
         items.put("Food", new Item("Food", "Еда"));
@@ -61,6 +60,8 @@ public class PreAlphaLoader extends Loader {
         items.put("Belt", new Item("Belt", "Пояс"));
         items.put("Vial", new Item("Vial", "Флакон"));
         items.put("Armor", new Item("Armor", "Доспехи"));
+        items.put("decreaseEnemyDamage", new Item("decreaseEnemyDamage", "decreaseEnemyDamage", false));
+        items.put("badLuck", new Item("badLuck", "badLuck", false));
 
         id = "noMenuParagraph";
         paragraph = new Paragraph(id, "Раздел отсутствует :(");
@@ -311,6 +312,23 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "59";
+        itemCost = 5;
+        paragraph = new Paragraph(id, "Торговец и сам не может толком рассказать, волшебный это пояс или " +
+                "обыкновенный. Однако вышитые на нем руны, безусловно, содержат какую-то магическую силу. " +
+                "Но вот злую или добрую? Решайте: подпоясываться или отдать покупку назад караванщику, который " +
+                "согласен вернуть за нее деньги. Стоит " + itemCost + " золотых.");
+        actions = new ArrayList<>();
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("Belt")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "89";
         paragraph = new Paragraph(id, "Решив, что хребет Лонсам все же предпочтительнее Мортлэндских болот, " +
                 "направляетесь на северо-восток. К полудню солнце печет настолько сильно, что вы уже еле-еле " +
@@ -360,7 +378,19 @@ public class PreAlphaLoader extends Loader {
                 "уворачиваться.");
         actions = new ArrayList<>();
         actions.add(new Event(new ModifyDexterity(-1)));
-        actions.add(new InlineLink("Продолжить", "483"));
+        actions.add(new InlineLink("Продолжить", "483", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "110";
+        paragraph = new Paragraph(id, "Ближе к вечеру навстречу вам попадается еще один обитатель пустыни. " +
+                "На этот раз это хотя бы человек — глубокий старик, который безнадежно бредет по пескам, опираясь " +
+                "на посох.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Заговорить", "630", true));
+        actions.add(new InlineLink("Пройти мимо", "408", true));
+        actions.add(new InlineLink("Атаковать телепатией", "555", true));
+        actions.add(new InlineLink("Атаковать мечом", "547", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -375,6 +405,37 @@ public class PreAlphaLoader extends Loader {
         actions.add(new InlineLink("Ищу мага, обитающего в скале посреди пустыни", "409", true));
         actions.add(new InlineLink("Просто путешествую", "386", true));
         actions.add(new InlineLink("Направляюсь к гномам, живущим внутри гор Лонсам", "508", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "121";
+        itemCost = 6;
+        paragraph = new Paragraph(id, "Торговец говорит, что это очень мощное противоядие, которое может не раз " +
+                "пригодиться в дороге. Верить ему или нет — дело ваше, но проверить это сейчас все равно невозможно. " +
+                "Стоит " + itemCost + " золотых.");
+        actions = new ArrayList<>();
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("Vial")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "213";
+        paragraph = new Paragraph(id, "Одним из крыльев монстр выбивает меч из рук несчастного путника и проворно " +
+                "впивается когтями в его горло. После чего подхватывает свою жертву, тяжело поднимается в воздух и " +
+                "вскоре скрывается из виду. Да, человечности вам не занимать, хотя, быть может, важность миссии не " +
+                "позволяет вмешиваться во все схватки, свидетелем которых вы можете стать. И все же вы не выполнили " +
+                "одну из главных заповедей Странников Элгариола: «Помоги — и тебе помогут». Боги накажут вас за это. " +
+                "В следующий раз, когда потребуется ПРОВЕРИТЬ СВОЮ УДАЧУ - Удача от вас отвернется. А теперь решайте, " +
+                "куда направиться дальше.");
+        actions = new ArrayList<>();
+        actions.add(new Event(new GiveItem(items.get("badLuck"))));
+        actions.add(new InlineLink("На восток", "246", true));
+        actions.add(new InlineLink("На юго-восток", "11", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -436,11 +497,51 @@ public class PreAlphaLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "259";
-        paragraph = new Paragraph(id, "Моток веревки, которая всегда может пригодиться. Стоит 2 золотых.");
+        itemCost = 2;
+        paragraph = new Paragraph(id, "Моток веревки, которая всегда может пригодиться. Стоит " + itemCost + " золотых.");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Купить", "512",
-                new InventoryCheck(items.get("Gold"), 2, Condition.MORE_EQUAL),
-                new BuyItem(items.get("Rope"), 2), false));
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("Rope")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "278";
+        itemCost = 2;
+        paragraph = new Paragraph(id, "В бою эти доспехи защитят вас, и урон, наносимый противником станет на 1 меньше. " +
+                "Но, как это ни печально, они отнимут у вас 2 единицы ЛОВКОСТИ. К тому же путешествие по пустыне пешком " +
+                "да еще в рыцарских доспехах обещает быть весьма «приятным». Каждый прожитый день в доспехах будет " +
+                "стоить 3 СИЛЫ — именно на столько латы осложнят вам жизнь. Так что решайте, стоит ли тащить " +
+                "покупку на себе. Цена " + itemCost + " золотых.");
+        actions = new ArrayList<>();
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("Armor")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        inlineLink.addEffect(new ModifyDexterity(-2));
+        inlineLink.addEffect(new GiveItem(items.get("decreaseEnemyDamage")));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "290";
+        itemCost = 3;
+        paragraph = new Paragraph(id, "Накидка, по словам торговца, при случае сможет защитить от песчаной бури, " +
+                "а быть может, и не только от нее. Стоит " + itemCost + " золотых.");
+        actions = new ArrayList<>();
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("Cloak")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -449,8 +550,8 @@ public class PreAlphaLoader extends Loader {
                 "поворачивает и устремляется в вашу сторону. Попытаетесь разрубить его мечом или посмотрите, что " +
                 "будет дальше?");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Использовать меч", "105"));
-        actions.add(new InlineLink("Ожидать", "496"));
+        actions.add(new InlineLink("Использовать меч", "105", true));
+        actions.add(new InlineLink("Ожидать", "496", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -473,15 +574,81 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "376";
+        itemCost = 5;
+        paragraph = new Paragraph(id, "Рана, нанесенная этим мечом, будет стоить врагу не 2, а 3 СИЛЫ. Стоит " + itemCost + " золотых.");
+        actions = new ArrayList<>();
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("FineSword")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        inlineLink.addEffect(new SetDamage(3));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "413";
+        paragraph = new Paragraph(id, "Более того, он говорит, что ему редко удается встретить столь любезного и " +
+                "приятного покупателя, а жизнь караванщика достаточно скучна. Поэтому он предлагает отметить ваши " +
+                "покупки ужином да заодно выпить немного вина за удачу в путешествиях и в торговле. Откажетесь, " +
+                "сославшись на усталость, или согласитесь?");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Отказаться", "38", true));
+        actions.add(new InlineLink("Согласиться", "133", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "421";
+        itemCost = 5;
+        paragraph = new Paragraph(id, "Вы сможете выпустить птицу на волю и голубь будет сопровождать вас. Когда " +
+                "потребуется, вы сможете отправить его с посланием в Элгариол. Стоит " + itemCost + " золотых.");
+        actions = new ArrayList<>();
+        inlineLink = new InlineLink("Купить", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL));
+        inlineLink.addEffect(new GiveItem(items.get("Dove")));
+        inlineLink.addEffect(new GiveItem(items.get("CaravanGold"), itemCost));
+        inlineLink.addEffect(new RemoveItem(items.get("Gold"), itemCost));
+        actions.add(inlineLink);
+        actions.add(new InlineLink("Назад", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Недостаточно золота", "512", new InventoryCheck(items.get("Gold"), itemCost, Condition.LESS)));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "446";
+        paragraph = new Paragraph(id, "Простившись с торговцем, устремляетесь дальше в ночь. И только отойдя на " +
+                "достаточно безопасное расстояние от каравана, решаетесь остановиться на ночлег.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Отдыхать", "20", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "479";
         paragraph = new Paragraph(id, "Перекати-поле приближаются. Неожиданно первый шар, который должен был " +
                 "прокатиться в нескольких шагах от вас, резко сворачивает и, натолкнувшись на ногу, взрывается. " +
                 "Попытаетесь теперь увернуться от остальных, обнажите меч или воспользуетесь своей Силой мысли?");
         actions = new ArrayList<>();
         actions.add(new Event(new ModifyStrength(-4)));
-        actions.add(new InlineLink("Попытаться увернуться", "483"));
-        actions.add(new InlineLink("Обножить меч", "254"));
-        actions.add(new InlineLink("Использовать Силу мысли", "12"));
+        actions.add(new InlineLink("Попытаться увернуться", "483", true));
+        actions.add(new InlineLink("Обножить меч", "254", true));
+        actions.add(new InlineLink("Использовать Силу мысли", "12", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "480";
+        paragraph = new Paragraph(id, "Обнажив меч, издаете воинственный клич, чем сразу же привлекаете " +
+                "внимание твари. Несколько раз взмахнув огромными крыльями, она оказывается прямо над вами, выпустив " +
+                "свою жертву. Теперь вы можете ее разглядеть. Между двух больших кожистых крыльев, как у летучей " +
+                "мыши, виднеется человеческое тело!");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyDexterity(-1)));
+        actions.add(new Event(new SetStateCombat()));
+        actions.add(new Event(new AddCombatCheck()));
+        actions.add(new Enemy("КРЫЛАТЫЙ ЧЕЛОВЕК", "WINGED_MAN", 10, 9, 0, 3));
+        inlineLink = new InlineLink("Продолжить", "99", new EnemyDead(), new GiveItem(items.get("WINGED_MAN_DEAD")), true);
+        inlineLink.addEffect(new ModifyDexterity(1));
+        actions.add(inlineLink);
+        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -498,6 +665,19 @@ public class PreAlphaLoader extends Loader {
         paragraph = new Paragraph(id, "ПРОВЕРЬТЕ СВОЮ УДАЧУ.");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Проверить удачу", "30", new LuckCheck("30", "359"), true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "486";
+        paragraph = new Paragraph(id, "Путь настолько тяжел, что вас даже не слишком изумляет силуэт, появившийся " +
+                "через несколько сот шагов на гребне бархана. Вначале его можно принять за мираж, неясное видение, " +
+                "настолько неожиданно появление в этих раскаленных песках рыцаря в полном вооружении, да еще и на " +
+                "коне. Пот стекает по его лицу под поднятым забралом, но он тем не менее не расстается с тяжелыми " +
+                "латами, хотя не совсем понятно, от кого они могут защитить в этих местах. Ведь наибольшую опасность " +
+                "здесь представляет отнюдь не клинок, а магия и телепатия.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Воспользоваться телепатией", "360", new ThoughtPowerCheck(5, Condition.MORE_EQUAL), true));
+        actions.add(new InlineLink("Продолжить", "252", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -523,8 +703,8 @@ public class PreAlphaLoader extends Loader {
                 "шелковый пояс (5);\n" +
                 "флакон с неизвестной жидкостью (6);\n" +
                 "рыцарские доспехи (2).\n" +
-                "После этого можете либо попрощаться и пойти дальше, решив, что лучше будет переночевать одному, " +
-                "либо попроситься на ночлег к любезному торговцу.");
+                "После этого можете попрощаться и пойти дальше, решая переночевать одному, либо попроситься на " +
+                "ночлег к любезному торговцу.");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Веревка", "259", new InventoryCheck(items.get("Rope"), false)));
         actions.add(new InlineLink("Голубь", "421", new InventoryCheck(items.get("Dove"), false)));
@@ -556,6 +736,20 @@ public class PreAlphaLoader extends Loader {
         actions.add(new Enemy("КРЫЛАТЫЙ ЧЕЛОВЕК", "WINGED_MAN", 10, 0, 3));
         actions.add(new MovementLink("Продолжить", "238", new EnemyDead(), new GiveItem(items.get("WINGED_MAN_DEAD"))));
         actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "540";
+        paragraph = new Paragraph(id, "Ночь проходит спокойно. Утром вы прощаетесь с доброжелательным " +
+                "караванщиком и спрашиваете его, как лучше всего пересечь Мортлэндские топи. Он отвечает, что " +
+                "ни разу не пытался попасть на ту сторону болот или гор, но слышал, что где-то неподалеку есть " +
+                "жилье. Сейчас надо будет пройти немного на юго-восток, потом прямо на восток — вот и выйдите к топям. " +
+                "Послушаетесь совета и направитесь на юго-восток или решите, что торговец хочет заманить вас в " +
+                "ловушку, и пойдете на северо-восток?");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(3)));
+        actions.add(new InlineLink("Юго-восток", "93", true));
+        actions.add(new InlineLink("Северо-восток", "116", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 

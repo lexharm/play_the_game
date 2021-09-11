@@ -41,4 +41,6 @@ public class InlineLink extends Action {
         super(caption, id, check, feature);
         this.newMessage = newMessage;
     }
+
+
 }
