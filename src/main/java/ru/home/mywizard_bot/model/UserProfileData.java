@@ -74,6 +74,10 @@ public class UserProfileData implements Serializable {
         }
     }
 
+    public void removeItem(String item) {
+        inventory.remove(item);
+    }
+
     public void removeItem(Item item) {
         if (item.isVisible()) {
             if (inventory.containsKey(item.getId())) {
