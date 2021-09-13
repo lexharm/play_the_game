@@ -10,7 +10,7 @@ public class InlineLink extends Action {
 
     public InlineLink(String caption, String id) {
         super(caption, id);
-        this.newMessage = false;
+        this.newMessage = true;
     }
 
     public InlineLink(String caption, String id, boolean newMessage) {
@@ -29,7 +29,7 @@ public class InlineLink extends Action {
 
     public InlineLink(String caption, String id, Feature feature) {
         super(caption, id, feature);
-        this.newMessage = false;
+        this.newMessage = true;
     }
 
     public InlineLink(String caption, String id, Feature feature, boolean newMessage) {

@@ -71,7 +71,7 @@ public class PreAlphaLoader extends Loader {
         id = "noMenuParagraph";
         paragraph = new Paragraph(id, "Раздел отсутствует :(");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Вернуться в главное меню", "mainMenu"));
+        actions.add(new InlineLink("Вернуться в главное меню", "mainMenu", false));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -152,7 +152,7 @@ public class PreAlphaLoader extends Loader {
         allParagraphs.put(id, paragraph);
 
         id = "10019";
-        paragraph = new Paragraph(id, "Имена этих людей слишком хорошо известны, чтобы их называть\\!");
+        paragraph = new Paragraph(id, "Имена этих людей слишком хорошо известны, чтобы их называть!");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Понятно, очень приятно", "10005"));
         paragraph.setActions(actions);
@@ -170,8 +170,8 @@ public class PreAlphaLoader extends Loader {
                 "так и не достигнув цели своего путешествия.");
         actions = new ArrayList<>();
         actions.add(new Event(new EndGame()));
-        actions.add(new MovementLink("Начать заново", "newGameConfirm"));
-        actions.add(new MovementLink("Выйти в главное меню", "mainMenu"));
+        actions.add(new InlineLink("Начать заново", "newGameConfirm"));
+        actions.add(new InlineLink("Выйти в главное меню", "mainMenu"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -179,8 +179,8 @@ public class PreAlphaLoader extends Loader {
         paragraph = new Paragraph(id, "Вам не хватило сил одержать победу в этой схватке. Вам конец " + Emojis.SKELETON);
         actions = new ArrayList<>();
         actions.add(new Event(new EndGame()));
-        actions.add(new MovementLink("Начать заново", "newGameConfirm"));
-        actions.add(new MovementLink("Выйти в главное меню", "mainMenu"));
+        actions.add(new InlineLink("Начать заново", "newGameConfirm"));
+        actions.add(new InlineLink("Выйти в главное меню", "mainMenu"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -267,7 +267,7 @@ public class PreAlphaLoader extends Loader {
                 "Если вы готовы пройти нехожеными тропами и испытать на себе всю силу Врага, не потеряв надежды " +
                 "выйти победителем, то переверните страницу, и да сопутствует вам удача!");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("Вперед!", "1", new SetStateScenario()));
+        actions.add(new InlineLink("Вперед!", "1", new SetStateScenario()));
         actions.add(new Event(new InitNewGame()));
         actions.add(new Event(new GiveItem(items.get("Sword"))));
         actions.add(new Event(new GiveItem(items.get("Food"), 3)));
@@ -284,8 +284,19 @@ public class PreAlphaLoader extends Loader {
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("На северо-восток", "89"));
-        actions.add(new MovementLink("На юго-восток", "230"));
+        actions.add(new InlineLink("На северо-восток", "89"));
+        actions.add(new InlineLink("На юго-восток", "230"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "11";
+        paragraph = new Paragraph(id, "Через несколько часов ходьбы вдали появляется какое-то непонятное черное " +
+                "пятно, а к вечеру уже видно, что это горы — не слишком высокие, но достаточно непроходимые. " +
+                "Странно, ведь, по вашим расчетам, Лонсам должен быть много севернее. Смеркается, пора располагаться " +
+                "на ночлег. Ночи в пустыне более чем теплые, и вы укладываетесь спать прямо на песке, не рискуя " +
+                "подхватить простуду.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Отдыхать", "243"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -295,8 +306,8 @@ public class PreAlphaLoader extends Loader {
                 "пытаться отбиться мечом, либо постараться увернуться.");
         actions = new ArrayList<>();
         actions.add(new Event(new ModifyStrength(-4)));
-        actions.add(new MovementLink("Использовать меч", "105"));
-        actions.add(new MovementLink("Попытаться увернуться", "483"));
+        actions.add(new InlineLink("Использовать меч", "105"));
+        actions.add(new InlineLink("Попытаться увернуться", "483"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -327,7 +338,43 @@ public class PreAlphaLoader extends Loader {
         actions.add(new Enemy("ТОРГОВЕЦ", "CARAVAN_MAN", 10, 12, 0));
         inlineLink = new InlineLink("Продолжить", "137", new EnemyDead(), new GiveItem(items.get("CARAVAN_MAN_DEAD")), true);
         actions.add(inlineLink);
-        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        actions.add(new InlineLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "45";
+        paragraph = new Paragraph(id, "Стараясь остаться незамеченным, вы выскальзываете из шатра и " +
+                "прислушиваетесь. Сначала все тихо, но потом со стороны других шатров начинают раздаваться крики и " +
+                "звон оружия. К счастью, жилище вашего малогостеприимного хозяина расположено на самом краю " +
+                "стоянки. Стараясь поторапливаться, вы растворяетесь в ночи.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Продолжить", "162"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "50";
+        paragraph = new Paragraph(id, "Старик удивленно пожимает плечами и тоже отправляется в путь. Вы же " +
+                "продолжаете идти в том же направлении, что и раньше.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Продолжить", "408"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "51";
+        paragraph = new Paragraph(id, "Понимая вашу подозрительность, рыцарь охотно рассказывает о себе: «Я — " +
+                "один из Палладинов Добра. Много лет назад я родился в городе Катэна, который находится далеко к югу " +
+                "от этих проклятых богами мест. Мать умерла, когда мне было три года, отец — едва я достиг " +
+                "совершеннолетия. Наша семья была небогата, и я предпочел, продав дом и все, что в нем было, " +
+                "вступить в ряды рыцарей ордена Голубого Креста. Прости, что я не могу рассказать тебе о " +
+                "доблестных воинах и благородных задачах нашего ордена — это имеет право делать только Великий " +
+                "Магистр. Добро тоже иногда вынуждено действовать втайне, чтобы суметь победить Зло. Пять лет " +
+                "назад я был послан с важной миссией в Грейкейп, порт к северу отсюда. Но Повелитель этой пустыни " +
+                "через своих шпионов узнал о моем поручении и наложил на меня заклятье. Я обречен скитаться по " +
+                "пустыне и никогда не найти выхода отсюда. Только смерть Повелителя может снять с меня это " +
+                "проклятье. Меня зовут Шарль д'Ардье. А кто ты и как попал сюда?»");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Рассказать правду", "7", true));
+        actions.add(new InlineLink("Не отвечать и попрощаться", "596", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -358,9 +405,9 @@ public class PreAlphaLoader extends Loader {
                 "Но вместе с ветром появляется и первая растительность — несколько шаров перекати-поле, быстро " +
                 "катящихся навстречу. Что вы предпримите?");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("Свернуть в сторону", "514"));
-        actions.add(new MovementLink("Продолжать путь", "479"));
-        actions.add(new MovementLink("Остановиться и обножить меч", "344"));
+        actions.add(new InlineLink("Свернуть в сторону", "514"));
+        actions.add(new InlineLink("Продолжать путь", "479"));
+        actions.add(new InlineLink("Остановиться и обножить меч", "344"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -372,9 +419,9 @@ public class PreAlphaLoader extends Loader {
                 "раны на теле незнакомца. Еще немного, и он будет добит этим кошмарным чудовищем. Хотите вмешаться, " +
                 "или же предпочтете не участвовать в схватке?");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("Атаковать оружием", "480"));
-        actions.add(new MovementLink("Применить Силу мысли", "515"));
-        actions.add(new MovementLink("Не участвовать в схватке", "213"));
+        actions.add(new InlineLink("Атаковать оружием", "480"));
+        actions.add(new InlineLink("Применить Силу мысли", "515"));
+        actions.add(new InlineLink("Не участвовать в схватке", "213"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -386,8 +433,8 @@ public class PreAlphaLoader extends Loader {
                 "Хотите подойти поговорить с одним из погонщиков или продолжите свой путь, решив, что ночь безопасней " +
                 "провести в одиночку, чем с незнакомыми людьми?");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("Поговорить с погонщиком", "345"));
-        actions.add(new MovementLink("Продолжить путь", "245"));
+        actions.add(new InlineLink("Поговорить с погонщиком", "345"));
+        actions.add(new InlineLink("Продолжить путь", "245"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -470,6 +517,23 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "132";
+        paragraph = new Paragraph(id, "После душного, пропитанного, жаром и пылью воздуха пустыни первый оазис " +
+                "на вашем пути кажется миражом или сказкой. Тем более что внутри оазиса ожидает прекрасный дворец из " +
+                "белого камня, окруженный не только садом с растениями, многие из которых вы никогда в жизни не " +
+                "видели, но и фонтанами из золота и серебра. Небольшие фигурки лебедей выбрасывают из клювов высокие " +
+                "струи воды, падающие в пруд справа от дворца. То здесь, то там виднеются слуги в алых бурнусах, " +
+                "ни один из которых не обращает на вас ни малейшего внимания. Остановив одного из слуг, вы " +
+                "спрашиваете: «Милейший, кому принадлежит этот дворец?» Он смотрит так, как посмотрели бы на " +
+                "главной площади столицы Элгариола, спроси вы, кому принадлежит этот город. «Это дворец Али " +
+                "бен-Сулеймана»,— в конце концов отвечает он и торопится прочь, как заторопились бы и вы " +
+                "закончить беседу с сумасшедшим.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Познакомиться с хозяином оазиса", "538", true));
+        actions.add(new InlineLink("Покинуть оазис", "54", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "133";
         paragraph = new Paragraph(id, "Ужин оказывается чрезвычайно вкусен, вино — изысканно. Караванщик весь " +
                 "вечер пребывает в прекрасном расположении духа, рассказывая самые невероятные истории якобы из " +
@@ -498,7 +562,7 @@ public class PreAlphaLoader extends Loader {
         inlineLink = new InlineLink("Продолжить", "436", new EnemyDead(), new GiveItem(items.get("KNIGHT_DEAD")), true);
         inlineLink.addEffect(new ModifyDexterity(3));
         actions.add(inlineLink);
-        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        actions.add(new InlineLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -525,8 +589,22 @@ public class PreAlphaLoader extends Loader {
         paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга " +
                 "наперерез вам. Ваше действие?");
         actions = new ArrayList<>();
-        actions.add(new MovementLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
-        actions.add(new MovementLink("Идти дальше", "96"));
+        actions.add(new InlineLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
+        actions.add(new InlineLink("Идти дальше", "96"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "232";
+        paragraph = new Paragraph(id, "Все еще продолжая удивляться, что вы видите дорогу посреди пустыни, " +
+                "направляетесь дальше. Но тут ваше удивление возрастает еще больше: впереди перекресток. А на нем, " +
+                "взявшись за руки, пляшут маленькие человечки, чуть побольше кулака. Вы успеваете только заметить, " +
+                "что ноги у них напоминают ноги лошади, когда они, завидев вас, бросаются врассыпную и прячутся за " +
+                "ближайшими барханами.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Использовать телепатию", "103", new ThoughtPowerCheck(5, Condition.MORE_EQUAL)));
+        actions.add(new InlineLink("Вступить на перекресток", "149"));
+        actions.add(new InlineLink("Оставить дорогу и пойти на север", "17"));
+        actions.add(new InlineLink("Уйти на юго-восток", "486"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -536,7 +614,7 @@ public class PreAlphaLoader extends Loader {
                 "разумная жизнь и, основываясь на этом, принимать решения.");
         actions = new ArrayList<>();
         actions.add(new Event(new ModifyThoughtPower(1)));
-        actions.add(new MovementLink("Продолжить", "99"));
+        actions.add(new InlineLink("Продолжить", "99"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -546,6 +624,19 @@ public class PreAlphaLoader extends Loader {
                 "предстоит нелегкий путь.");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Отдыхать", "20", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "246";
+        paragraph = new Paragraph(id, "Постепенно смеркается. Далеко впереди, справа и слева, начинают " +
+                "вырисовываться силуэты гор, позолоченные заходящим солнцем. Слева должен быть Лонсам, прямо " +
+                "впереди Мортлэндские топи, но что за горы справа? Или Майлин о них ничего не знал, или вы " +
+                "сбились с пути. Может быть, небольшая деревенька, виднеющаяся впереди, позволит разрешить " +
+                "ваши сомнения?");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Зайти в деревню", "358"));
+        actions.add(new InlineLink("Обойти деревню и направиться к топям", "511"));
+        actions.add(new InlineLink("Пойти на северо-восток к горам Лонсам", "495"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -612,6 +703,19 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "273";
+        paragraph = new Paragraph(id, "Через полдня Лонсам перед вами. Но как пересечь горы, если они почти " +
+                "отвесны и не видно ни тропы, ни перевала? Для начала, решив, что утро вечера мудренее, ложитесь " +
+                "спать.");
+        paragraph.addText("Ночь проходит спокойно. Но куда направиться утром? На север в поисках возможности перейти " +
+                "через горы или на юг - возможно, что путь через Мортлэндские топи будет легче?");
+        actions = new ArrayList<>();
+        actions.add(new Event(new ModifyStrength(2)));
+        actions.add(new InlineLink("На север", "351", true));
+        actions.add(new InlineLink("На юг", "427", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "278";
         itemCost = 2;
         paragraph = new Paragraph(id, "В бою эти доспехи защитят вас, и урон, наносимый противником станет на 1 меньше. " +
@@ -671,8 +775,8 @@ public class PreAlphaLoader extends Loader {
                 "перекати-поле, он рассчитал правильно. Ваш труп так и останется в самом начале пути...");
         actions = new ArrayList<>();
         actions.add(new Event(new EndGame()));
-        actions.add(new MovementLink("Начать заново", "newGameConfirm"));
-        actions.add(new MovementLink("Выйти в главное меню", "mainMenu"));
+        actions.add(new InlineLink("Начать заново", "newGameConfirm"));
+        actions.add(new InlineLink("Выйти в главное меню", "mainMenu"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -681,6 +785,15 @@ public class PreAlphaLoader extends Loader {
                 "представлять серьезной опасности.");
         actions = new ArrayList<>();
         actions.add(new InlineLink("Продолжить", "252", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "369";
+        paragraph = new Paragraph(id, "Во второй половине дня вы выходите на... перекресток. Прямо по пустыне " +
+                "идут неведомо куда две дороги, одна из которых уходит на северо-восток, а другая — на юго-восток.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Обойти перекресток и идти на север", "17", true));
+        actions.add(new InlineLink("Вступить на перекресток", "149", true));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -737,6 +850,73 @@ public class PreAlphaLoader extends Loader {
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
+        id = "422";
+        paragraph = new Paragraph(id, "В свою очередь рыцарь открывается вам. Он рассказывает, что принадлежит к " +
+                "числу воинов ордена Голубого Креста, ведущего борьбу со Злом под знаменами Добра. Пять лет назад он " +
+                "был послан через пустыню на север в порт Грейкейп с весьма важной миссией. Но Повелитель пустыни " +
+                "через своих шпионов узнал об этом и наложил на него заклятие, обрекающее всю жизнь скитаться по " +
+                "пустыне, никогда не найдя из нее выхода. Только смерть чародея сможет снять это проклятие. " +
+                "Посочувствовав рыцарю, спрашиваете, видел ли он по ту сторону гор и болот одинокую скалу. " +
+                "Увы, отвечает собеседник, какие-то неведомые силы так и не дали ему к ней приблизиться, но он " +
+                "видел ее и чувствовал Зло, исходящее от нее. Ну что ж, вас интересует еще вопрос, но один из " +
+                "самых важных: как же перебраться через Лонсам? Рыцарь советует повернуть на север, а потом на восток. " +
+                "Там должна быть тропа через горы, по которой проезжал он сам. Правда, это было около года назад. " +
+                "Вы благодарите случайного собеседника, и он скачет дальше. Теперь надо решать куда идти дальше.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("На север", "369", true));
+        actions.add(new InlineLink("На восток", "273", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "426";
+        paragraph = new Paragraph(id, "«Чего-чего, а приключений, молодой человек, вам встретится предостаточно»," +
+                "— говорит старик и, пожелав удачи, продолжает путь. Вскоре он скрывается из виду, а вас поджидает " +
+                "новая неожиданность. Прямо посреди пустыни вы видите начало широкой дороги, вымощенной голубоватым " +
+                "камнем. Но если она выходит из песка, то ведь может и уходить просто в песок. Или все же куда-то " +
+                "ведет? Но куда? Ответов пока нет, но надо решать что делать дальше.");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Пойти по дороге", "232", true));
+        actions.add(new InlineLink("Свернуть на север", "132", true));
+        actions.add(new InlineLink("Свернуть на юго-восток", "486", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "435";
+        paragraph = new Paragraph(id, "Любопытство не столь уж редкий порок, чтобы стоило его осуждать, но на " +
+                "этот раз оно стоит вам жизни. Не проходит и нескольких минут, как другие караванщики врываются в " +
+                "шатер, чтобы отомстить за погибшего товарища. Сопротивление коротко и бесполезно...");
+        actions = new ArrayList<>();
+        actions.add(new Event(new EndGame()));
+        actions.add(new InlineLink("Начать заново", "newGameConfirm"));
+        actions.add(new InlineLink("Выйти в главное меню", "mainMenu"));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "436";
+        paragraph = new Paragraph(id, "Мертвый рыцарь падает с коня, и тот уносится прочь прежде, чем вы " +
+                "успеваете его поймать. В карманах убитого находите 1 золотой, а доспехи настолько раскалены солнцем, " +
+                "что надевать их в пустыне было бы полнейшим безумием. Да и нести их с собой как-то не хочется. " +
+                " Теперь ничего не остается, как продолжить путь. Куда вы направитесь?");
+        //Однако если вам нужен меч, можете взять его.
+        actions = new ArrayList<>();
+        actions.add(new Event(new GiveItem(items.get("Gold"), 1)));
+        actions.add(new InlineLink("На север", "369", true));
+        actions.add(new InlineLink("На восток", "273", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
+        id = "441";
+        paragraph = new Paragraph(id, "Выслушав ваш рассказ, старик на некоторое время задумывается, как бы " +
+                "размышляя, можно ли верить всей этой невероятной истории. Потом говорит: «Отважный путник, у меня " +
+                "есть способ проверить, правду ли ты мне сказал. — В его руках появляется маленькая блестящая " +
+                "змейка. — Дозволь ей обвиться вокруг твоего запястья. Если ты не солгал, она не причинит тебе " +
+                "вреда, а я смогу тебе помочь. Если же все сказанное — ложь, она убьет тебя».");
+        actions = new ArrayList<>();
+        actions.add(new InlineLink("Согласиться на проверку", "288", true));
+        actions.add(new InlineLink("Отказаться", "309", true));
+        paragraph.setActions(actions);
+        allParagraphs.put(id, paragraph);
+
         id = "446";
         paragraph = new Paragraph(id, "Простившись с торговцем, устремляетесь дальше в ночь. И только отойдя на " +
                 "достаточно безопасное расстояние от каравана, решаетесь остановиться на ночлег.");
@@ -781,7 +961,7 @@ public class PreAlphaLoader extends Loader {
         inlineLink = new InlineLink("Продолжить", "99", new EnemyDead(), new GiveItem(items.get("WINGED_MAN_DEAD")), true);
         inlineLink.addEffect(new ModifyDexterity(1));
         actions.add(inlineLink);
-        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        actions.add(new InlineLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -867,8 +1047,8 @@ public class PreAlphaLoader extends Loader {
         actions.add(new Event(new SetStateCombat()));
         actions.add(new Event(new AddCombatCheck()));
         actions.add(new Enemy("КРЫЛАТЫЙ ЧЕЛОВЕК", "WINGED_MAN", 10, 0, 3));
-        actions.add(new MovementLink("Продолжить", "238", new EnemyDead(), new GiveItem(items.get("WINGED_MAN_DEAD"))));
-        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        actions.add(new InlineLink("Продолжить", "238", new EnemyDead(), new GiveItem(items.get("WINGED_MAN_DEAD")), true));
+        actions.add(new InlineLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -893,8 +1073,8 @@ public class PreAlphaLoader extends Loader {
                 "по поводу и без повода...");
         actions = new ArrayList<>();
         actions.add(new Event(new EndGame()));
-        actions.add(new MovementLink("Начать заново", "newGameConfirm"));
-        actions.add(new MovementLink("Выйти в главное меню", "mainMenu"));
+        actions.add(new InlineLink("Начать заново", "newGameConfirm"));
+        actions.add(new InlineLink("Выйти в главное меню", "mainMenu"));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
@@ -906,7 +1086,7 @@ public class PreAlphaLoader extends Loader {
         actions.add(new Enemy("СТАРИК", "OLD_MAN", 10, 0, 10));
         inlineLink = new InlineLink("Продолжить", "463", new EnemyDead(2), new GiveItem(items.get("OLD_MAN_DEAD")), true);
         actions.add(inlineLink);
-        actions.add(new MovementLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
+        actions.add(new InlineLink("Путешествие окончено" + Emojis.SCULL_BONES, "combatDefeat", new PlayerDead()));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
 
