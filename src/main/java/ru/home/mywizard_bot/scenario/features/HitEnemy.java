@@ -40,12 +40,18 @@ public class HitEnemy implements Feature {
                 status.append(String.format("%s (%d%s) наносит урон %d ед. %s (%d%s)\n\n",
                         profileData.getUserName(), playerPower, Emojis.DAGGER, enemy.getDamage(),
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));
+                if (enemy.getStrength() <= 0) {
+                    status.append(enemy.getCaption().toUpperCase() + " умирает " + Emojis.SCULL_BONES + "\n\n");
+                }
             } else if (enemyPower > playerPower) {
                 //Player gets damage
                 profileData.setStrength(profileData.getStrength() - enemy.getDamage());
                 status.append(String.format("%s (%d%s) получает урон %d ед. от %s (%d%s)\n\n",
                         profileData.getUserName(), playerPower, Emojis.DAGGER, enemyDamage,
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));
+                if (profileData.getStrength() <= 0) {
+                    status.append("Это последний удар для " + profileData.getUserName() + " " + Emojis.SCULL_BONES + "\n\n");
+                }
             } else if (enemy.getId().equals(enemyId) && enemyPower == playerPower) {
                 //Player blocks
                 status.append(String.format("%s (%d%s) парирует удар %s (%d%s)\n\n",

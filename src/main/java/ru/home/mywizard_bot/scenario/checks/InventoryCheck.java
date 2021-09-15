@@ -9,15 +9,19 @@ import java.util.Map;
 public class InventoryCheck extends Check {
     int count;
     Condition condition;
+    String value;
+    boolean presence;
 
     public InventoryCheck() {}
 
     public InventoryCheck(String value) {
-        super(value);
+        this.value = value;
+        presence = true;
     }
 
     public InventoryCheck(String value, boolean presence) {
-        super(value, presence);
+        this(value);
+        this.presence = presence;
     }
 
     public InventoryCheck(Item item) {

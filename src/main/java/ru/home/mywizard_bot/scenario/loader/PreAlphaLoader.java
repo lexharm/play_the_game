@@ -92,7 +92,7 @@ public class PreAlphaLoader extends Loader {
         paragraph.setIllustration(new Illustration("", "static/images/art_1.jpg"));
         actions = new ArrayList<>();
         //actions.add(new InlineLink("Руководство", "10003", false));
-        actions.add(new InlineLink("Новая игра", "newGameConfirm", false));
+        actions.add(new InlineLink("Новая игра", "newGameConfirm", true));
         //actions.add(new InlineLink("Статистика", "10004", false));
         //actions.add(new InlineLink("Подробнее о боте", "10005", false));
         paragraph.setActions(actions);

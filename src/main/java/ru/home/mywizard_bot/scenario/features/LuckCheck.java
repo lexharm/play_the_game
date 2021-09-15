@@ -31,7 +31,7 @@ public class LuckCheck implements Feature {
             status = "Вы прошли проверку удачи " + Emojis.THUMBSUP;
         } else {
             resultId = badLuckParagraphId;
-            status = "Вы не прошли проверку удачи " + Emojis.THUMBSUP;
+            status = "Вы не прошли проверку удачи " + Emojis.THUMBSDOWN;
         }
         status += "(" + dice + ")";
         profileData.setAdditionalStatus(status);

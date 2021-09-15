@@ -131,10 +131,10 @@ public class ReplyMessagesService {
             } else {
                 log.info("replyKeyboard != null && inlineKeyboard != null && size > 2");
                 //TODO: what if 1st message is photo? we have to delete keyboard into dummy message?
-                PartialBotApiMethod botApiMethod = replyMessagesList.get(0);
+                PartialBotApiMethod botApiMethod = replyMessagesList.get(1);
                 if (botApiMethod instanceof SendMessage) {
                     if (!profileData.equalsReplyKeyboard(replyKeyboard)) {
-                        ((SendMessage) botApiMethod).setReplyMarkup(new ReplyKeyboardRemove());
+                        ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard);
                     }
                 }
                 BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(replyMessagesList.size()-1);
@@ -216,11 +216,16 @@ public class ReplyMessagesService {
             } else if (replyMessagesList.size() == 2) {
                 log.info("inlineKeyboard != null && size = 2");
                 if (profileData.isHasReplyKeyboard()) {
+                    replyMessagesList.add(0, new SendMessage()
+                            .setChatId(chatId)
+                            .setReplyMarkup(new ReplyKeyboardRemove())
+                            .setText(getText("bot.reportUs")));
+                    replyMessagesList.add(1, new DeleteMessage(chatId, 0));
                     //TODO: 1st message can be of another type
-                    SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
-                    firstMessage.setReplyMarkup(new ReplyKeyboardRemove());
+                    /*SendMessage firstMessage = (SendMessage) replyMessagesList.get(0);
+                    firstMessage.setReplyMarkup(new ReplyKeyboardRemove());*/
                 }
-                SendMessage lastMessage = (SendMessage) replyMessagesList.get(1);
+                SendMessage lastMessage = (SendMessage) replyMessagesList.get(replyMessagesList.size()-1);
                 lastMessage.setReplyMarkup(inlineKeyboard);
                 /*replyMessagesList.add(new EditMessageReplyMarkup()
                         .setChatId(chatId)

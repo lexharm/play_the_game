@@ -5,15 +5,19 @@ import ru.home.mywizard_bot.model.UserProfileData;
 import java.util.Map;
 
 public class EventCheck extends Check {
+    String value;
+    boolean presence;
 
     public EventCheck() {}
 
     public EventCheck(String value) {
-        super(value);
+        this.value = value;
+        presence = true;
     }
 
     public EventCheck(String value, boolean presence) {
-        super(value, presence);
+        this(value);
+        this.presence = presence;
     }
 
     @Override
