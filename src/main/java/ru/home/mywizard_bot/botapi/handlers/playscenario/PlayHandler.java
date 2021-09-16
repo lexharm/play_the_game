@@ -9,8 +9,10 @@ import ru.home.mywizard_bot.scenario.Combat;
 import ru.home.mywizard_bot.scenario.Paragraph;
 import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
+import ru.home.mywizard_bot.scenario.actions.InlineLink;
 import ru.home.mywizard_bot.service.ReplyMessagesService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
+import ru.home.mywizard_bot.utils.Emojis;
 
 @Component
 public class PlayHandler extends Handler {
@@ -24,7 +26,11 @@ public class PlayHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData) {
+    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData, Action matchedLink) {
+        if (matchedLink instanceof InlineLink) {
+            String addition = Emojis.EXCLAMATION + profileData.getUserName() + ": " + matchedLink.getCaption() + "\n";
+            profileData.addAddStatus(addition);
+        }
         Paragraph newParagraph = profileData.getNewParagraph();
         if (!newParagraph.getId().equals(currentParagraph.getId())) {
             newParagraph.applyActions(profileData);

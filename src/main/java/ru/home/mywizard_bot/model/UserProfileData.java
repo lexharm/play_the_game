@@ -58,6 +58,18 @@ public class UserProfileData implements Serializable {
     Date lastInteractionDate;
     List<Float> combatPowerRange = new ArrayList<>(7);
 
+    public String getUserName() {
+        return userName.replace("_", "");
+    }
+
+    public void addAddStatus(String addition) {
+        additionalStatus = addition + additionalStatus;
+    }
+
+    public void appendAddStatus(String addition) {
+        additionalStatus += addition;
+    }
+
     public void addItem(Item item) {
         if (item.isVisible()) {
             if (inventory.containsKey(item.getId())) {
@@ -88,6 +100,10 @@ public class UserProfileData implements Serializable {
                 checks.put(item.getId(), checks.get(item.getId()) - 1);
             }
         }
+    }
+
+    public void removeAllItems() {
+        inventory = new HashMap<>();
     }
 
     @Override
@@ -123,7 +139,7 @@ public class UserProfileData implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("*").append(userName).append("*").append("\n");
         sb.append("Здоровье ").append(strength).append("/").append(initStrength).append("\n");
-        sb.append(classicCombat ? "Ловкость " : " Сила мысли ").append(classicCombat ? dexterity : thoughtPower).append("\n");
+        sb.append(classicCombat ? "Ловкость " : "Сила мысли ").append(classicCombat ? dexterity : thoughtPower).append("\n");
         int dice = Dice.roll();
         attackPower = dice * 2 + (classicCombat ? dexterity : thoughtPower);
         StringBuilder attackPowerSB = new StringBuilder();

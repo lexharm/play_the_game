@@ -19,7 +19,7 @@ public class ModifyDexterity implements Feature {
         }
         if (delta != 0) {
             profileData.setDexterity(profileData.getDexterity() + delta);
-            profileData.setAdditionalStatus(status);
+            profileData.appendAddStatus(status);
         }
     }
 }

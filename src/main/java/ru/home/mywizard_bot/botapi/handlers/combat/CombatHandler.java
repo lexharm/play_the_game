@@ -29,7 +29,7 @@ public class CombatHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData) {
+    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData, Action matchedLink) {
         if (profileData.getBotState() != BotState.SHOW_MAIN_MENU) {
             if (profileData.getCombatChecks().stream().allMatch(x -> x.test(profileData)) || profileData.getStrength() <= 0) {
                 profileData.setBotState(BotState.PLAY_SCENARIO);

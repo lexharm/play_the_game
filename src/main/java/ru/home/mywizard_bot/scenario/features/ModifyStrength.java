@@ -28,7 +28,7 @@ public class ModifyStrength implements Feature {
         }
         if (delta != 0) {
             profileData.setStrength(strength + delta);
-            profileData.setAdditionalStatus(status);
+            profileData.appendAddStatus(status);
         }
     }
 }

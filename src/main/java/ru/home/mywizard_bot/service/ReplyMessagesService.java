@@ -121,7 +121,7 @@ public class ReplyMessagesService {
                 if (botApiMethod instanceof SendMessage) {
                     ((SendMessage) botApiMethod).setReplyMarkup(replyKeyboard).enableMarkdown(true);
                 }
-                BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(1);
+                BotApiMethod botApiMethod2 = (BotApiMethod) replyMessagesList.get(replyMessagesList.size()-1);
                 if (botApiMethod2 instanceof SendMessage) {
                     ((SendMessage) botApiMethod2).setReplyMarkup(inlineKeyboard);
                 }

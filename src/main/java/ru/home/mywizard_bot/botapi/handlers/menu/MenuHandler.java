@@ -10,6 +10,7 @@ import ru.home.mywizard_bot.scenario.Story;
 import ru.home.mywizard_bot.scenario.actions.Action;
 import ru.home.mywizard_bot.service.ReplyMessagesService;
 import ru.home.mywizard_bot.service.UsersProfileDataService;
+import ru.home.mywizard_bot.utils.Emojis;
 
 @Component
 public class MenuHandler extends Handler {
@@ -28,7 +29,12 @@ public class MenuHandler extends Handler {
     }
 
     @Override
-    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData) {
+    protected void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData, Action matchedLink) {
+        if (matchedLink.getCaption().equals("Вернуться в игру")) {
+            String status = Emojis.EXCLAMATION + profileData.getUserName() + " завязывает узелочек своего походного " +
+                    "мешка, вешает его на палочку и готов к приключениям.";
+            profileData.addAddStatus(status);
+        }
 
     }
 

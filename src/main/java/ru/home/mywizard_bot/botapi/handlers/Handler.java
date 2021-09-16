@@ -80,7 +80,7 @@ public abstract class Handler {
                 newParagraph = getNewParagraph(link, currentParagraph);
                 profileData.setNewParagraph(newParagraph);
                 link.applyEffects(profileData);
-                engageParagraphFeaturesHook_1(currentParagraph, profileData);
+                engageParagraphFeaturesHook_1(currentParagraph, profileData, matchedLink);
                 processStates(profileData.getBotState(), profileData);
                 paragraphChanged = true;
                 break;
@@ -103,7 +103,7 @@ public abstract class Handler {
 
     protected abstract Paragraph getNewParagraph(Action link, Paragraph currentParagraph);
 
-    protected abstract void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData);
+    protected abstract void engageParagraphFeaturesHook_1(Paragraph currentParagraph, UserProfileData profileData, Action matchedLink);
 
     protected abstract void engageParagraphFeaturesHook_2(Paragraph currentParagraph, UserProfileData profileData, boolean paragraphChanged);
 

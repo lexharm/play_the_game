@@ -54,6 +54,13 @@ public class InventoryCheck extends Check {
                 break;
             }
         }
+        //TODO: Make maps inventory and checks are the same map
+        for (Map.Entry<String, Integer> entry : profileData.getChecks().entrySet()) {
+            if (entry.getKey().equals(value)) {
+                itemCount = entry.getValue();
+                break;
+            }
+        }
         switch (condition) {
             case EQUAL: return itemCount == count;
             case NOT_EQUAL: return itemCount != count;
