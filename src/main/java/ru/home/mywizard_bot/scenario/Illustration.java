@@ -11,6 +11,7 @@ public class Illustration implements Cloneable {
 
     public Illustration(String caption, String imagePath) {
         this.caption = caption;
-        this.imagePath = "static" + File.separator + "images" + File.separator + imagePath;
+        this.imagePath = File.separator + "app" + File.separator + "src" + File.separator + "main" + File.separator +
+                "resources" + File.separator + "static" + File.separator + "images" + File.separator + imagePath;
     }
 }

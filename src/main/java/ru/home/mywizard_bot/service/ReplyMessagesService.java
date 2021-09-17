@@ -70,7 +70,8 @@ public class ReplyMessagesService {
         Illustration illustration = paragraph.getIllustration();
         if (illustration != null) {
             try {
-                File image = ResourceUtils.getFile("classpath:" + illustration.getImagePath());
+                //File image = ResourceUtils.getFile("classpath:" + illustration.getImagePath());
+                File image = ResourceUtils.getFile(illustration.getImagePath());
                 replyMessagesList.add(new SendPhoto().setChatId(chatId).setCaption(illustration.getCaption()).setPhoto(image));
             } catch (FileNotFoundException e) {
                 log.info("There is no image file: {}", illustration.getImagePath());
