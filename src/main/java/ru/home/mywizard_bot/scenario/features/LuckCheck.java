@@ -26,8 +26,8 @@ public class LuckCheck implements Feature {
             resultId = badLuckParagraphId;
             status = "Боги помнят все ваши деяния и наказывают: Вы не прошли проверку удачи на этот раз.";
             profileData.getChecks().remove("badLuck");
-        //} else if (dice % 2 == 0) {
-        } else if (dice % 2 >= 0) {
+        } else if (dice % 2 == 0) {
+        //} else if (dice % 2 >= 0) {
             resultId = goodLuckParagraphId;
             status = "Вы прошли проверку удачи " + Emojis.THUMBSUP;
         } else {
