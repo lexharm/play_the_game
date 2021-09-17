@@ -38,7 +38,7 @@ public class HitEnemy implements Feature {
                 //Player hits
                 enemy.setStrength(enemy.getStrength() - profileData.getDamage());
                 status.append(String.format("%s (%d%s) наносит урон %d ед. %s (%d%s)\n\n",
-                        profileData.getUserName(), playerPower, Emojis.DAGGER, enemy.getDamage(),
+                        profileData.getUserName(), playerPower, Emojis.DAGGER, profileData.getDamage(),
                         enemy.getCaption().toUpperCase(), enemyPower, Emojis.DAGGER));
                 if (enemy.getStrength() <= 0) {
                     status.append(enemy.getCaption().toUpperCase() + " умирает " + Emojis.SCULL_BONES + "\n\n");

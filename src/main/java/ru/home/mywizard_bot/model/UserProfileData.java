@@ -58,8 +58,8 @@ public class UserProfileData implements Serializable {
     Date lastInteractionDate;
     List<Float> combatPowerRange = new ArrayList<>(7);
 
-    public String getUserName() {
-        return userName.replace("_", "");
+    public void setUserName(String userName) {
+        this.userName = userName.replace("_", "").replace("*", "");
     }
 
     public void addAddStatus(String addition) {

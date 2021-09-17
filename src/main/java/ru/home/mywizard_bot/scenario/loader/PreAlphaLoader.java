@@ -87,8 +87,12 @@ public class PreAlphaLoader extends Loader {
 
         id = "initialMenu";
         paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n" +
+                "Версия 0.1 (pre-alpha)" +
                 "Используемые в игре материалы принадлежат их авторам.\n" +
-                "Версия 0.1 (pre-alpha)");
+                "Hint: если в режиме игры (не боя и не меню) у вас пропала кнопка инвентаря и меню, то введите в поле " +
+                "отправки сообщения \"Листок путешественника\" или \"Меню\" для открытия инвентаря или вызова меню " +
+                "(да, это баг, но я не успел его починить) и вообще в игре присутствуют баги, о которых вы мне можете сообщить.\n" +
+                "Enjoy the game!");
         paragraph.setIllustration(new Illustration("", "intro.jpg"));
         actions = new ArrayList<>();
         //actions.add(new InlineLink("Руководство", "10003", false));
