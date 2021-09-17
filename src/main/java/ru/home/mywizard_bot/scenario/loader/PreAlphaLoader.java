@@ -89,7 +89,7 @@ public class PreAlphaLoader extends Loader {
         paragraph = new Paragraph(id, "Добро пожаловать в игру \"Повелитель безбрежной пустыни\" от PLAY_the_GAME!\n" +
                 "Используемые в игре материалы принадлежат их авторам.\n" +
                 "Версия 0.1 (pre-alpha)");
-        paragraph.setIllustration(new Illustration("", "static/images/intro.jpg"));
+        paragraph.setIllustration(new Illustration("", "intro.jpg"));
         actions = new ArrayList<>();
         //actions.add(new InlineLink("Руководство", "10003", false));
         actions.add(new InlineLink("Новая игра", "newGameConfirm", true));
@@ -112,7 +112,7 @@ public class PreAlphaLoader extends Loader {
         id = "newGameConfirm";
         paragraph = new Paragraph(id, "Вы уверены?");
         actions = new ArrayList<>();
-        actions.add(new InlineLink("Да", "intro_8", true));
+        actions.add(new InlineLink("Да", "intro_1", true));
         actions.add(new InlineLink("Назад", "mainMenu", false));
         paragraph.setActions(actions);
         allParagraphs.put(id, paragraph);
@@ -191,7 +191,6 @@ public class PreAlphaLoader extends Loader {
                 "и орков, выполнявших волю могущественного мага Барлада Дэрта. И вот уже грозит новая опасность — " +
                 "теперь с востока. Издалека, из-за горной цепи Лонсам и Мортлэндских топей, стали доходить до " +
                 "Элгариола слухи о новом чародее, сильнее и коварнее прежнего.");
-        paragraph.setIllustration(new Illustration("", "static/images/barbarian_1.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Далее...", "intro_2", true));
         paragraph.setActions(actions);
@@ -283,7 +282,8 @@ public class PreAlphaLoader extends Loader {
                 "В деревушке, раскинувшейся у самого края пустыни, вы узнали, что древний караванный путь уходит на " +
                 "юго-восток. Там могут даже встретиться еще не пересохшие оазисы. Путь на северо-восток ведет к горам " +
                 "Лонсам. Куда направитесь вы?");
-        paragraph.setIllustration(new Illustration("", "static/images/desert.jpg"));
+        //paragraph.setIllustration(new Illustration("", "static/images/desert.jpg"));
+        paragraph.setIllustration(new Illustration("", "desert.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("На северо-восток", "89"));
         actions.add(new InlineLink("На юго-восток", "230"));
@@ -486,7 +486,7 @@ public class PreAlphaLoader extends Loader {
                 "(не правда ли, несколько странный способ передвигаться по пустыне, где за все время не встретилось " +
                 "еще ни одного оазиса с водой), они спрашивают, куда вы держите путь. Судя по одежде и кривым саблям, " +
                 "это кочевники. Надо что-то ответить. Но что?");
-        paragraph.setIllustration(new Illustration("", "static/images/nomads.png"));
+        paragraph.setIllustration(new Illustration("", "nomads.png"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Ищу мага, обитающего в скале посреди пустыни", "409", true));
         actions.add(new InlineLink("Просто путешествую", "386", true));
@@ -530,7 +530,7 @@ public class PreAlphaLoader extends Loader {
                 "главной площади столицы Элгариола, спроси вы, кому принадлежит этот город. «Это дворец Али " +
                 "бен-Сулеймана»,— в конце концов отвечает он и торопится прочь, как заторопились бы и вы " +
                 "закончить беседу с сумасшедшим.");
-        paragraph.setIllustration(new Illustration("", "static/images/oasis.jpg"));
+        paragraph.setIllustration(new Illustration("", "oasis.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Познакомиться с хозяином оазиса", "538", true));
         actions.add(new InlineLink("Покинуть оазис", "54", true));
@@ -591,7 +591,7 @@ public class PreAlphaLoader extends Loader {
                 "еще... Лучше уж об этом не думать. Тем более что впереди что-то виднеется.");
         paragraph.addText("Через полчаса становится понятно, что это караван верблюдов, неспешно двигающийся с юга " +
                 "наперерез вам. Ваше действие?");
-        paragraph.setIllustration(new Illustration("", "static/images/caravan2.jpg"));
+        paragraph.setIllustration(new Illustration("", "caravan2.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Свернуть на север, чтобы избежать встречи с ним", "481"));
         actions.add(new InlineLink("Идти дальше", "96"));
@@ -604,7 +604,7 @@ public class PreAlphaLoader extends Loader {
                 "взявшись за руки, пляшут маленькие человечки, чуть побольше кулака. Вы успеваете только заметить, " +
                 "что ноги у них напоминают ноги лошади, когда они, завидев вас, бросаются врассыпную и прячутся за " +
                 "ближайшими барханами.");
-        paragraph.setIllustration(new Illustration("", "static/images/crossroads.jpg"));
+        paragraph.setIllustration(new Illustration("", "crossroads.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Использовать телепатию", "103", new ThoughtPowerCheck(5, Condition.MORE_EQUAL)));
         actions.add(new InlineLink("Вступить на перекресток", "149"));
@@ -769,7 +769,7 @@ public class PreAlphaLoader extends Loader {
         id = "345";
         paragraph = new Paragraph(id, "Нельзя сказать, чтобы погонщик был особенно рад вашему появлению. Если не " +
                 "получится завести разговор, тогда придётся по-хорошему уйти.");
-        paragraph.setIllustration(new Illustration("", "static/images/caravan.jpg"));
+        paragraph.setIllustration(new Illustration("", "caravan.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Проверить обаяние", "346", new LuckCheck("629", "245"), true));
         paragraph.setActions(actions);
@@ -797,7 +797,7 @@ public class PreAlphaLoader extends Loader {
         id = "369";
         paragraph = new Paragraph(id, "Во второй половине дня вы выходите на... перекресток. Прямо по пустыне " +
                 "идут неведомо куда две дороги, одна из которых уходит на северо-восток, а другая — на юго-восток.");
-        paragraph.setIllustration(new Illustration("", "static/images/crossroads.jpg"));
+        paragraph.setIllustration(new Illustration("", "crossroads.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Обойти перекресток и идти на север", "17", true));
         actions.add(new InlineLink("Вступить на перекресток", "149", true));
@@ -995,7 +995,7 @@ public class PreAlphaLoader extends Loader {
                 "коне. Пот стекает по его лицу под поднятым забралом, но он тем не менее не расстается с тяжелыми " +
                 "латами, хотя не совсем понятно, от кого они могут защитить в этих местах. Ведь наибольшую опасность " +
                 "здесь представляет отнюдь не клинок, а магия и телепатия.");
-        paragraph.setIllustration(new Illustration("", "static/images/knight.jpg"));
+        paragraph.setIllustration(new Illustration("", "knight.jpg"));
         actions = new ArrayList<>();
         actions.add(new InlineLink("Воспользоваться телепатией", "360", new ThoughtPowerCheck(5, Condition.MORE_EQUAL), true));
         actions.add(new InlineLink("Продолжить", "252", true));
@@ -1079,7 +1079,7 @@ public class PreAlphaLoader extends Loader {
                 "ваш мозг в плотные тиски и методично начинает разрушать его. К сожалению, вы встретились с мощным " +
                 "телепатом, совершенно не испытывающим желание пасть от руки человека, привыкшего размахивать мечом " +
                 "по поводу и без повода...");
-        paragraph.setIllustration(new Illustration("", "static/images/old_man.jpg"));
+        paragraph.setIllustration(new Illustration("", "old_man.jpg"));
         actions = new ArrayList<>();
         actions.add(new Event(new EndGame()));
         actions.add(new InlineLink("Начать заново", "newGameConfirm"));
@@ -1089,7 +1089,7 @@ public class PreAlphaLoader extends Loader {
 
         id = "555";
         paragraph = new Paragraph(id, "Старичок оказался несколько крепче, чем вы думали.");
-        paragraph.setIllustration(new Illustration("", "static/images/old_man.jpg"));
+        paragraph.setIllustration(new Illustration("", "old_man.jpg"));
         actions = new ArrayList<>();
         actions.add(new Event(new SetStateCombat()));
         actions.add(new Event(new AddCombatCheck(new EnemyDead(2))));
