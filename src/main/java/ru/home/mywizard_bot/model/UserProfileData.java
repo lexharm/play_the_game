@@ -59,6 +59,9 @@ public class UserProfileData implements Serializable {
     List<Float> combatPowerRange = new ArrayList<>(7);
 
     public void setUserName(String userName) {
+        if (userName == null || userName.isEmpty()) {
+            userName = "NoNameUser";
+        }
         this.userName = userName.replace("_", "").replace("*", "");
     }
 
